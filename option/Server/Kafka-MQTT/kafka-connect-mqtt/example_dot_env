@@ -1,0 +1,3 @@
+BROKER_HOSTNAME=kafka.example.org
+KAFKA_TOPIC=sinetstream.sensor
+MQTT_URL=tcp://mqtt.example.org:1883

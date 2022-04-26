@@ -1,0 +1,5 @@
+SS_BROKERS=kafka.example.org:9092
+SS_CONSISTENCY=AT_LEAST_ONCE
+SSSRC_TOPIC=sinetstream.image.camera
+SSSRC_GROUP_ID=yolo
+SSDST_TOPIC=sinetstream.image.yolo

@@ -1,0 +1,2 @@
+KAFKA_TOPIC=sinetstream.sensor
+ES_URL=http://es.example.org:9200

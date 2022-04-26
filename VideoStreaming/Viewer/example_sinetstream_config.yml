@@ -1,0 +1,17 @@
+camera:
+  topic: sinetstream.image.camera
+  brokers: kafka.example.org:9092
+  type: kafka
+  group_id: video-viewer-camera
+
+openpose:
+  topic: sinetstream.image.openpose
+  brokers: kafka.example.org:9092
+  type: kafka
+  group_id: video-viewer-openpose
+
+yolo:
+  topic: sinetstream.image.yolo
+  brokers: kafka.example.org:9092
+  type: kafka
+  group_id: video-viewer-yolo

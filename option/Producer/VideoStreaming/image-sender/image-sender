@@ -1,0 +1,140 @@
+#!/usr/bin/env python3
+from argparse import ArgumentParser
+from logging import basicConfig, getLogger
+from math import modf
+from os import getenv
+from pathlib import Path
+from queue import Empty, Queue
+from threading import Event, Thread
+from time import perf_counter, sleep
+
+from cv2 import CAP_PROP_FPS, VideoCapture
+from sinetstream import MessageWriter
+
+logger = getLogger(__name__)
+logger.setLevel(level=getenv("LOG_LEVEL", "WARNING"))
+if getenv("LOG_FORMAT"):
+    basicConfig(format=getenv("LOG_FORMAT"), style="{")
+else:
+    basicConfig()
+
+
+def get_fps(file_video):
+    if not Path(file_video).exists():
+        raise FileNotFoundError(file_video)
+
+    video = VideoCapture(file_video)
+    fps = video.get(CAP_PROP_FPS)
+    video.release()
+    logger.debug("fps=%f", fps)
+    return fps
+
+
+class Adjuster:
+
+    SIZE = 20
+
+    def __init__(self, args):
+        fps = get_fps(args.input_video)
+        self.frame_rate = args.frame_rate if args.frame_rate > 0.0 else fps
+        logger.debug("frame rate=%f", self.frame_rate)
+
+        self.sleep_time_1 = 1.0 / self.frame_rate
+        self.sleep_time_q = self.sleep_time_1 * (Adjuster.SIZE + 1)
+        logger.debug(
+            "sleep_time_1=%f, sleep_time_q=%f", self.sleep_time_1, self.sleep_time_q
+        )
+
+        self.__sampling_freq = (
+            args.sampling_rate / fps if args.sampling_rate > 0.0 else 1.0
+        )
+        logger.debug("sampling freq=%f", self.__sampling_freq)
+        self.que = Queue(Adjuster.SIZE + 1)
+
+    def next(self):
+        time1 = perf_counter()
+        self.que.put(time1)
+        if self.que.full():
+            time0 = self.que.get()
+            sleep_time = self.sleep_time_q - time1 + time0
+        else:
+            sleep_time = self.sleep_time_1
+        logger.debug("sleep_time=%f", sleep_time)
+        if sleep_time > 0:
+            sleep(sleep_time)
+
+    @property
+    def sampling_freq(self):
+        return self.__sampling_freq
+
+
+def send_image(q, service, adjuster, fin_reading):
+    logger.debug("start writer loop")
+    with MessageWriter(service, value_type="image") as writer:
+        while not fin_reading.is_set():
+            try:
+                img = q.get(True, 0.1)
+                logger.debug("send image")
+                writer.publish(img)
+                adjuster.next()
+            except Empty:
+                pass
+            except Exception:
+                logger.exception("send error")
+    logger.debug("end writer loop")
+
+
+def _read_video(q, input_video, sampling_freq):
+    threshold = 0.0
+    video = VideoCapture(input_video)
+    while video.isOpened():
+        success, frame = video.read()
+        # Ensure file was read successfully
+        if not success:
+            break
+
+        threshold += sampling_freq
+        if threshold < 1.0:
+            logger.debug("skip frame")
+            continue
+        else:
+            threshold, _ = modf(threshold)
+
+        q.put(frame)
+    video.release()
+
+
+def read_video(q, input_video, sampling_freq, fin_reading):
+    logger.debug("start reader loop")
+    try:
+        _read_video(q, input_video, sampling_freq)
+    finally:
+        fin_reading.set()
+        logger.debug("end reader loop")
+
+
+def parse_args():
+    parser = ArgumentParser()
+    parser.add_argument("-i", "--input-video", required=True)
+    parser.add_argument("-s", "--service", default="video")
+    parser.add_argument("-r", "--frame-rate", type=float, default=-1.0)
+    parser.add_argument("-R", "--sampling-rate", type=float, default=-1.0)
+    return parser.parse_args()
+
+
+def main(args):
+    adjuster = Adjuster(args)
+    q = Queue(20)
+    fin_reading = Event()
+
+    Thread(
+        target=read_video,
+        args=(q, args.input_video, adjuster.sampling_freq, fin_reading),
+        daemon=True,
+    ).start()
+    send_image(q, args.service, adjuster, fin_reading)
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    main(args)

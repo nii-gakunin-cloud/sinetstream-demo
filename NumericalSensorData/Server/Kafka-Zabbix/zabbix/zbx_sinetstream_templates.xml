@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2022-01-24T15:57:55Z</date>
+    <groups>
+        <group>
+            <name>Templates/Applications</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>SINETStream connector</template>
+            <name>SINETStream connector</name>
+            <groups>
+                <group>
+                    <name>Templates/Applications</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>SINETStream</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>SINETStream connector trapper</name>
+                    <type>TRAP</type>
+                    <key>sinetstream.connector</key>
+                    <delay>0</delay>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <applications>
+                        <application>
+                            <name>SINETStream</name>
+                        </application>
+                    </applications>
+                    <triggers>
+                        <trigger>
+                            <expression>{nodata({$SINETSTREAM_WARNING_TIME})}=1</expression>
+                            <name>SINETStream no data</name>
+                            <priority>WARNING</priority>
+                        </trigger>
+                    </triggers>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Sensors</name>
+                    <type>DEPENDENT</type>
+                    <key>sinetstream.sensors</key>
+                    <delay>0</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>SINETStream Sensor: {#SENSOR_NODE} - {#SENSOR}</name>
+                            <type>DEPENDENT</type>
+                            <key>sinetstream.sensor[{#SENSOR_NODE},{#SENSOR}]</key>
+                            <delay>0</delay>
+                            <value_type>FLOAT</value_type>
+                            <applications>
+                                <application>
+                                    <name>SINETStream</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>JAVASCRIPT</type>
+                                    <params>var data = JSON.parse(value);
+if (data['node'] !== '{#SENSOR_NODE}') {
+  return null;
+}
+if ('{#SENSOR}' in data) {
+  return JSON.stringify(data['{#SENSOR}']);
+} else {
+  return null;
+}</params>
+                                </step>
+                            </preprocessing>
+                            <master_item>
+                                <key>sinetstream.connector</key>
+                            </master_item>
+                        </item_prototype>
+                    </item_prototypes>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>{#SENSOR_NODE} - {#SENSOR}</name>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>1</sortorder>
+                                    <color>1A7C11</color>
+                                    <item>
+                                        <host>SINETStream connector</host>
+                                        <key>sinetstream.sensor[{#SENSOR_NODE},{#SENSOR}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
+                    <master_item>
+                        <key>sinetstream.connector</key>
+                    </master_item>
+                    <preprocessing>
+                        <step>
+                            <type>JAVASCRIPT</type>
+                            <params>var data = JSON.parse(value);
+var sensors = Object.keys(data).filter(function(x){ return x !== 'node' });
+var node = ('node' in data) ? data['node'] : '';
+return JSON.stringify(
+  sensors.map(
+    function(x) {
+      return {
+        '{#SENSOR}': x,
+        '{#SENSOR_NODE}': node,
+      };
+    }
+  )
+);</params>
+                        </step>
+                    </preprocessing>
+                </discovery_rule>
+            </discovery_rules>
+            <tags>
+                <tag>
+                    <tag>Application</tag>
+                    <value>SINETStream</value>
+                </tag>
+            </tags>
+            <macros>
+                <macro>
+                    <macro>{$SINETSTREAM_WARNING_TIME}</macro>
+                    <value>10m</value>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>

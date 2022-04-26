@@ -1,0 +1,5 @@
+video:
+  topic: sinetstream.image.video
+  brokers: kafka.example.org:9092
+  type: kafka
+  consistency: AT_LEAST_ONCE

@@ -1,0 +1,5 @@
+sensors:
+  topic: sinetstream.sensor
+  brokers: kafka.example.org:9092
+  type: kafka
+  consistency: AT_LEAST_ONCE

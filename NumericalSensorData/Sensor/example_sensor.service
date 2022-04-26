@@ -1,0 +1,12 @@
+[Unit]
+Description=Send sensor data
+
+[Service]
+Type=simple
+User=user01
+WorkingDirectory=/home/user01/sensor
+ExecStart=/home/user01/sensor/producer.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

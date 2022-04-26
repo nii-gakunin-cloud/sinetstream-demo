@@ -1,0 +1,4 @@
+KAFKA_HOST=kafka.example.org
+KAFKA_TOPIC=sinetstream.sensor
+ZABBIX_ADDR=zabbix.example.org
+ZABBIX_HOST=SINETStream

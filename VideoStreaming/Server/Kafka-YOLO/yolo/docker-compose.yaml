@@ -1,0 +1,12 @@
+version: '3.7'
+services:
+  yolo:
+    build: ./build
+    runtime: nvidia
+    init: true
+    ipc: host
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    restart: always
+    env_file: .env

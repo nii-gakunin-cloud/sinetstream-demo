@@ -1,0 +1,18 @@
+version: '3.7'
+services:
+  grafana:
+    image: grafana/grafana:8.4.6
+    container_name: grafana
+    environment:
+      ES_URL: $ES_URL
+      KAFKA_TOPIC: $KAFKA_TOPIC
+    volumes:
+    - ./provisioning:/etc/grafana/provisioning
+    - ./dashboards:/var/lib/grafana/dashboards
+    - grafana-data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    init: true
+    restart: always
+volumes:
+  grafana-data:

@@ -1,0 +1,53 @@
+version: '3.7'
+services:
+  kafka-connect:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sample/kafka-connect:latest
+    hostname: ${REST_ADVERTISED_HOST_NAME:-kafka-connect}
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: ${BROKER_HOSTNAME}:9092
+      CONNECT_REST_ADVERTISED_HOST_NAME: ${REST_ADVERTISED_HOST_NAME:-kafka-connect}
+      CONNECT_REST_PORT: 8083
+      CONNECT_GROUP_ID: ${GROUP_ID:-kafka-connect}
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: '1'
+      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: '1'
+      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: '1'
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.converters.ByteArrayConverter
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_KEY: $AWS_SECRET_KEY
+    ports:
+      - "${REST_PORT:-8083}:8083"
+  minio:
+    image: minio/minio
+    command: server /data
+    environment:
+      MINIO_BROWSER: off
+      MINIO_ROOT_USER: $AWS_ACCESS_KEY_ID
+      MINIO_ROOT_PASSWORD: $AWS_SECRET_KEY
+    ports:
+      - 9000:9000
+    volumes:
+      - ./data:/data
+    profiles:
+      - minio
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+  create-bucket:
+    image: minio/mc
+    depends_on:
+      - minio
+    profiles:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc config host add minio http://minio:9000 $AWS_ACCESS_KEY_ID $AWS_SECRET_KEY;
+      /usr/bin/mc mb --ignore-existing minio/$S3_BUCKET_NAME;
+      exit 0;
+      "

@@ -1,0 +1,7 @@
+BROKER_HOSTNAME=kafka.example.org
+KAFKA_TOPIC=topic-name
+AWS_ACCESS_KEY_ID=accesskey
+AWS_SECRET_KEY=secretkey
+S3_BUCKET_NAME=mybucket
+S3_REGION=ap-northeast-1
+# S3_OBJECT_EXTENSION=.json

@@ -1,0 +1,6 @@
+*~
+*.bak
+*.log
+.sinetstream_config.yml
+.env
+.vscode

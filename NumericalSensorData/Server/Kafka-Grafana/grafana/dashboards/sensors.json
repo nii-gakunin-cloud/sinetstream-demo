@@ -1,0 +1,210 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "iteration": 1649752573233,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": 3600000,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "8.4.4",
+      "repeat": "sensor",
+      "repeatDirection": "v",
+      "targets": [
+        {
+          "alias": "",
+          "bucketAggs": [
+            {
+              "field": "msg.node.keyword",
+              "id": "3",
+              "settings": {
+                "min_doc_count": "1",
+                "order": "desc",
+                "orderBy": "_term",
+                "size": "10"
+              },
+              "type": "terms"
+            },
+            {
+              "field": "@timestamp",
+              "id": "2",
+              "settings": {
+                "interval": "auto"
+              },
+              "type": "date_histogram"
+            }
+          ],
+          "datasource": {
+            "type": "elasticsearch",
+            "uid": "P31C819B24CF3C3C7"
+          },
+          "metrics": [
+            {
+              "field": "msg.$sensor",
+              "id": "1",
+              "settings": {},
+              "type": "avg"
+            }
+          ],
+          "query": "msg.node.keyword:$node",
+          "refId": "A",
+          "timeField": "@timestamp"
+        }
+      ],
+      "title": "$sensor",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 35,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "elasticsearch",
+          "uid": "P31C819B24CF3C3C7"
+        },
+        "definition": "{\"find\": \"terms\", \"field\": \"msg.node.keyword\"}",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "node",
+        "options": [],
+        "query": "{\"find\": \"terms\", \"field\": \"msg.node.keyword\"}",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "elasticsearch",
+          "uid": "P31C819B24CF3C3C7"
+        },
+        "definition": "{\"find\": \"fields\", \"type\": \"float,long\"}",
+        "hide": 0,
+        "includeAll": true,
+        "multi": true,
+        "name": "sensor",
+        "options": [],
+        "query": "{\"find\": \"fields\", \"type\": \"float,long\"}",
+        "refresh": 1,
+        "regex": "(?:msg\\.)?(.+)",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-12h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "sensors",
+  "uid": "IF7W0A8nz",
+  "version": 1,
+  "weekStart": ""
+}

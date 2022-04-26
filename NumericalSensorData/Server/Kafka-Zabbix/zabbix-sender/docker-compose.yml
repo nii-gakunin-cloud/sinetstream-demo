@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  zabbix-sender:
+    build: ./build
+    network_mode: host
+    restart: always
+    env_file: .env

@@ -1,0 +1,3 @@
+BROKER_HOSTNAME=kafka.example.org
+KAFKA_TOPIC=sinetstream.sensor
+ES_URL=http://es.example.org:9200
