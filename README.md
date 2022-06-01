@@ -37,7 +37,7 @@ Demo packege for SINETStream
 
 ## 関連情報
 - SINETStream https://www.sinetstream.net/ <br>
-A. Takefusa, J. Sun, I. Fujiwara, H. Yoshida, K. Aida and C. Pu, <br>
+- A. Takefusa, J. Sun, I. Fujiwara, H. Yoshida, K. Aida and C. Pu, <br>
 "SINETStream: Enabling Research IoT Applications with Portability, Security and Performance Requirements," <br>
 2021 IEEE 45th Annual Computers, Software, and Applications Conference (COMPSAC), 2021, pp. 482-492, doi: 10.1109/COMPSAC51774.2021.00073.<br>
 
