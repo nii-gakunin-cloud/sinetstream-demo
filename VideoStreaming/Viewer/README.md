@@ -59,6 +59,7 @@ camera:
   brokers: kafka.example.org:9092
   type: kafka
   group_id: video-viewer-camera
+  consistency: AT_LEAST_ONCE
 ```
 
 `brokers` と `topic` の値を実行環境に合せて修正してください。他のパラメータの指定方法など `.sinetstream_config.yml` の記述方法の詳細については [SINETStream - 設定ファイル](https://www.sinetstream.net/docs/userguide/config.html) を参照してください。

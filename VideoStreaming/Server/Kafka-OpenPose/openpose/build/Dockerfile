@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.5.1-cudnn8-devel-ubuntu20.04 AS builder
+FROM nvidia/cuda:11.6.2-cudnn8-devel-ubuntu20.04 AS builder
 
 RUN apt-get update \
     && env DEBIAN_FRONTEND=noninteractive apt-get upgrade -y \
@@ -38,7 +38,7 @@ RUN cd /opt/openpose \
 
 ##########################################################################
 
-FROM nvidia/cuda:11.5.1-cudnn8-runtime-ubuntu20.04
+FROM nvidia/cuda:11.6.2-cudnn8-runtime-ubuntu20.04
 
 COPY --from=builder /opt/openpose /opt/openpose
 COPY --from=builder /usr/local/python /usr/local/python

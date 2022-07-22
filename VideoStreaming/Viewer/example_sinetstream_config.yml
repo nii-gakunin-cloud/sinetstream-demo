@@ -3,15 +3,18 @@ camera:
   brokers: kafka.example.org:9092
   type: kafka
   group_id: video-viewer-camera
+  consistency: AT_LEAST_ONCE
 
 openpose:
   topic: sinetstream.image.openpose
   brokers: kafka.example.org:9092
   type: kafka
   group_id: video-viewer-openpose
+  consistency: AT_LEAST_ONCE
 
 yolo:
   topic: sinetstream.image.yolo
   brokers: kafka.example.org:9092
   type: kafka
   group_id: video-viewer-yolo
+  consistency: AT_LEAST_ONCE

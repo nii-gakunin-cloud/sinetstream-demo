@@ -30,8 +30,9 @@ def _get_job():
     if param is None:
         logger.debug("schedule: None")
         return param
-    param = param.strip()
-    if re.match(r"\d+$", param):
+    if type(param) is str:
+        param = param.strip()
+    if type(param) is not str or re.match(r"\d+$", param):
         secs = int(param)
         logger.debug(f"schedule: every {secs} seconds")
         return schedule.every(secs).seconds

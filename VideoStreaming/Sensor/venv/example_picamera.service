@@ -1,0 +1,13 @@
+[Unit]
+Description=Send images from Pi Camera
+
+[Service]
+Type=simple
+User=user01
+WorkingDirectory=/home/user01/picamera
+Environment="PATH=/home/user01/picamera/bin"
+ExecStart=/home/user01/picamera/ss-camera.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
