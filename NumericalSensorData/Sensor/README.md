@@ -133,7 +133,7 @@ def get_sensor_data(device):
 いくつかのセンサーにおける実装例を示します。
 
 * DHT11: 温度湿度センサー
-    * 実装例: [dht11/proudcer-dht11.py](dht11/producer-dht11.py)
+    * 実装例: [dht11/producer-dht11.py](dht11/producer-dht11.py)
     * 手順書: [dht11/README.md](dht11/README.md)
 * [SHT3x](https://sensirion.com/jp/products/product-catalog/?filter_series=370b616d-de4c-469f-a22b-e5e8737481b5): 温度湿度センサー
     * 実装例: [sht3x/producer-sht3x.py](sht3x/producer-sht3x.py)

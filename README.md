@@ -1,6 +1,8 @@
 # SINETStream demo
 
-Demo packege for SINETStream
+Demo package for SINETStream
+
+[English description here.](README_en.md)
 
 ## デモパッケージ
 
