@@ -47,7 +47,7 @@ The version of each software component is listed below.
 
 The Kafka broker must be available. Please refer to the following procedures and others to build the Kafka broker.
 
-* [option/Server/Kafka](../Kafka/README_en.md)
+* [option/Server/Kafka](../Kafka/README.en.md)
 
 Kafka Connector is run using [Docker](https://www.docker.com/), [Docker Compose](https://github.com/docker/compose). Please refer to the following links for installation.
 

@@ -34,9 +34,9 @@ The following are the prerequisites for running the image stream viewer `VideoVi
 
 The Kafka broker, which is the destination for the image stream, must also be available. The Kafka broker must be pre-built with one of the following configurations.
 
-* [VideoStreaming/Server/Kafka-OpenPose](../Server/Kafka-OpenPose/README_en.md)
-* [VideoStreaming/Server/Kafka-YOLO](../Server/Kafka-YOLO/README_en.md)
-* [option/Server/Kafka](../../option/Server/Kafka/README_en.md)
+* [VideoStreaming/Server/Kafka-OpenPose](../Server/Kafka-OpenPose/README.en.md)
+* [VideoStreaming/Server/Kafka-YOLO](../Server/Kafka-YOLO/README.en.md)
+* [option/Server/Kafka](../../option/Server/Kafka/README.en.md)
 
 
 ### 1.2. Installing the Library

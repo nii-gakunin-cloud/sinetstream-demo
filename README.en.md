@@ -2,7 +2,7 @@
 
 Demo package for SINETStream
 
-[日本語版はこちら。](README.md)
+[日本語](README.md)
 
 ## Demo package
 
@@ -10,15 +10,15 @@ The [National Institute of Informatics](https://www.nii.ac.jp/) [Cloud Infrastru
 
 The following demo package for building an IoT system using SINETStream is now available on this website.
 
-* [numerical sensor data](NumericalSensorData/README_en.md)
-  * [numerical sensor data](NumericalSensorData/README_en.md) allows you to build an IoT system that collects and visualizes numerical sensor data.
+* [numerical sensor data](NumericalSensorData/README.en.md)
+  * [numerical sensor data](NumericalSensorData/README.en.md) allows you to build an IoT system that collects and visualizes numerical sensor data.
   Send numerical values measured by sensors connected to Raspberry Pi to a server and visualize them with [Zabbix](https://www.zabbix.com/) or [Grafana](https://grafana.com/grafana/).
     * Sensor<br>
     Provides example implementation and instructions for sending measured values of temperature/humidity sensor (DHT11/SHT3x) and CO2 sensor (SCD41) to a server using SINETStream library.
     * Server<br>
     Provides procedures and materials for visualization of sensor readings received by the [Kafka](https://kafka.apache.org/) broker using SINETStream library, including graph display in Zabbix/Grafana.
 
-* [video streaming](VideoStreaming/README_en.md)
+* [video streaming](VideoStreaming/README.en.md)
   * Build an IoT system to collect, process, and visualize video image data.
   Build a system where images captured by a Raspberry Pi camera are processed by a GPU node on the server and the results are displayed on the client.
     * Sensor<br>
@@ -28,7 +28,7 @@ The following demo package for building an IoT system using SINETStream is now a
     * Viewer<br>
     Provides a Python program and execution steps to display images from the server (Kafka broker) on the client using the SINETStream library.
 
-* [option](option/README_en.md)
+* [option](option/README.en.md)
   * Procedures and materials related to optional configuration items and test tools for this package.
     * Server<br>
     Provides instructions and materials related to optional configuration items for the server part (building the Kafka broker, storing messages, and forwarding MQTT ([Mosquitto](https://mosquitto.org/)) messages to the Kafka broker).

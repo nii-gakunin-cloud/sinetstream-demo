@@ -30,9 +30,9 @@ The following are the prerequisites for running `consumer.py`.
 
 The Kafka broker from which the text data will be retrieved must be available. Please pre-build the Kafka broker with one of the following configurations.
 
-* [option/Server/Kafka](../../../Server/Kafka/README_en.md)
-* [NumericalSensorData/Server/Kafka-Grafana](../../../../NumericalSensorData/Server/Kafka-Grafana/README_en.md)
-* [NumericalSensorData/Server/Kafka-Zabbix](../../../../NumericalSensorData/Server/Kafka-Zabbix/README_en.md)
+* [option/Server/Kafka](../../../Server/Kafka/README.en.md)
+* [NumericalSensorData/Server/Kafka-Grafana](../../../../NumericalSensorData/Server/Kafka-Grafana/README.en.md)
+* [NumericalSensorData/Server/Kafka-Zabbix](../../../../NumericalSensorData/Server/Kafka-Zabbix/README.en.md)
 
 ### 1.2. Library Installation
 

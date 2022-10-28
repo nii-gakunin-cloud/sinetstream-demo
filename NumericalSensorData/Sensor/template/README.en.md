@@ -11,9 +11,9 @@ The following is an example implementation that serves as a model for a sensor d
 
 The Kafka broker to which the sensor data will be sent must be available. Please pre-build the Kafka broker with one of the following configurations.
 
-* [NumericalSensorData/Server/Kafka-Grafana](../../Server/Kafka-Grafana/README_en.md)
-* [NumericalSensorData/Server/Kafka-Zabbix](../../Server/Kafka-Zabbix/README_en.md)
-* [option/Server/Kafka](../../../option/Server/Kafka/README_en.md)
+* [NumericalSensorData/Server/Kafka-Grafana](../../Server/Kafka-Grafana/README.en.md)
+* [NumericalSensorData/Server/Kafka-Zabbix](../../Server/Kafka-Zabbix/README.en.md)
+* [option/Server/Kafka](../../../option/Server/Kafka/README.en.md)
 
 ### 1.2. Installing Libraries
 
@@ -79,6 +79,6 @@ $ ./producer.py -I 300
 
 Use [consumer.py](../../../option/Consumer/NumericalSensorData/text-consumer/consumer.py) to check the sensor data sent from the RaspberryPi. For instructions on how to run consumer.py, please refer to the following link.
 
-* [option/Consumer/NumericalSensorData/text-consumer/README_en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README_en.md)
+* [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 Specify the same values for the message broker addresses (brokers), topic name (topic), and type (type) in the `.sinetstream_config.yml` configuration file for consumer.py as for the sensor data transmission program.

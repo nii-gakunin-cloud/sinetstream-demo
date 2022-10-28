@@ -258,4 +258,4 @@ If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` value in 
 
 ## 5. check the result of processing
 
-Using the image stream viewer [VideoViewer.py](../../Viewer/README_en.md), you can check the processing results of YOLOv5. To display the processing results of YOLOv5, specify the topic name of the YOLOv5 output destination in the target topic name of VideoViewer.py.
+Using the image stream viewer [VideoViewer.py](../../Viewer/README.en.md), you can check the processing results of YOLOv5. To display the processing results of YOLOv5, specify the topic name of the YOLOv5 output destination in the target topic name of VideoViewer.py.

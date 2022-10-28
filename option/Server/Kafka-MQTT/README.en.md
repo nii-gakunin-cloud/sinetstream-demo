@@ -34,7 +34,7 @@ The version of each software component is shown below.
 
 The Kafka broker must be available. Please refer to the following procedures and others to build the Kafka broker.
 
-* [option/Server/Kafka](../Kafka/README_en.md)
+* [option/Server/Kafka](../Kafka/README.en.md)
 
 Use [Docker](https://www.docker.com/) and [Docker Compose](https://github.com/docker/compose) to run Kafka Connector and Mosquitto (MQTT broker). Please refer to the following links for installation.
 
@@ -93,9 +93,9 @@ If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` in the `.
 You can confirm that the MQTT broker is available by running the test producer and consumer. For instructions on how to run each of the test programs, please review the procedures described in the links below.
 
 * Producer
-  * [NumericalSensorData/Sensor/template/README_en.md](../../../NumericalSensorData/Sensor/template/README_en.md)
+  * [NumericalSensorData/Sensor/template/README.en.md](../../../NumericalSensorData/Sensor/template/README.en.md)
 * Consumer
-  * [option/Consumer/NumericalSensorData/text-consumer/README_en.md](../../Consumer/NumericalSensorData/text-consumer/README_en.md)
+  * [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 However, please specify `mqtt` as the type (type) and the address of the MQTT broker as the address of the message broker (brokers) in the `.sinetstream_config.yml` configuration file for SINETStream. An example of a configuration file is shown below.
 

@@ -215,9 +215,9 @@ $ docker compose logs
 You can confirm that the Kafka broker is ready to use by running the test producer and consumer. For instructions on how to run each of the test programs, please review the instructions at the following links.
 
 * Producer
-  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README_en.md)
+  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
 * Consumer
-  * [option/Consumer/NumericalSensorData/text-consumer/README_en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README_en.md)
+  * [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 ## 4. Building Elasticsearch
 
@@ -416,7 +416,7 @@ green open sinetstream.sensor-20220417 rDq3QLb9Rq6IcYCv8P_egw 1 0 1774  0 226.3k
 
 You can send test data to the Kafka broker by executing a test producer. For instructions on how to run the test program, please review the instructions documented in the following link.
 
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README_en.md)
+* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
 
 > The test program sends random values instead of actual sensor readings.
 
@@ -482,7 +482,7 @@ The graphs displayed on the dashboard are added dynamically according to the sen
 You can send test data to the Kafka broker by executing a test producer, which can be used to check the operation of Grafana or other server-side applications. For instructions on how to run the test program, please review the instructions noted in the following link.
 
 
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README_en.md)
+* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
 
 > The above link is the same as "[5.6. Send Test Data](#56-sending-test-data)".
 

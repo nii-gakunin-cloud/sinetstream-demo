@@ -2,7 +2,7 @@
 
 Demo package for SINETStream
 
-[English description here.](README_en.md)
+[English](README.en.md)
 
 ## デモパッケージ
 

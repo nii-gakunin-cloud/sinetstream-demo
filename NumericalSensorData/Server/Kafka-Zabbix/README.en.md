@@ -223,9 +223,9 @@ $ docker compose logs
 You can confirm that the Kafka broker is ready to use by running the test producer and consumer. For instructions on how to run each of the test programs, please review the instructions at the following links.
 
 * Producer
-  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README_en.md)
+  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
 * Consumer
-  * [option/Consumer/NumericalSensorData/text-consumer/README_en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README_en.md)
+  * [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 ## 4. Building Zabbix Server
 
@@ -519,7 +519,7 @@ Specify the following parameters in the file `.env` that sets environment variab
 | Parameter                                                                                                                    | Environment variable name | Parameter value in the example operation |
 |------------------------------------------------------------------------------------------------------------------------------|---------------------------|------------------------------------------|
 | Kafka broker address<br>Value set in "[3.2.2. BROKER_HOSTNAME](#322-broker_hostname)"                                        | `BROKER_HOSTNAME`         | `kafka.example.org`                      |
-| Kafka topic name<br> Topic name specified in"[Sensor/README_en.md](../../Sensor/README_en.md#32-configuration-file)"         | `KAFKA_TOPIC`             | `sinetstream.sensor`                     |
+| Kafka topic name<br> Topic name specified in"[Sensor/README.en.md](../../Sensor/README.en.md#32-configuration-file)"         | `KAFKA_TOPIC`             | `sinetstream.sensor`                     |
 | Zabbix server address<br> hostname or IP address                                                                             | `ZABBIX_ADDR`             | `zabbix.example.org`                     |
 | Name of host to be registered as target of Zabbix monitoring<br>Value set in "[4.3.3.2. Register host](#4332-register-host)" | `ZABBIX_HOST`             | `SINETStream`                            |
 

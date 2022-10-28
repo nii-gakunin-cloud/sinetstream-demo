@@ -32,9 +32,9 @@ The following are the prerequisites for running `image-sender`.
 
 The Kafka broker to which the image stream will be sent must be available. Please pre-build the Kafka broker with one of the following configurations.
 
-* [option/Server/Kafka](../../../Server/Kafka/README_en.md)
-* [VideoStreaming/Server/Kafka-OpenPose](../../../../VideoStreaming/Server/Kafka-OpenPose/README_en.md)
-* [VideoStreaming/Server/Kafka-YOLO](../../../../VideoStreaming/Server/Kafka-YOLO/README_en.md)
+* [option/Server/Kafka](../../../Server/Kafka/README.en.md)
+* [VideoStreaming/Server/Kafka-OpenPose](../../../../VideoStreaming/Server/Kafka-OpenPose/README.en.md)
+* [VideoStreaming/Server/Kafka-YOLO](../../../../VideoStreaming/Server/Kafka-YOLO/README.en.md)
 
 ### 1.2. Library installation
 

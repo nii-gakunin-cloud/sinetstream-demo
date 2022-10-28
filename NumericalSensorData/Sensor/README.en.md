@@ -31,9 +31,9 @@ flowchart LR
 
 The Kafka broker to which the sensor data will be sent must be available. Please build the Kafka broker in advance with one of the following configurations.
 
-* [NumericalSensorData/Server/Kafka-Grafana](../Server/Kafka-Grafana/README_en.md)
-* [NumericalSensorData/Server/Kafka-Zabbix](../Server/Kafka-Zabbix/README_en.md)
-* [option/Server/Kafka](../../option/Server/Kafka/README_en.md)
+* [NumericalSensorData/Server/Kafka-Grafana](../Server/Kafka-Grafana/README.en.md)
+* [NumericalSensorData/Server/Kafka-Zabbix](../Server/Kafka-Zabbix/README.en.md)
+* [option/Server/Kafka](../../option/Server/Kafka/README.en.md)
 
 ## 2. Create a program to send sensor data
 
@@ -134,13 +134,13 @@ The following are implementation examples for some sensors.
 
 * DHT11: temperature/humidity sensor
     * Example implementation: [dht11/producer-dht11.py](dht11/producer-dht11.py)
-    * Procedure: [dht11/README_en.md](dht11/README_en.md)
+    * Procedure: [dht11/README.en.md](dht11/README.en.md)
 * [SHT3x](https://sensirion.com/jp/products/product-catalog/?filter_series=370b616d-de4c-469f-a22b-e5e8737481b5): Temperature/humidity sensor
     * Example implementation: [sht3x/producer-sht3x.py](sht3x/producer-sht3x.py)
-    * Procedure: [sht3x/README_en.md](sht3x/README_en.md)
+    * Procedure: [sht3x/README.en.md](sht3x/README.en.md)
 * [SCD41](https://sensirion.com/jp/products/product-catalog/SCD41/): CO2 sensor
     * Implementation example: [scd41/producer-scd41.py](scd41/producer-scd41.py)
-    * Procedure: [scd41/README_en.md](scd41/README_en.md)
+    * Procedure: [scd41/README.en.md](scd41/README.en.md)
 
 ## 3. Execute the program to send sensor data
 
@@ -298,6 +298,6 @@ Created symlink /etc/systemd/system/multi-user.target.wants/sensor.service → /
 
 [consumer.py](../../option/Consumer/NumericalSensorData/text-consumer/consumer.py) to check the sensor data sent from the RaspberryPi. For instructions on how to run consumer.py, please refer to the following link.
 
-* [option/Consumer/NumericalSensorData/text-consumer/README_en.md](../../option/Consumer/NumericalSensorData/text-consumer/README_en.md)
+* [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 Specify the same values for the message broker addresses (brokers), topic name (topic), and type (type) in the `.sinetstream_config.yml` configuration file for consumer.py as for the sensor data transmission program.

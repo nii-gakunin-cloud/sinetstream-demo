@@ -45,9 +45,9 @@ The following OS for Raspberry Pi is assumed:
 
 The Kafka broker to which the images will be sent must be available in advance. Please build the Kafka broker with one of the following configurations.
 
-* [VideoStreaming/Server/Kafka-OpenPose](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-OpenPose/README_en.md)
-* [VideoStreaming/Server/Kafka-YOLO](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-YOLO/README_en.md)
-* [option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README_en.md)
+* [VideoStreaming/Server/Kafka-OpenPose](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-OpenPose/README.en.md)
+* [VideoStreaming/Server/Kafka-YOLO](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-YOLO/README.en.md)
+* [option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.en.md)
 
 ### 1.3. Camera module
 
@@ -73,8 +73,8 @@ $ sudo ip link set dev usb1 mtu 1200
 
 We provide two ways for the build procedure:
 
-* [Build procedure using containers](docker/README_en.md)
-* [Build procedure using venv](venv/README_en.md)
+* [Build procedure using containers](docker/README.en.md)
+* [Build procedure using venv](venv/README.en.md)
 
 Normally, it is recommended that you follow the instructions for building using containers. However, if you are running in an environment with limited resources such as [Raspberry Pi Zero W](https://www.raspberrypi.com/products/raspberry-pi-zero-w/), consider running the build procedure using venv.
 

@@ -260,4 +260,4 @@ If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` value in 
 
 ## 5. Check Processing Result
 
-Use the image stream viewer [VideoViewer.py](../../Viewer/README_en.md) to check the result of OpenPose processing. When displaying the result of OpenPose processing, specify the topic name of the OpenPose output destination in the target topic name of VideoViewer.py.
+Use the image stream viewer [VideoViewer.py](../../Viewer/README.en.md) to check the result of OpenPose processing. When displaying the result of OpenPose processing, specify the topic name of the OpenPose output destination in the target topic name of VideoViewer.py.

@@ -33,7 +33,7 @@ The system to be built consists of two parts:
   
 Instructions and materials for building each part of the system are stored in a subdirectory.
 
-* [Sensor/README_en.md](Sensor/README_en.md)
-* [Server/README_en.md](Server/README_en.md)
+* [Sensor/README.en.md](Sensor/README.en.md)
+* [Server/README.en.md](Server/README.en.md)
 
 All messages (sensor readings) sent and received in this system are exchanged via the Server's Kafka broker. Therefore, please build the Server first.
