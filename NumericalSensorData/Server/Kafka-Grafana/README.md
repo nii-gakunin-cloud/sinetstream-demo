@@ -243,7 +243,7 @@ elasticsearch-elasticsearch-1   "/bin/tini -- /usr/l…"   elasticsearch       r
 
 STATUSが`running`となっていることを確認してください。
 
-Elasticsearchの起動にはしばらく時間がかかります。Elasticsearchの状態を確認するには[Cluster helth API](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/cluster-health.html)を実行することで確認できます。以下のコマンドを実行して `status`が`green`となっていることを確認してください。
+Elasticsearchの起動にはしばらく時間がかかります。Elasticsearchの状態を確認するには[Cluster health API](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/cluster-health.html)を実行することで確認できます。以下のコマンドを実行して `status`が`green`となっていることを確認してください。
 
 ```console
 $ curl -s http://localhost:9200/_cluster/health?pretty
