@@ -1,6 +1,6 @@
 # Visualizing and monitoring sensor data with Grafana
 
-Sensor data sent from the Raspberry Pi is collected by [Elasticsearch](https://www.elastic.co/jp/elasticsearch/) and then visualized and monitored by [Grafana](https://grafana.com/grafana /) to visualize and monitor the data.
+Sensor data sent from the Raspberry Pi is collected by [Elasticsearch](https://www.elastic.co/jp/elasticsearch/) and then visualized and monitored by [Grafana](https://grafana.com/grafana/) to visualize and monitor the data.
 
 - [1. Configuration](#1-configuration)
   - [1.1. Version](#11-version)
@@ -26,7 +26,7 @@ Sensor data sent from the Raspberry Pi is collected by [Elasticsearch](https://w
   - [6.1. Deploying Materials](#61-deploying-materials)
   - [6.2. Parameter Settings](#62-parameter-settings)
   - [6.3. Running the Container](#63-running-the-container)
-  - [6.4. Viewing Dashboard](#64-viewing-the-dashboard)
+  - [6.4. Viewing the Dashboard](#64-viewing-the-dashboard)
   - [6.5. Sending Test Data](#65-sending-test-data)
 
 ## 1. Configuration
@@ -120,7 +120,7 @@ The following description assumes that you can execute `docker` commands without
 
 #### 2.1.2. Docker Compose
 
-Docker Compose](https://github.com/docker/compose) is used to manage multiple containers and container startup parameters in a configuration file.
+[Docker Compose](https://github.com/docker/compose) is used to manage multiple containers and container startup parameters in a configuration file.
 
 The installation procedure for Docker Compose is shown below. Here are the installation instructions for Docker Compose v2.
 
@@ -243,7 +243,7 @@ elasticsearch-elasticsearch-1   "/bin/tini -- /usr/l…"   elasticsearch       r
 
 Make sure that the STATUS is `running`.
 
-Elasticsearch will take a while to start; to check the status of Elasticsearch, use [Cluster health API](https://www.elastic.co/guide/en/elasticsearch/reference/7. 17/cluster-health.html). Run the following command and make sure the status is `green`.
+Elasticsearch will take a while to start; to check the status of Elasticsearch, use [Cluster health API](https://www.elastic.co/guide/en/elasticsearch/reference/7.17/cluster-health.html). Run the following command and make sure the status is `green`.
 
 ```console
 $ curl -s http://localhost:9200/_cluster/health?pretty
@@ -477,7 +477,7 @@ A dashboard [sensors] that displays data sent from the Raspberry Pi as a graph i
 
 The graphs displayed on the dashboard are added dynamically according to the sensor type sent from the Raspberry Pi. You can also change the sensor type to be displayed by using the `sensor` checklist displayed at the top of the dashboard. The default setting is `All`, which displays graphs for all sensor types.
 
-### 6.5. Sending test data
+### 6.5. Sending Test Data
 
 You can send test data to the Kafka broker by executing a test producer, which can be used to check the operation of Grafana or other server-side applications. For instructions on how to run the test program, please review the instructions noted in the following link.
 

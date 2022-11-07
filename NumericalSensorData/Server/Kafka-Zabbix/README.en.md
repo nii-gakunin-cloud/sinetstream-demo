@@ -114,7 +114,7 @@ The following description assumes that you can execute `docker` commands without
 
 #### 2.1.2. Docker Compose
 
-Docker Compose](https://github.com/docker/compose) is used to manage multiple containers and container startup parameters in a configuration file.
+[Docker Compose](https://github.com/docker/compose) is used to manage multiple containers and container startup parameters in a configuration file.
 
 The installation procedure for Docker Compose is shown below. Here are the installation instructions for Docker Compose v2.
 
@@ -424,7 +424,7 @@ Select `SINETStream connector` template and click [Select] button. The `SINETStr
 
 ![Zabbix Host List Screen 3](img/zabbix-026.png)
 
-### 4.4. Displaying sensor data
+### 4.4. Displaying Sensor Data
 
 Check the procedure for displaying sensor data.
 
