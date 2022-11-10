@@ -45,9 +45,9 @@ Raspberry Pi のOSには以下のものを想定します。
 
 画像の送信先となる Kafka ブローカが事前に利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを構築してください。
 
-* [VideoStreaming/Server/Kafka-OpenPose](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-OpenPose/README.md)
-* [VideoStreaming/Server/Kafka-YOLO](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-YOLO/README.md)
-* [option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.md)
+* [VideoStreaming/Server/Kafka-OpenPose](../Server/Kafka-OpenPose/README.md)
+* [VideoStreaming/Server/Kafka-YOLO](../Server/Kafka-YOLO/README.md)
+* [option/Server/Kafka](../../option/Server/Kafka/README.md)
 
 ### 1.3. カメラモジュール
 

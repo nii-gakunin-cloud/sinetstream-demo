@@ -191,7 +191,7 @@ $ ./ss-camera.py
 
 ## 4. 動作確認
 
-画像ストリームビューア[VideoViewer.py](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Viewer/README.md)を利用することでRaspberryPiから送信したカメラ画像を確認することができます。VideoViewer.pyが画像を読み込む対象とするトピック名には、ここでの構築環境で送信先に指定したトピック名（環境変数で指定した場合は`SS_TOPIC`に設定した値）を指定してください。
+画像ストリームビューア[VideoViewer.py](../../Viewer/README.md)を利用することでRaspberryPiから送信したカメラ画像を確認することができます。VideoViewer.pyが画像を読み込む対象とするトピック名には、ここでの構築環境で送信先に指定したトピック名（環境変数で指定した場合は`SS_TOPIC`に設定した値）を指定してください。
 
 ## 5. 付録
 
@@ -310,7 +310,7 @@ SS_MAX_REQUEST_SIZE=8388620
 
 Kafkaブローカが受け取るメッセージサイズの最大値を変更するためにプロパティ[message.max.bytes](https://kafka.apache.org/documentation/#brokerconfigs_message.max.bytes) を指定する必要があります。
 
-[option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.md)などでKafkaブローカを構築している場合、`docker-compose.yml`を配置したディレクトリにある `.env` でに環境変数`KAFKA_MESSAGE_MAX_BYTES`の指定を追加することで、これを設定できます。`.env`の記述例を以下に示します。
+[option/Server/Kafka](../../../option/Server/Kafka/README.md)などでKafkaブローカを構築している場合、`docker-compose.yml`を配置したディレクトリにある `.env` でに環境変数`KAFKA_MESSAGE_MAX_BYTES`の指定を追加することで、これを設定できます。`.env`の記述例を以下に示します。
 
 ```
 BROKER_HOSTNAME=kafka.example.org

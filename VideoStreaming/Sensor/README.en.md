@@ -45,9 +45,9 @@ The following OS for Raspberry Pi is assumed:
 
 The Kafka broker to which the images will be sent must be available in advance. Please build the Kafka broker with one of the following configurations.
 
-* [VideoStreaming/Server/Kafka-OpenPose](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-OpenPose/README.en.md)
-* [VideoStreaming/Server/Kafka-YOLO](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Server/Kafka-YOLO/README.en.md)
-* [option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.en.md)
+* [VideoStreaming/Server/Kafka-OpenPose](../Sensor/../Server/Kafka-OpenPose/README.en.md)
+* [VideoStreaming/Server/Kafka-YOLO](../Server/Kafka-YOLO/README.en.md)
+* [option/Server/Kafka](../../option/Server/Kafka/README.en.md)
 
 ### 1.3. Camera module
 

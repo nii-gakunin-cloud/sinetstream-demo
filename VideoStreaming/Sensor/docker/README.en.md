@@ -48,7 +48,7 @@ Place the `docker-compose.yml` file in this directory on your Raspberry Pi. Also
 
 ### 1.3. Host Name Resolution
 
-If a hostname is specified as the [address to advertise](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.en.md#32-broker_hostname) for the Kafka broker and DNS name resolution is not available, you will need to configure it by other means.
+If a hostname is specified as the [address to advertise](../../../option/Server/Kafka/README.en.md#32-broker_hostname) for the Kafka broker and DNS name resolution is not available, you will need to configure it by other means.
 
 Here is an example of using `extra_hosts` in `docker-compose.yml` to resolve the name of the Kafka broker in a container. Here we set `192.168.2.100` as the IP address of `kafka.example.org`.
 
@@ -204,7 +204,7 @@ In order to automatically start sending images when the RaspberryPi starts, `res
 
 ## 4. Check Operation
 
-Use the image stream viewer [VideoViewer.py](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Viewer/README.en.md). For the topic name that VideoViewer.py reads images from, specify the topic name in `SS_TOPIC` of the environment built here.
+Use the image stream viewer [VideoViewer.py](../../Viewer/README.en.md). For the topic name that VideoViewer.py reads images from, specify the topic name in `SS_TOPIC` of the environment built here.
 
 ## 5. Appendix
 
@@ -235,7 +235,7 @@ SS_MAX_REQUEST_SIZE=8388620
 
 To change the maximum message size that the Kafka broker will receive, the property [message.max.bytes](https://kafka.apache.org/documentation/#brokerconfigs_message.max.bytes) must be specified.
 
-If you have built your Kafka broker with [option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.en.md) or similar, you can set this by adding the `.env` environment variable `KAFKA_MESSAGE_MAX_BYTES` in the directory where you have placed `docker-compose.yml`. An example of `.env` description is shown below.
+If you have built your Kafka broker with [option/Server/Kafka](../../../option/Server/Kafka/README.en.md) or similar, you can set this by adding the `.env` environment variable `KAFKA_MESSAGE_MAX_BYTES` in the directory where you have placed `docker-compose.yml`. An example of `.env` description is shown below.
 
 ```
 BROKER_HOSTNAME=kafka.example.org

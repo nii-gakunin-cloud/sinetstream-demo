@@ -48,7 +48,7 @@ https://docs.docker.com/compose/install/compose-plugin/
 
 ### 1.3. ホスト名の名前解決
 
-Kafkaブローカの[advertise するアドレス](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.md#32-broker_hostname)としてホスト名が指定され、かつDNSによる名前解決ができない場合、他の手段で設定を行う必要があります。
+Kafkaブローカの[advertise するアドレス](../../../option/Server/Kafka/README.md#32-broker_hostname)としてホスト名が指定され、かつDNSによる名前解決ができない場合、他の手段で設定を行う必要があります。
 
 `docker-compose.yml` の`extra_hosts`を利用してコンテナにおけるKafkaブローカの名前解決を行う例を以下に示します。ここでは`kafka.example.org`のIPアドレスとして `192.168.2.100` を設定します。
 
@@ -204,7 +204,7 @@ RaspberryPi起動時に自動的に画像送信を開始するために`docker-c
 
 ## 4. 動作確認
 
-画像ストリームビューア[VideoViewer.py](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/VideoStreaming/Viewer/README.md)を利用することでRaspberryPiから送信したカメラ画像を確認することができます。VideoViewer.pyが画像を読み込む対象とするトピック名には、ここで構築した環境の`SS_TOPIC`に指定したトピック名を指定してください。
+画像ストリームビューア[VideoViewer.py](../../Viewer/README.md)を利用することでRaspberryPiから送信したカメラ画像を確認することができます。VideoViewer.pyが画像を読み込む対象とするトピック名には、ここで構築した環境の`SS_TOPIC`に指定したトピック名を指定してください。
 
 ## 5. 付録
 
@@ -235,7 +235,7 @@ SS_MAX_REQUEST_SIZE=8388620
 
 Kafkaブローカが受け取るメッセージサイズの最大値を変更するためにプロパティ[message.max.bytes](https://kafka.apache.org/documentation/#brokerconfigs_message.max.bytes) を指定する必要があります。
 
-[option/Server/Kafka](https://gitlab.vcp-handson.org/niidp/sinetstream-demo/-/blob/main/option/Server/Kafka/README.md)などでKafkaブローカを構築している場合、`docker-compose.yml`を配置したディレクトリにある `.env` でに環境変数`KAFKA_MESSAGE_MAX_BYTES`の指定を追加することで、これを設定できます。`.env`の記述例を以下に示します。
+[option/Server/Kafka](../../../option/Server/Kafka/README.md)などでKafkaブローカを構築している場合、`docker-compose.yml`を配置したディレクトリにある `.env` でに環境変数`KAFKA_MESSAGE_MAX_BYTES`の指定を追加することで、これを設定できます。`.env`の記述例を以下に示します。
 
 ```
 BROKER_HOSTNAME=kafka.example.org
