@@ -1,0 +1,8 @@
+UID={{ uid }}
+GID={{ gid }}
+{%- if postgres is defined and postgres.url is defined %}
+PG_URL={{ postgres.url }}
+{%- endif %}
+{%- if kafka is defined and kafka.hostname is defined %}
+KAFKA_HOSTNAME={{ kafka.hostname }}
+{%- endif %}

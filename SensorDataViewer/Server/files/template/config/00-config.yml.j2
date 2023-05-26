@@ -1,0 +1,7 @@
+target:
+  - {{ new_target }}
+{%- if "target" is defined %}
+{%- for it in target %}
+  - {{ it }}
+{%- endfor%}
+{%- endif %}

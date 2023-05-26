@@ -1,0 +1,7 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AndroidSensorsForm.svelt > lte switch 1`] = `"<label class=\\"switch icon s-0aZZ0OQmx-Dz\\"><input type=\\"checkbox\\" name=\\"android.lte\\" aria-label=\\"lte chart switch\\" class=\\"s-0aZZ0OQmx-Dz\\"> <span class=\\"s-0aZZ0OQmx-Dz\\"><i class=\\"s-0aZZ0OQmx-Dz\\">signal_cellular_alt</i></span> <div class=\\"tooltip s-0aZZ0OQmx-Dz\\">LTE chart</div></label>"`;
+
+exports[`AndroidSensorsForm.svelt > map switch 1`] = `"<label class=\\"switch icon s-0aZZ0OQmx-Dz\\"><input type=\\"checkbox\\" name=\\"android.map\\" aria-label=\\"map pane switch\\" class=\\"s-0aZZ0OQmx-Dz\\"> <span class=\\"s-0aZZ0OQmx-Dz\\"><i class=\\"s-0aZZ0OQmx-Dz\\">map</i></span> <div class=\\"tooltip s-0aZZ0OQmx-Dz\\">map pane</div></label>"`;
+
+exports[`AndroidSensorsForm.svelt > publisher 1`] = `"<div class=\\"field label s-0aZZ0OQmx-Dz\\"><input type=\\"text\\" name=\\"android.publisher\\" id=\\"publisher\\" class=\\"s-0aZZ0OQmx-Dz\\"> <label for=\\"publisher\\" class=\\"s-0aZZ0OQmx-Dz\\">publisher</label> <span class=\\"error s-0aZZ0OQmx-Dz\\"></span></div>"`;

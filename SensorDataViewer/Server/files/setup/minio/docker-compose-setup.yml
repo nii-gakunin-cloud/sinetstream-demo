@@ -1,0 +1,19 @@
+services:
+  mc:
+    image: quay.io/minio/mc
+    entrypoint: ['']
+    tty: true
+    command: /setup-minio.sh
+    network_mode: host
+    volumes:
+      - ./setup-minio.sh:/setup-minio.sh
+    secrets:
+      - source: MINIO_CONFIG
+        target: /etc/config.env
+    environment:
+      MINIO_PORT: ${MINIO_PORT:-9000}
+      BUCKET_NAME: ${BUCKET_NAME}
+
+secrets:
+  MINIO_CONFIG:
+    file: ${target_dir}/secrets/MINIO_CONFIG

@@ -1,0 +1,3 @@
+table:
+  name: step_counter
+  schema: public

@@ -1,0 +1,3 @@
+table:
+  name: sensor_types
+  schema: public

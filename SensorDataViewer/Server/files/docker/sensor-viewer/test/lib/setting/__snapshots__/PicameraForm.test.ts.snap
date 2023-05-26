@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PicameraForm.svelt > name 1`] = `"<div class=\\"field label s-w2M-6FE5mMvr\\"><input type=\\"text\\" name=\\"image.topic\\" id=\\"image-topic\\" class=\\"s-w2M-6FE5mMvr\\"> <label for=\\"image-topic\\" class=\\"s-w2M-6FE5mMvr\\">image topic name</label> <span class=\\"error s-w2M-6FE5mMvr\\"></span></div>"`;
+
+exports[`PicameraForm.svelt > switch 1`] = `"<label class=\\"switch icon s-w2M-6FE5mMvr\\"><input type=\\"checkbox\\" name=\\"image.visible\\" aria-label=\\"image pane switch\\" class=\\"s-w2M-6FE5mMvr\\"> <span class=\\"s-w2M-6FE5mMvr\\"><i class=\\"s-w2M-6FE5mMvr\\">image</i></span> <div class=\\"tooltip s-w2M-6FE5mMvr\\">image pane</div></label>"`;
+
+exports[`PicameraForm.svelt > update method 1`] = `"<label class=\\"radio s-w2M-6FE5mMvr\\"><input type=\\"radio\\" name=\\"image.update\\" value=\\"push\\" aria-label=\\"radio push\\" class=\\"s-w2M-6FE5mMvr\\"> <span class=\\"s-w2M-6FE5mMvr\\">push</span></label>"`;
+
+exports[`PicameraForm.svelt > update method 2`] = `"<label class=\\"radio s-w2M-6FE5mMvr\\"><input type=\\"radio\\" name=\\"image.update\\" value=\\"polling\\" aria-label=\\"radio polling\\" class=\\"s-w2M-6FE5mMvr\\"> <span class=\\"s-w2M-6FE5mMvr\\">polling</span></label>"`;

@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SubItemLabel.svelt > check 1`] = `"<body><div><div class=\\"row\\"><div></div> <div><i>check_circle</i></div> <div>default slot</div></div><!--<SubItemLabel>--><!--<ItemContextTest>--></div></body>"`;
+
+exports[`SubItemLabel.svelt > slot 1`] = `"<body><div><div class=\\"row\\"><div></div> <div><i>check_circle</i></div> <div>child value</div></div><!--<SubItemLabel>--><!--<ItemContextTest>--></div></body>"`;
+
+exports[`SubItemLabel.svelt > uncheck 1`] = `"<body><div><div class=\\"row\\"><div></div> <div><i>unpublished</i></div> <div>default slot</div></div><!--<SubItemLabel>--><!--<ItemContextTest>--></div></body>"`;
+
+exports[`SubItemLabel.svelt > value 1`] = `"<body><div><div class=\\"row\\"><div></div> <div><i>check_circle</i></div> <div>default slot: \\"child value\\"</div></div><!--<SubItemLabel>--><!--<ItemContextTest>--></div></body>"`;

@@ -1,0 +1,3 @@
+table:
+  name: linear_acceleration_30sec
+  schema: public

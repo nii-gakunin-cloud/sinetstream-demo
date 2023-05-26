@@ -1,0 +1,20 @@
+services:
+  perftool:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/perftool:0.2.4
+    restart: on-failure:5
+    env_file: .env.perftool
+    command: -U /run/perftool/socket
+    volumes:
+      - ./perftool:/run/perftool
+  picamera:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.2.3
+    privileged: true
+    volumes:
+      - /dev:/dev
+      - /run/udev:/run/udev
+      - ./perftool:/run/perftool
+    restart: on-failure:5
+    env_file: .env.picamera
+    command: -U /run/perftool/socket -S
+    depends_on:
+      - perftool

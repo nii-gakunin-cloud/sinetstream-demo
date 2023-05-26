@@ -1,0 +1,3 @@
+table:
+  name: rotation_vector
+  schema: public

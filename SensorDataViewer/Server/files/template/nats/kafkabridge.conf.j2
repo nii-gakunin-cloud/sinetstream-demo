@@ -1,0 +1,16 @@
+nats: {
+  Servers: ["nats:4222"],
+}
+
+jetstream: {
+  maxwait: 5000,
+}
+
+connect: [
+  {
+    type: "NATSToKafka",
+    brokers: ["kafka:19092"]
+    topic: "{{ android.topic.sensor_data }}",
+    subject: "{{ android.topic.sensor_data }}",
+  }
+]

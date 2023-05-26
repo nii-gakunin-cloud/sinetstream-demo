@@ -1,0 +1,3 @@
+table:
+  name: viewer_config
+  schema: public

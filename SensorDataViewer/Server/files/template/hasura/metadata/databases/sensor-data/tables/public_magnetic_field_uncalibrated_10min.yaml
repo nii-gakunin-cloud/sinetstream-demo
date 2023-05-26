@@ -1,0 +1,3 @@
+table:
+  name: magnetic_field_uncalibrated_10min
+  schema: public

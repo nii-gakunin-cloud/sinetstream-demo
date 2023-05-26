@@ -1,0 +1,3 @@
+table:
+  name: gyroscope_uncalibrated_2min
+  schema: public

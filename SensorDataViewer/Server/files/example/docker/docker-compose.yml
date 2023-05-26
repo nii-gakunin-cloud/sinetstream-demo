@@ -1,0 +1,176 @@
+services:
+  nats:
+    image: nats:2.9.17
+    restart: always
+    ports:
+      - ${MQTT_PORT:-1883}:1883
+    volumes:
+      - ./conf/nats/nats-server.conf:/nats-server.conf
+  nats-kafka:
+    image: natsio/nats-kafka:1.3.0
+    restart: always
+    command: -c /conf/kafkabridge.conf
+    volumes:
+      - ./conf/nats/kafkabridge.conf:/conf/kafkabridge.conf
+    depends_on:
+      kafka:
+        condition: service_healthy
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    restart: always
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+      - kafka-secrets:/var/lib/kafka/secrets
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:19092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+    depends_on:
+      zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: nc -z localhost 19092 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    restart: always
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-log:/var/lib/zookeeper/log
+      - zookeeper-secrets:/var/lib/zookeeper/secrets
+    environment:
+      ZOOKEEPER_CLIENT_PORT: "2181"
+      KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
+    healthcheck:
+      test: echo ruok | nc localhost 2181 || exit -1
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  minio:
+    image: quay.io/minio/minio:RELEASE.2023-05-18T00-05-36Z
+    restart: always
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./data/minio:/data
+    ports:
+      - ${MINIO_PORT:-9000}:9000
+      - ${MINIO_CONSOLE_PORT:-9090}:9090
+    command: server /data --console-address ":9090"
+    environment:
+      MINIO_CONFIG_ENV_FILE: /etc/config.env
+    secrets:
+      - source: MINIO_CONFIG
+        target: /etc/config.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+  thumbnail:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/picamera-thumbnail:0.1.6
+    environment:
+      TOPIC: minio-sinetstream-picamera
+    secrets:
+      - MINIO_CONFIG
+    depends_on:
+      kafka:
+        condition: service_healthy
+  postgres:
+    image: timescale/timescaledb:2.11.0-pg15-oss
+    restart: always
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - /etc/passwd:/etc/passwd:ro
+      - ./init/sql/create_table.sql:/docker-entrypoint-initdb.d/020_create_table.sql:ro
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB_FILE: /run/secrets/POSTGRES_DB
+      POSTGRES_USER_FILE: /run/secrets/POSTGRES_USER
+      POSTGRES_PASSWORD_FILE: /run/secrets/POSTGRES_PASSWORD
+    secrets:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+    healthcheck:
+      test: pg_isready -U $(cat $$POSTGRES_USER_FILE) -d $(cat $$POSTGRES_DB_FILE)
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  kafka-connect:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.1.0
+    restart: always
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: kafka:19092
+      CONNECT_GROUP_ID: connect-cluster
+      CONNECT_CONFIG_STORAGE_TOPIC: connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: connect-status
+      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: '1'
+      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: '1'
+      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: '1'
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.converters.ByteArrayConverter
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_REST_PORT: 8083
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components
+    ports:
+      - ${KAFKA_CONNECT_PORT:-8083}:8083
+    depends_on:
+      kafka:
+        condition: service_healthy
+  graphql:
+    image: hasura/graphql-engine:v2.25.1-ce.cli-migrations-v3
+    restart: always
+    volumes:
+      - ./init/hasura:/hasura-metadata
+    environment:
+      PG_DATABASE_URL: ${PG_URL}
+      HASURA_GRAPHQL_METADATA_DATABASE_URL: ${PG_URL}
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+#     HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+#   ports:
+#     - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+  nginx:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.1
+    ports:
+      - "443:443"
+    restart: always
+    volumes:
+      - ./conf/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    secrets:
+      - source: CERT_FILE
+        target: /etc/nginx/certs/server.crt
+      - source: CERT_KEY
+        target: /etc/nginx/certs/server.key
+    depends_on:
+      graphql:
+        condition: service_healthy
+
+secrets:
+  MINIO_CONFIG:
+    file: ./secrets/MINIO_CONFIG
+  POSTGRES_DB:
+    file: ./secrets/POSTGRES_DB
+  POSTGRES_USER:
+    file: ./secrets/POSTGRES_USER
+  POSTGRES_PASSWORD:
+    file: ./secrets/POSTGRES_PASSWORD
+  CERT_FILE:
+    file: ./secrets/CERT_FILE
+  CERT_KEY:
+    file: ./secrets/CERT_KEY
+
+volumes:
+  zookeeper-data:
+  zookeeper-log:
+  zookeeper-secrets:
+  kafka-data:
+  kafka-secrets:
+  

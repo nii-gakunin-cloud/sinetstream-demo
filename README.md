@@ -28,6 +28,17 @@ Demo package for SINETStream
     * Viewer<br>
     SINETStreamライブラリを利用してサーバ(Kafkaブローカ)の画像をクライアントで表示する Pythonプログラムと実行手順を示します。
 
+* [sensor data viewer](SensorDataViewer/README.md)
+  * Android端末、Raspberry Piから収集したセンサーデータ、位置情報、カメラ画像などを可視化するIoTシステムを構築することができます。
+    * Sensor
+      * Android
+        * アンドロイド端末に搭載されているセンサーのデータや位置情報、電波強度などをサーバに送信する手順を示します。
+      * Raspberry Pi
+        * カメラモジュールで撮影したデータを送信する手順と資材を提供します。
+        * Perftoolの性能測定結果を送信する手順と資材を提供します。
+    * Server
+      * ブローカに送信されたデータを可視化するサーバを構築する手順と資材を提供します。
+
 * [option](option/README.md)
   * 本パッケージの任意の設定項目やテストツールなどに関する手順書と資材です。
     * Server<br>

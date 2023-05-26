@@ -1,0 +1,5 @@
+picamera:
+  topic:
+{%- for topic in picamera_topics.split(",") %}
+    - {{ topic | trim }}
+{%- endfor %}

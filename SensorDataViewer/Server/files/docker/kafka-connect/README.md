@@ -1,0 +1,3 @@
+# SINETStream S3 Connect Container
+
+SINETStreamのメッセージからメッセージ本体(msg)だけをオブジェクトストレージに保存するKafkaコネクタのコンテナイメージ

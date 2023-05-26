@@ -1,0 +1,3 @@
+table:
+  name: ambient_temperature_1min
+  schema: public

@@ -1,0 +1,35 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ErrorToast.svelt > message 1`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > position > bottom 1`] = `"<body><div><div class=\\"toast pink white-text active\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > position > bottom->top 1`] = `"<body><div><div class=\\"toast pink white-text active\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > position > bottom->top 2`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > position > top 1`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > position > top->bottom 1`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > position > top->bottom 2`] = `"<body><div><div class=\\"toast pink white-text active\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > default timeout 1`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > default timeout 2`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > default timeout 3`] = `"<body><div><div class=\\"toast pink white-text top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > disable timeout 1`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > disable timeout 2`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > disable timeout 3`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > timeout 10sec 1`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > timeout 10sec 2`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > timeout 10sec 3`] = `"<body><div><div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;
+
+exports[`ErrorToast.svelt > timeout > timeout 10sec 4`] = `"<body><div><div class=\\"toast pink white-text top\\" aria-label=\\"error-toast\\"><i>error</i> <span>error message</span></div><!--<ErrorToast>--></div></body>"`;

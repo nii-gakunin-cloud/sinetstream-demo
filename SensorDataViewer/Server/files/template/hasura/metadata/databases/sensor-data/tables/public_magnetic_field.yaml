@@ -1,0 +1,3 @@
+table:
+  name: magnetic_field
+  schema: public

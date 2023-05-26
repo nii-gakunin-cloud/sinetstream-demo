@@ -1,0 +1,3 @@
+table:
+  name: gyroscope
+  schema: public

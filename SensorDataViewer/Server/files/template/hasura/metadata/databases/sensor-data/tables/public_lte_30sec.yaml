@@ -1,0 +1,3 @@
+table:
+  name: lte_30sec
+  schema: public

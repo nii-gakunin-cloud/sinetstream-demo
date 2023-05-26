@@ -1,0 +1,3 @@
+table:
+  name: geomagnetic_rotation_vector_1min
+  schema: public

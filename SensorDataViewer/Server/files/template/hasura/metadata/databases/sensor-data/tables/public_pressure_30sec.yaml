@@ -1,0 +1,3 @@
+table:
+  name: pressure_30sec
+  schema: public

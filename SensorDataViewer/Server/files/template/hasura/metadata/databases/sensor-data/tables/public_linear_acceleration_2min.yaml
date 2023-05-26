@@ -1,0 +1,3 @@
+table:
+  name: linear_acceleration_2min
+  schema: public

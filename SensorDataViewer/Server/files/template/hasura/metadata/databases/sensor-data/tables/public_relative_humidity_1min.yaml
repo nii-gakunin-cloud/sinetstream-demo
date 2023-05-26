@@ -1,0 +1,3 @@
+table:
+  name: relative_humidity_1min
+  schema: public

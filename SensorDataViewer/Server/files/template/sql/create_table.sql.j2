@@ -1,0 +1,443 @@
+{%- if "android" in target %}
+CREATE TABLE IF NOT EXISTS "{{ mqtt.topic.sensor_data }}" (
+  tstamp timestamp with time zone NOT NULL,
+  msg jsonb
+);
+SELECT create_hypertable('{{ mqtt.topic.sensor_data }}', 'tstamp', if_not_exists => TRUE);
+CREATE INDEX IF NOT EXISTS "{{ mqtt.topic.sensor_data }}_msg_idx" ON "{{ mqtt.topic.sensor_data }}" USING gin (msg);
+
+{% if database.sensors == "table" %}
+{% for sensor in sensors %}
+CREATE TABLE IF NOT EXISTS {{ sensor.type }} (
+  "timestamp" timestamp with time zone NOT NULL,
+{%- if "values" in sensor %}
+{%- for value in sensor["values"] %}
+  {{ value.name }} {{ value.type }},
+{%- endfor %}
+{%- elif "value" in sensor %}
+  value {{ sensor["value"] }},
+{%- else %}
+  x real,
+  y real,
+  z real,
+{%- endif %}
+  publisher text
+);
+SELECT create_hypertable('{{ sensor.type }}', 'timestamp', if_not_exists => TRUE);
+{% endfor %}
+
+{%- for sensor in ext_sensors %}
+{%- if sensor.table == mqtt.topic.sensor_data %}
+CREATE TABLE IF NOT EXISTS {{ sensor.type }} (
+  "timestamp" timestamp with time zone NOT NULL, {% for value in sensor["values"] %}
+{%- if "name" in value %}
+  "{{ value.name }}" 
+{%- else %}
+  "{{ value.path[-1] }}" 
+{%- endif %} {% if "type" in value -%} {{ value.type }},{% else -%} real,{% endif -%}
+{%- endfor %}
+  "publisher" text
+);
+SELECT create_hypertable('{{ sensor.type }}', 'timestamp', if_not_exists => TRUE);
+{%- endif %}
+{% endfor %}
+
+CREATE OR REPLACE FUNCTION propagete_sensor_type() RETURNS trigger AS $propagete_sensor_type$
+DECLARE
+  publisher text;
+  ts timestamp with time zone;
+  val real;
+  skip boolean := TRUE;
+{% for sensor in sensors %}
+  {{ sensor.type }}_jsonpath jsonpath := '$."sensors"[*]?(@."type" == "{{ sensor.type }}")';
+{%- endfor %}
+{% for sensor in ext_sensors %}
+{%- if sensor.table == mqtt.topic.sensor_data %}
+  {{ sensor.type }}_jsonpath jsonpath := '{{ sensor.jsonpath }}';
+{%- endif %}
+{%- endfor %}
+BEGIN
+  publisher := NEW.msg #>> '{device,userinfo,publisher}'::text[];
+  ts := NEW.tstamp;
+{% for sensor in sensors %}
+  IF NEW.msg @? {{ sensor.type }}_jsonpath THEN
+    INSERT INTO {{ sensor.type }} SELECT
+      ts AS "timestamp",
+{%- if "values" in sensor %}
+{%- for value in sensor["values"] %}
+      (r."values" -> {{ value.index }})::{{ value.type }} AS {{ value.name }},
+{%- endfor %}
+{%- elif "value" in sensor %}
+      r."value",
+{%- else %}
+      (r."values" -> 0)::real AS x,
+      (r."values" -> 1)::real AS y,
+      (r."values" -> 2)::real AS z,
+{%- endif %}
+      publisher AS publisher
+    FROM jsonb_to_recordset(jsonb_path_query_array(NEW.msg, {{ sensor.type }}_jsonpath)) r
+{%- if "value" in sensor %}
+      ("value" {{ sensor["value"] }});
+{%- else %}
+      ("values" jsonb);
+{%- endif %}
+  END IF;
+{% endfor %}
+{% for sensor in ext_sensors %}
+{%- if sensor.table == mqtt.topic.sensor_data %}
+  IF NEW.msg @? {{ sensor.type }}_jsonpath THEN
+    <<check>>
+    BEGIN
+{%- for value in sensor["values"] %}
+        val := (NEW.msg #>> '{
+{%- for item in value["path"] -%}
+                {{ item }} {%- if not loop.last -%} , {%- endif -%}
+{%- endfor -%}
+            }'::text[])::real;
+        IF val IS NOT NULL THEN
+            skip := FALSE;
+            EXIT check;
+        END IF;
+{%- endfor %}
+    END;
+    IF NOT skip THEN
+        INSERT INTO {{ sensor.type }} SELECT
+            ts AS "timestamp",
+{%- for value in sensor["values"] %}
+            (NEW.msg #>> '{
+{%- for item in value["path"] -%}
+                {{ item }} {%- if not loop.last -%} , {%- endif -%}
+{%- endfor -%}
+            }'::text[])::real AS {% if "name" in value -%} "{{ value["name"] }}", {%- else -%} {{ value["path"][-1] }}, {%- endif -%}
+{%- endfor %}
+            publisher AS publisher;
+    END IF;
+  END IF;
+{%- endif %}
+{% endfor %}
+  RETURN NEW;
+END;
+$propagete_sensor_type$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER propagete_sensor_type AFTER INSERT ON "{{ mqtt.topic.sensor_data}}"
+  FOR EACH ROW EXECUTE FUNCTION propagete_sensor_type();
+{% else %}
+{% for sensor in sensors %}
+DROP VIEW IF EXISTS {{ sensor.type }} CASCADE;
+CREATE VIEW {{ sensor.type }} AS
+SELECT
+    s."timestamp",
+{%- if "values" in sensor %}
+{%- for value in sensor["values"] %}
+    (r."values" -> {{ value.index }})::{{ value.type }} AS {{ value.name }},
+{%- endfor %}
+{%- elif "value" in sensor %}
+    r."value",
+{%- else %}
+    (r."values" -> 0)::real AS x,
+    (r."values" -> 1)::real AS y,
+    (r."values" -> 2)::real AS z,
+{%- endif %}
+    s.publisher
+FROM (
+    SELECT
+        jsonb_path_query_array(j.msg, '$."sensors"[*]?(@."type" == "{{ sensor.type }}")'::jsonpath) AS data,
+        j.tstamp AS "timestamp",
+        (j.msg #>> '{device,userinfo,publisher}'::text[]) AS publisher
+    FROM "{{ mqtt.topic.sensor_data }}" AS j
+    WHERE (j.msg @? '$."sensors"[*]?(@."type" == "{{ sensor.type }}")'::jsonpath)
+) s,
+{%- if "value" in sensor %}
+LATERAL jsonb_to_recordset(s.data) r ("value" {{ sensor["value"] }}, "timestamp" timestamp with time zone);
+{%- else %}
+LATERAL jsonb_to_recordset(s.data) r ("values" jsonb, "timestamp" timestamp with time zone);
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+
+{% for sensor in sensors %}
+{% for item in time_range %}
+DROP VIEW IF EXISTS {{ sensor.type }}_{{ item.suffix }};
+CREATE VIEW {{ sensor.type }}_{{ item.suffix }} AS
+SELECT
+    time_bucket ('{{ item.interval }}'::interval, s."timestamp") AS "timestamp",
+{%- if "values" in sensor %}
+{%- for value in sensor["values"] %}
+    first(s.{{ value.name}}, s."timestamp") AS {{ value.name }},
+{%- endfor %}
+{%- elif "value" in sensor %}
+    avg(s."value") AS value,
+{%- else %}
+    first(s.x, s."timestamp") AS x,
+    first(s.y, s."timestamp") AS y,
+    first(s.z, s."timestamp") AS z,
+{%- endif %}
+    s.publisher
+FROM {{ sensor.type }} AS s
+GROUP BY time_bucket('{{ item.interval }}'::interval, s."timestamp"), s.publisher;
+{% endfor %}
+{% endfor %}
+
+DROP VIEW IF EXISTS sensor_types;
+CREATE VIEW sensor_types AS
+SELECT
+    value
+FROM (
+    SELECT
+        jsonb_path_query_array(t.msg, '$."sensors"[*].type'::jsonpath) AS data
+    FROM
+        "{{ mqtt.topic.sensor_data }}" AS t) AS s,
+    LATERAL jsonb_array_elements_text(s.data) AS value
+GROUP BY
+    value;
+{% endif %}
+
+{%- if "perftool" in target %}
+CREATE TABLE IF NOT EXISTS "{{ kafka.topic.perftool }}" (
+  tstamp timestamp with time zone NOT NULL,
+  msg jsonb
+);
+SELECT create_hypertable ('{{ kafka.topic.perftool }}', 'tstamp', if_not_exists => TRUE);
+CREATE INDEX IF NOT EXISTS "{{ kafka.topic.perftool }}_msg_idx" ON "{{ kafka.topic.perftool }}" USING gin (msg);
+
+{% if database.sensors == "table" %}
+{%- for sensor in ext_sensors %}
+{%- if sensor.table == kafka.topic.perftool %}
+CREATE TABLE IF NOT EXISTS {{ sensor.type }} (
+  "timestamp" timestamp with time zone NOT NULL, {% for value in sensor["values"] %}
+{%- if "name" in value %}
+  "{{ value.name }}" 
+{%- else %}
+  "{{ value.path[-1] }}" 
+{%- endif %} {% if "type" in value -%} {{ value.type }},{% else -%} real,{% endif -%}
+{%- endfor %}
+  "publisher" text
+);
+SELECT create_hypertable('{{ sensor.type }}', 'timestamp', if_not_exists => TRUE);
+{%- endif %}
+{% endfor %}
+
+CREATE OR REPLACE FUNCTION propagete_perftool() RETURNS trigger AS $propagete_perftool$
+DECLARE
+  publisher text;
+  ts timestamp with time zone;
+BEGIN
+    ts := NEW.tstamp;
+{% for sensor in ext_sensors %}
+{%- if sensor.table == kafka.topic.perftool %}
+    publisher := NEW.msg #>> '{
+{%- for item in sensor.publisher -%}
+        {{ item }} {%- if not loop.last -%} , {%- endif -%}
+{%- endfor -%}
+    }'::text[];
+    INSERT INTO {{ sensor.type }} SELECT
+        ts AS "timestamp",
+{%- for value in sensor["values"] %}
+        (NEW.msg #>> '{
+{%- for item in value["path"] -%}
+            {{ item }} {%- if not loop.last -%} , {%- endif -%}
+{%- endfor -%}
+        }'::text[])::real AS {% if "name" in value -%} "{{ value["name"] }}", {%- else -%} {{ value["path"][-1] }}, {%- endif -%}
+{%- endfor %}
+        publisher AS publisher;
+{%- endif %}
+{% endfor %}
+    RETURN NEW;
+END;
+$propagete_perftool$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER propagete_perftool AFTER INSERT ON "{{ kafka.topic.perftool }}"
+  FOR EACH ROW EXECUTE FUNCTION propagete_perftool();
+{%- endif %}
+{%- endif %}
+
+{%- if "android" in target or "perftool" in target %}
+{% for sensor in ext_sensors %}
+{% if database.sensors == "view" %}
+DROP VIEW IF EXISTS {{ sensor.type }} CASCADE;
+CREATE VIEW {{ sensor.type }} AS SELECT DISTINCT ON (timestamp, publisher)
+    *
+FROM (
+    SELECT
+        j.tstamp AS "timestamp",
+{%- for value in sensor["values"] %}
+        (j.msg #>> '{
+{%- for item in value["path"] -%}
+            {{ item }}
+{%- if not loop.last -%}
+            ,
+{%- endif -%}
+{%- endfor -%}
+        }'::text[])::real AS {% if "name" in value -%}
+        "{{ value["name"] }}",
+{%- else -%}
+        {{ value["path"][-1] }},
+{%- endif -%}
+{%- endfor %}
+        (j.msg #>> '{
+{%- for item in sensor["publisher"] -%}
+            {{ item }}
+{%- if not loop.last -%}
+            ,
+{%- endif -%}
+{%- endfor -%}
+        }'::text[]) AS publisher
+    FROM
+        "{{ sensor.table }}" AS j
+) AS x
+WHERE "timestamp" IS NOT NULL
+ORDER BY "timestamp", publisher;
+{% endif %}
+
+{% for item in time_range %}
+DROP VIEW IF EXISTS {{ sensor.type }}_{{ item.suffix }};
+CREATE VIEW {{ sensor.type }}_{{ item.suffix }} AS
+SELECT
+    time_bucket('{{ item.interval }}'::interval, s."timestamp") AS "timestamp",
+{%- for value in sensor["values"] %}
+{%- if "name" in value %}
+    {{ sensor["function"]["name"] }}(s.{{ value["name"] }}
+{%- if "args" in sensor["function"] -%}
+{%- for arg in sensor["function"]["args"] -%}
+        , s."{{arg}}"
+{%- endfor %}
+{%- endif -%}
+    ) AS {{ value["name"] }},
+{%- else %}
+    {{ sensor["function"]["name"] }}(s.{{ value["path"][-1] }}
+{%- if "args" in sensor["function"] -%}
+{%- for arg in sensor["function"]["args"] -%}
+        , s."{{arg}}"
+{%- endfor %}
+{%- endif -%}
+    ) AS {{ value["path"][-1] }},
+{%- endif %}
+{%- endfor %}
+    s.publisher
+FROM
+    {{ sensor.type }} AS s
+GROUP BY
+    time_bucket('{{ item.interval }}'::interval, s."timestamp"),
+    s.publisher;
+{% endfor %}
+{% endfor %}
+{%- endif %}
+
+{%- if "picamera" in target %}
+CREATE TABLE IF NOT EXISTS "{{ minio.event.table }}" (
+  key character varying NOT NULL,
+  value jsonb,
+  PRIMARY KEY (key)
+);
+CREATE INDEX IF NOT EXISTS "{{ minio.event.table }}_value_idx" ON "{{ minio.event.table }}" USING gin (value);
+
+{% if database.sensors == "view" %}
+DROP VIEW "{{ minio.etag.table }}";
+CREATE VIEW "{{ minio.etag.table }}" AS
+    SELECT
+        (({{ minio.event.table }}.value #>> '{Records,0,s3,object,eTag}'::text[]))::text AS "etag",
+        {{ minio.event.table }}.key AS path
+    FROM
+        {{ minio.event.table }}
+    WHERE split_part(({{ minio.event.table }}.key)::text, '/'::text, 2) = 'topics'::text;
+{% else %}
+CREATE TABLE IF NOT EXISTS "{{ minio.etag.table }}" (
+    "path" character varying NOT NULL,
+    etag text
+);
+
+CREATE OR REPLACE FUNCTION propagete_picamera() RETURNS trigger AS $propagete_picamera$
+BEGIN
+    INSERT INTO "{{ minio.etag.table }}" VALUES (NEW.key, (NEW.value #>> '{Records,0,s3,object,eTag}'::text[])::text);
+    RETURN NEW;
+END;
+$propagete_picamera$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE TRIGGER propagete_picamera AFTER INSERT ON "{{ minio.event.table }}"
+    FOR EACH ROW EXECUTE FUNCTION propagete_picamera();
+{% endif %}
+
+{% for topic in kafka.topic.picamera %}
+CREATE TABLE IF NOT EXISTS "{{ topic }}" (
+  tstamp timestamp with time zone NOT NULL,
+  etag text
+);
+{% endfor %}
+
+DROP VIEW IF EXISTS picamera;
+CREATE VIEW picamera AS
+SELECT
+    (z.tstamp)::timestamp with time zone AS "timestamp",
+    split_part((x.path)::text, '/'::text, 3) AS topic,
+    x.path
+FROM "{{ minio.etag.table }}" AS x
+JOIN 
+{%- if kafka.topic.picamera | length == 1 %}
+"{{ kafka.topic.picamera[0] }}" z 
+{%- else %}
+(
+{%- for topic in kafka.topic.picamera %}
+    SELECT * FROM "{{ topic }}" {% if not loop.last %}UNION ALL{% endif %}
+{%- endfor %}
+) z
+{%- endif %}
+ON x.etag = z.etag
+ORDER BY z.tstamp;
+{%- endif %}
+
+CREATE TABLE IF NOT EXISTS viewer_config (
+    id SERIAL PRIMARY KEY,
+    name text UNIQUE NOT NULL,
+    comment text,
+    config jsonb NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS viewer_config_config_key ON viewer_config USING gin(config);
+
+{% if "picamera" in target %}
+{% set kafka_topics = kafka.topic.picamera %}
+{% else %}
+{% set kafka_topics = [''] %}
+{% endif %}
+{% for topic in kafka_topics %}
+INSERT INTO viewer_config (name,config) VALUES ('default{%- if not loop.first -%}{{ loop.index }}{%- endif -%}', '{
+    "android": {
+{%- if "android" in target %}
+        "lte": true,
+        "map": true,
+        "sensor": [
+            "gravity",
+            "light"
+        ],
+        "publisher": "{{ viewer_setting.android.publisher }}"
+{%- else %}
+        "lte": false,
+        "map": false,
+        "sensor": [],
+        "publisher": ""
+{%- endif %}
+    },
+    "image": {
+{%- if "picamera" in target %}
+        "topic": "{{ topic }}",
+        "update": "push",
+        "visible": true
+{%- else %}
+        "topic": "",
+        "update": "push",
+        "visible": false
+{%- endif %}
+    },
+    "perftool": {
+{%- if "perftool" in target %}
+        "name": "{{ viewer_setting.perftool.name }}",
+        "visible": true
+{%- else %}
+        "name": "",
+        "visible": false
+{%- endif %}
+    }
+}')
+    ON CONFLICT (name)
+    DO UPDATE SET config=excluded.config;
+{% endfor %}

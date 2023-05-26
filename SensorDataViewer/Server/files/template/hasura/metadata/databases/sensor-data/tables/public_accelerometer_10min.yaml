@@ -1,0 +1,3 @@
+table:
+  name: accelerometer_10min
+  schema: public

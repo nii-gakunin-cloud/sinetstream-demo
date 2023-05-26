@@ -1,0 +1,9 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SubItemLabel.svelt > name > default name 1`] = `"<body><div><div class=\\"row\\"><label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"item\\"> <span></span></label> <div></div></div> <!--<ItemCheckbox>--></div></body>"`;
+
+exports[`SubItemLabel.svelt > name > name property 1`] = `"<body><div><div class=\\"row\\"><label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"name1\\" value=\\"item\\"> <span></span></label> <div></div></div> <!--<ItemCheckbox>--></div></body>"`;
+
+exports[`SubItemLabel.svelt > slot 1`] = `"<body><div><div class=\\"row\\"><label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"item\\"> <span></span></label> <div><span data-testid=\\"label-slot\\" slot=\\"label\\">label slot</span></div></div> <div data-testid=\\"default-slot\\">default slot</div><!--<ItemCheckbox>--><!--<SlotTest>--></div></body>"`;
+
+exports[`SubItemLabel.svelt > value 1`] = `"<body><div><div class=\\"row\\"><label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"item\\"> <span></span></label> <div></div></div> <!--<ItemCheckbox>--></div></body>"`;

@@ -1,0 +1,5 @@
+services:
+  perftool:
+    image: harbor.vcloud.nii.ac.jp/sinetstream/perftool:0.2.4
+    restart: on-failure:5
+    env_file: .env.perftool

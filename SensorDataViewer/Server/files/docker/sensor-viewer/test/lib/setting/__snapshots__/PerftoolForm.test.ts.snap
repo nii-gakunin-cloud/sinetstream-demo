@@ -1,0 +1,5 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`PerftoolForm.svelt > name 1`] = `"<div class=\\"field label s-mPlSbL43WKAe\\"><input type=\\"text\\" name=\\"perftool.name\\" id=\\"perftool-name\\" class=\\"s-mPlSbL43WKAe\\"> <label for=\\"perftool-name\\" class=\\"s-mPlSbL43WKAe\\">perftool name</label> <span class=\\"error s-mPlSbL43WKAe\\"></span></div>"`;
+
+exports[`PerftoolForm.svelt > switch 1`] = `"<label class=\\"switch icon s-mPlSbL43WKAe\\"><input type=\\"checkbox\\" name=\\"perftool.visible\\" aria-label=\\"perftool chart switch\\" class=\\"s-mPlSbL43WKAe\\"> <span class=\\"s-mPlSbL43WKAe\\"><i class=\\"s-mPlSbL43WKAe\\">show_chart</i></span> <div class=\\"tooltip s-mPlSbL43WKAe\\">perftool chart</div></label>"`;

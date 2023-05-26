@@ -1,0 +1,6 @@
+server_name: "mqtt1"
+port: 4222
+jetstream: enabled
+mqtt {
+  port: {{ nats.mqtt.port }}
+}

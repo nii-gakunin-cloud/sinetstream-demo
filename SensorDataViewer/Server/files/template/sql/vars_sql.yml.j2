@@ -1,0 +1,200 @@
+{%- if "android" in target or "perftool" in target %}
+sensors:
+{%- if "android" in target %}
+  - type: accelerometer
+  - type: accelerometer_uncalibrated
+    values:
+      - name: x_without_compensation
+        type: real
+        index: 0
+      - name: y_without_compensation
+        type: real
+        index: 1
+      - name: z_without_compensation
+        type: real
+        index: 2
+      - name: x_with_compensation
+        type: real
+        index: 3
+      - name: y_with_compensation
+        type: real
+        index: 4
+      - name: z_with_compensation
+        type: real
+        index: 5
+  - type: gravity
+  - type: gyroscope
+  - type: gyroscope_uncalibrated
+    values:
+      - name: rotation_x
+        type: real
+        index: 0
+      - name: rotation_y
+        type: real
+        index: 1
+      - name: rotation_z
+        type: real
+        index: 2
+      - name: drift_x
+        type: real
+        index: 3
+      - name: drift_y
+        type: real
+        index: 4
+      - name: drift_z
+        type: real
+        index: 5
+  - type: linear_acceleration
+  - type: rotation_vector
+    values:
+      - name: "x"
+        type: real
+        index: 0
+      - name: "y"
+        type: real
+        index: 1
+      - name: "z"
+        type: real
+        index: 2
+      - name: scalar
+        type: real
+        index: 3
+  - type: step_counter
+    value: integer
+  - type: game_rotation_vector
+  - type: geomagnetic_rotation_vector
+  - type: magnetic_field
+  - type: magnetic_field_uncalibrated
+    values:
+      - name: geomagnetic_field_strength_x
+        type: real
+        index: 0
+      - name: geomagnetic_field_strength_y
+        type: real
+        index: 1
+      - name: geomagnetic_field_strength_z
+        type: real
+        index: 2
+      - name: iron_bias_estimation_x
+        type: real
+        index: 3
+      - name: iron_bias_estimation_y
+        type: real
+        index: 4
+      - name: iron_bias_estimation_z
+        type: real
+        index: 5
+  - type: orientation
+  - type: proximity
+    value: real
+  - type: ambient_temperature
+    value: real
+  - type: light
+    value: real
+  - type: pressure
+    value: real
+  - type: relative_humidity
+    value: real
+{%- endif %}
+ext_sensors:
+{%- if "android" in target %}
+  - type: location
+    jsonpath: '$."device"."location"'
+    values:
+      - path: [device, location, latitude]
+      - path: [device, location, longitude]
+    publisher: [device, userinfo, publisher]
+    function:
+      name: first
+      args: ["timestamp"]
+    table: "{{ android.topic.sensor_data }}"
+  - type: lte
+    jsonpath: '$."device"."cellular"."lte"'
+    values:
+      - path: [device, cellular, lte, rssi]
+      - path: [device, cellular, lte, rsrp]
+      - path: [device, cellular, lte, rsrq]
+      - path: [device, cellular, lte, rssnr]
+      - path: [device, cellular, lte, cqi]
+      - path: [device, cellular, lte, cqiTableIndex]
+        name: cqi_table_index
+      - path: [device, cellular, lte, timingAdvance]
+        name: timing_advance
+    publisher: [device, userinfo, publisher]
+    function:
+      name: avg
+    table: "{{ android.topic.sensor_data }}"
+{%- endif %}
+{%- if "perftool" in target %}
+  - type: perftool
+    values:
+      - path: [reader, msg_bytes_rate]
+        name: reader_bytes_rate
+      - path: [writer, msg_bytes_rate]
+        name: writer_bytes_rate
+      - path: [reader, msg_count_rate]
+        name: reader_count_rate
+      - path: [writer, msg_count_rate]
+        name: writer_count_rate
+      - path: [reader, error_count_rate]
+        name: reader_error_rate
+      - path: [writer, error_count_rate]
+        name: writer_error_rate
+      - path: [reader, error_count_total]
+        name: reader_error_count
+      - path: [writer, error_count_total]
+        name: writer_error_count
+    publisher: [name]
+    function:
+      name: avg
+    table: "{{ perftool.result.topic }}"
+{%- endif %}
+time_range:
+  - suffix: "30sec"
+    interval: "00:00:30"
+  - suffix: "1min"
+    interval: "00:01:00"
+  - suffix: "2min"
+    interval: "00:02:00"
+  - suffix: "10min"
+    interval: "00:10:00"
+{%- endif %}
+database:
+  sensors: table
+{%- if "android" in target %}
+mqtt:
+  topic:
+    sensor_data: "{{ android.topic.sensor_data }}"
+nats:
+  subject:
+    sensor_data: "{{ android.topic.sensor_data }}"
+{%- endif %}
+{%- if "perftool" in target or "picamera" in target %}
+kafka:
+  topic:
+{%- if "perftool" in target %}
+    perftool: "{{ perftool.result.topic }}"
+{%- endif %}
+{%- if "picamera" in target %}
+    picamera: 
+{%- for topic in picamera.topic %}
+      - "{{ topic }}"
+{%- endfor %}
+{%- endif %}
+{%- endif %}
+{%- if "picamera" in target %}
+minio:
+  event:
+    table: minio_event
+  etag:
+    table: minio_etag
+{%- endif %}
+viewer_setting:
+{%- if "android" in target %}
+  android:
+    publisher: "{{ android.default.publisher }}"
+{%- endif %}
+{%- if "perftool" in target %}
+  perftool:
+    name: "{{ perftool.target.topic }}"
+{%- endif %}
