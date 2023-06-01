@@ -9,7 +9,7 @@ Send the data measured by the temperature and humidity sensor (DHT11) to the Kaf
 * Raspberry Pi
   * The procedure shown here has been tested on the Raspberry Pi OS.
 * Python
-  * 3.7 or later
+  * 3.8 or later
 
 The Kafka broker to which the sensor data will be sent must be available. Please build the Kafka broker in advance with one of the following configurations.
 
@@ -22,7 +22,7 @@ The Kafka broker to which the sensor data will be sent must be available. Please
 Install the Python libraries that the sending program will use. In addition to the SINETStream library, we will install the library [dht11](https://github.com/szazo/DHT11_Python) to use the temperature and humidity sensor (DHT11).
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-cmd dht11 --user
+pip install -U --user sinetstream-kafka sinetstream-cmd dht11 --user
 ```
 
 > If you get an error because of conflicts with libraries you have already installed, use [venv](https://docs.python.org/ja/3/library/venv.html) or [pipenv](https://github.com/pypa/pipenv). Also, the `pip` command may be `pip3` in some environments. Replace it as necessary.
@@ -48,7 +48,7 @@ The data sent to the broker by the send program includes the sensor type and the
 Execute the following command to measure temperature and humidity with DHT11 every minute and send the measurement results to the Kafka broker specified in the configuration file ``.sinetstream_config.yml``:
 
 ```console
-$ . /producer-dht11.py
+. /producer-dht11.py
 ```
 
 The Kafka broker will be sent the following JSON data:
@@ -75,7 +75,7 @@ $ . /producer-dht11.py -v
 If you want the interval between sensor measurements to be something other than 1 minute, specify the measurement interval (in seconds) in the command line argument `-I`. For example, to set the interval to 5 minutes, specify the following:
 
 ```console
-$ . /producer-dht11.py -I 300
+. /producer-dht11.py -I 300
 ```
 
 ## 3. Verify operation

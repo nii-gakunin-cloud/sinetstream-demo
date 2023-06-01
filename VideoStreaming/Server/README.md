@@ -7,7 +7,6 @@
 * YOLOv5
   * [Kafka-YOLO/README.md](Kafka-YOLO/README.md)
 
-
 OpenPose, YOLOv5 などの画像処理を行わずに Kafka ブローカのみを構築する場合は `../../option/Server/` にある構築手順を参照してください。
 
 * Kafka broker

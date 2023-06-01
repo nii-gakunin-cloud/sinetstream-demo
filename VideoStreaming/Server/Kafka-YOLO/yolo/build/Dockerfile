@@ -1,10 +1,10 @@
-FROM nvcr.io/nvidia/pytorch:22.06-py3
+FROM nvcr.io/nvidia/pytorch:23.05-py3
 
 WORKDIR /srv/yolo
 
 COPY scripts /srv/yolo
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3.10 install --no-cache-dir -r requirements.txt
 
 COPY entrypoint.d /opt/nvidia/entrypoint.d
 

@@ -2,8 +2,6 @@
 
 Raspberry Piのカメラで撮影した画像をサーバに送信する環境を構築する手順を示します。
 
-![構成図](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -20,17 +18,15 @@ flowchart LR
     RD(SINETStream)
   end
   V==>|capture|PC---SS==>|publish|B-.->RD
-
-  style C y:37
   style R stroke-dasharray: 5 5
 ```
--->
 
 ## 1. 準備
 
 ### 1.1. 実行環境
 
 実行環境として以下のものを想定します。
+
 * Raspberry Pi
 * [Raspberry Piカメラモジュール](https://www.raspberrypi.com/documentation/accessories/camera.html)
 
@@ -54,7 +50,7 @@ Raspberry Pi のOSには以下のものを想定します。
 Raspberry Piのカメラモジュールを有効化するために、以下のコマンドを実行してください。
 
 ```console
-$ sudo raspi-config nonint do_camera 0
+sudo raspi-config nonint do_camera 0
 ```
 
 ### 1.4. MTUの設定
@@ -64,7 +60,7 @@ SINET SIMを使用したモバイルルータを経由してカメラ画像を�
 USB接続したモバイルルータは `usb1`, `eth1` などのデバイスとして認識されるので、以下のコマンドを実行してください。
 
 ```console
-$ sudo ip link set dev usb1 mtu 1200
+sudo ip link set dev usb1 mtu 1200
 ```
 
 > ここではデバイス名が`usb1`の場合の実行例を示しています。実行環境に応じたデバイス名に読み替えてください。

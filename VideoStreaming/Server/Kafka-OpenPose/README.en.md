@@ -2,8 +2,6 @@
 
 Build a server to process the image stream captured by the Raspberry Pi camera with [OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose).
 
-![Configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -24,10 +22,7 @@ flowchart LR
     RD(SINETStream)
   end
   WR==>B===>RD
-
-  style G y:34
 ```
--->
 
 ## 1. Configuration
 
@@ -71,7 +66,7 @@ Parameters of Kafka and OpenPose are set by environment variables of the contain
 
 The format of `.env` is as follows: `.env` is a file in which each line is formatted as "(parameter name) = (value)". An example is shown below.
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 KAFKA_MESSAGE_MAX_BYTES=20971520
 ```
@@ -94,7 +89,7 @@ The parameters for the Kafka broker are the properties described in "[Kafka Docu
 
 * Prefix the environment variable name with `KAFKA_`
 * Convert to all uppercase
-* Convert periods `. ` to underscores `_`
+* Convert periods `.` to underscores `_`
 * Replace hyphens `-` with a 2-letter underscore `__`.
 * replace an underscore `_` with a three-letter underscore `___`
 
@@ -106,8 +101,6 @@ For details on how to specify environment variables, see [Confluent Kafka config
 
 The OpenPose container reads images from the source topic, processes them with OpenPose, and writes them to the destination topic.
 
-![Configuration 2](system-2.svg)
-<!--
 ```mermaid
 graph LR
   subgraph R[Raspberry Pi]
@@ -127,7 +120,6 @@ graph LR
   end
   PUB==>ST==>OP===>DT==>SUB
 ```
--->
 
 The OpenPose container uses SINETStream for accessing source and destination topics; SINETStream requires a configuration file `.sinetstream_config.yml` containing the address and topic name of the broker to be connected. In this container image, you can directly prepare the SINETStream configuration file and specify the parameters via a [bind mount](https://docs.docker.com/storage/bind-mounts/) to the container. A simpler method of specifying parameters is to use the container's environment variables. The following is a description of how to specify each method.
 
@@ -160,7 +152,7 @@ image-dest:
 
 If you want to specify the same contents of the above configuration file in a container environment variable, you can do so as follows.
 
-```
+```bash
 SS_BROKERS=kafka.example.org:9092
 SS_CONSISTENCY=AT_LEAST_ONCE
 SSSRC_TOPIC=sinetstream.image.camera
@@ -202,7 +194,7 @@ The following are the execution steps for each of the Kafka broker and OpenPose 
 Execute the following command in the directory where you placed the `kafka/docker-compose.yml` and the `.env` file of the Kafka broker:
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > Here is an example of running Docker Compose v2; if you are using v1, use `docker-compose` instead of `docker compose`.
@@ -220,7 +212,7 @@ Make sure that the STATUS of `broker` and `zookeeper` containers are both `runni
 If the STATUS value is not `running`, check the container logs to determine the cause of the error.
 
 ```console
-$ docker compose logs
+docker compose logs
 ```
 
 ### 4.2. OpenPose
@@ -228,7 +220,7 @@ $ docker compose logs
 Build the OpenPose container image. Run the following command in the directory where you placed the files in `openpose/`. Building the container image will take about an hour.
 
 ```console
-$ docker compose build
+docker compose build
 ```
 
 > The container image build itself does not require a GPU; if you are using an AWS EC2 instance or similar as a GPU node, you can save money on cloud usage by switching to an instance type without a GPU while the container image is being built.
@@ -236,13 +228,13 @@ $ docker compose build
 Run the container:
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the state of the container:
 
 ```console
-$ docker compose ps 
+docker compose ps 
 ```
 
 Make sure that both container states (STATUS) are ``running``.

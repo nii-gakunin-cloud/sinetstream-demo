@@ -2,8 +2,6 @@
 
 The following are the steps to build an environment to send images captured by the Raspberry Pi camera to the server.
 
-![Configuration diagram](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -24,13 +22,13 @@ flowchart LR
   style C y:37
   style R stroke-dasharray: 5 5
 ```
--->
 
 ## 1. Preparation
 
 ### 1.1. Execution environment
 
 The following runtime environment is assumed:
+
 * Raspberry Pi
 * [Raspberry Pi camera module](https://www.raspberrypi.com/documentation/accessories/camera.html)
 
@@ -54,7 +52,7 @@ The Kafka broker to which the images will be sent must be available in advance. 
 To activate the camera module on Raspberry Pi, execute the following command.
 
 ```console
-$ sudo raspi-config nonint do_camera 0
+sudo raspi-config nonint do_camera 0
 ```
 
 ### 1.4. Configure MTU
@@ -64,7 +62,7 @@ If you continue to send camera images to the server via a mobile router using SI
 Since a USB-connected mobile router is recognized as a device such as `usb1`, `eth1`, etc., please execute the following command.
 
 ```console
-$ sudo ip link set dev usb1 mtu 1200
+sudo ip link set dev usb1 mtu 1200
 ```
 
 > Here is an example of execution when the device name is `usb1`. Please replace the device name with the one appropriate for your environment.

@@ -2,8 +2,6 @@
 
 Raspberry Piのカメラで撮影した画像ストリームを[OpenPose](https://github.com/CMU-Perceptual-Computing-Lab/openpose)で処理するサーバを構築します。
 
-![構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -24,10 +22,7 @@ flowchart LR
     RD(SINETStream)
   end
   WR==>B===>RD
-
-  style G y:34
 ```
--->
 
 ## 1. 構成について
 
@@ -71,7 +66,7 @@ Kafka, OpenPoseのパラメータはコンテナの環境変数により設定�
 
 `.env` は各行が「（パラメータ名）=（値）」の形式になっているファイルとなります。記述例を以下に示します。
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 KAFKA_MESSAGE_MAX_BYTES=20971520
 ```
@@ -106,8 +101,6 @@ Kafkaブローカに対するパラメータは「[Kafka Documentation - 3.1 Bro
 
 OpenPoseコンテナは入力元となるトピックから画像を読み込み、OpenPose で処理を行い、出力先となるトピックに書き出します。
 
-![構成2](system-2.svg)
-<!--
 ```mermaid
 graph LR
   subgraph R[Raspberry Pi]
@@ -127,7 +120,6 @@ graph LR
   end
   PUB==>ST==>OP===>DT==>SUB
 ```
--->
 
 OpenPoseコンテナでは送信元トピックと出力先トピックのアクセスに SINETStream を利用します。SINETStreamでは接続対象となるブローカのアドレスやトピック名を設定ファイル `.sinetstream_config.yml` に記述します。このコンテナイメージでは直接SINETStreamの設定ファイルを用意し、それをコンテナに[bind mount](https://docs.docker.com/storage/bind-mounts/)することでパラメータを指定することが出来ます。またより簡易に指定する方法としてコンテナの環境変数による指定方法を提供しています。それぞれの指定方法を以下に記します。
 
@@ -160,7 +152,7 @@ image-dest:
 
 上記の設定ファイルと同じ内容をコンテナの環境変数で指定する場合は以下のようになります。
 
-```
+```bash
 SS_BROKERS=kafka.example.org:9092
 SS_CONSISTENCY=AT_LEAST_ONCE
 SSSRC_TOPIC=sinetstream.image.camera
@@ -202,7 +194,7 @@ Kafkaブローカ、OpenPoseのそれぞれのコンテナの実行手順を示�
 `kafka/docker-compose.yml`とKafkaブローカの`.env`ファイルを配置したディレクトリで以下のコマンドを実行します。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > ここでは Docker Compose v2 の実行例を示しています。v1を利用している場合は`docker compose`のかわりに`docker-compose`を用いてください。
@@ -220,7 +212,7 @@ zookeeper           "/etc/confluent/dock…"   zookeeper           running
 STATUSの値が`running`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
 
 ```console
-$ docker compose logs
+docker compose logs
 ```
 
 ### 4.2. OpenPose
@@ -228,7 +220,7 @@ $ docker compose logs
 OpenPoseのコンテナイメージをビルドします。`openpose/`にあるファイルを配置したディレクトリで以下のコマンドを実行してください。コンテナイメージのビルドは１時間前後を要します。
 
 ```console
-$ docker compose build
+docker compose build
 ```
 
 > コンテナイメージのビルド自体は GPU を必要としません。GPUノードとしてAWSのEC2インスタンスなどを利用する場合、コンテナイメージのビルドを行う間GPUのないインスタンスタイプに変更することでクラウドの利用料金を節約することが出来ます。
@@ -236,13 +228,13 @@ $ docker compose build
 コンテナを実行します。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。
 
 ```console
-$ docker compose ps 
+docker compose ps 
 ```
 
 コンテナの状態(STATUS)がいずれも`running`となっていることを確認してください。

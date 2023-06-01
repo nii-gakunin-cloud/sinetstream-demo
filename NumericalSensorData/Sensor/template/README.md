@@ -7,7 +7,7 @@
 ### 1.1. 前提条件
 
 * Python
-  * 3.7 以降
+  * 3.8 以降
 
 センサーデータの送信先となる Kafka ブローカが利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを事前に構築してください。
 
@@ -20,7 +20,7 @@
 送信プログラムが利用する Python ライブラリをインストールします。
 
 ```console
-$ pip install -U --user sinetstream-cmd sinetstream-kafka sinetstream-mqtt
+pip install -U --user sinetstream-cmd sinetstream-kafka sinetstream-mqtt
 ```
 
 > 既にインストールしているライブラリとconflictしてしまいエラーとなる場合は [venv](https://docs.python.org/ja/3/library/venv.html) や [pipenv](https://github.com/pypa/pipenv) などの仮想環境の利用を検討してください。また環境によっては `pip` コマンドは `pip3` となっていることがあります。必要に応じて読み替えて下さい。
@@ -46,7 +46,7 @@ sensors:
 以下のコマンドを実行するとデータをブローカに１分毎に送信します。送信先となるブローカは設定ファイル`.sinetstream_config.yml`に記述したものになります。
 
 ```console
-$ ./producer.py
+./producer.py
 ```
 
 Kafkaブローカには、以下のようなJSONデータが送信されます。
@@ -72,7 +72,7 @@ $ ./producer.py -v
 センサーの測定間隔を１分以外にしたい場合は、コマンドライン引数 `-I` に測定間隔（秒）を指定してください。例えば測定間隔を５分にする場合は以下のように指定します。
 
 ```console
-$ ./producer.py -I 300
+./producer.py -I 300
 ```
 
 ## 3. 動作確認

@@ -28,8 +28,6 @@ The sensor data sent from Raspberry Pi will be collected, visualized and monitor
 
 ## 1. Configuration
 
-![Configuration-1](img/system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph C1[Raspberry Pi 1]
@@ -55,19 +53,18 @@ flowchart LR
   P2-.->B
   B==>KC==>|Zabbix trapper|ZS-.->W
 ```
--->
 
 The server we are building here consists of 3 nodes.
 
-* Broker node
-  * Node running Kafka broker that receives sent sensor data
-* Zabbix Sender node
-  * Node that forwards data sent to the Kafka broker to Zabbix server
-  * Converting message formats between Kafka broker and Zabbix, etc.
-* Zabbix Node
-  * Node running Zabbix Server
-  * Zabbix Server performs visualization and monitoring, including graph display
-  * Zabbix Server is the final repository of submitted data
+- Broker node
+  - Node running Kafka broker that receives sent sensor data
+- Zabbix Sender node
+  - Node that forwards data sent to the Kafka broker to Zabbix server
+  - Converting message formats between Kafka broker and Zabbix, etc.
+- Zabbix Node
+  - Node running Zabbix Server
+  - Zabbix Server performs visualization and monitoring, including graph display
+  - Zabbix Server is the final repository of submitted data
 
 Software components running on each node can also run on the same node.
 
@@ -77,16 +74,16 @@ The version of each software component is listed below.
 
 |Software|Version|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
 |[Zabbix](https://www.zabbix.com/)|6.0 LTS|
 
 ### 1.2. Limitations
 
 The system built here is intended to show an example of a system built using SINETStream. Therefore, the Kafka broker is configured as follows with priority on simplicity.
 
-* 1 node configuration
-* No encryption of communication paths
-* No authentication
+- 1 node configuration
+- No encryption of communication paths
+- No authentication
 
 When using Kafka in actual operation, please take appropriate measures as necessary, such as using a multi-node configuration.
 
@@ -100,14 +97,14 @@ Each component to be executed on the server will be executed as a Docker contain
 
 Please refer to the following page to install Docker Engine. 19.03.0 or later version of Docker is required.
 
-* [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
-* [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-* [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
+- [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
+- [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+- [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 
 As noted in the installation instructions above, adding users to the `docker` group will allow them to run `docker` commands without administrative privileges. Please configure the group settings as needed.
 
 ```console
-$ sudo gpasswd -a $USER docker
+sudo gpasswd -a $USER docker
 ```
 
 The following description assumes that you can execute `docker` commands without administrative privileges.
@@ -119,16 +116,16 @@ The following description assumes that you can execute `docker` commands without
 The installation procedure for Docker Compose is shown below. Here are the installation instructions for Docker Compose v2.
 
 ```console
-$ sudo mkdir -p /usr/local/libexec/docker/cli-plugins
-$ sudo curl -L https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
-$ sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo mkdir -p /usr/local/libexec/docker/cli-plugins
+sudo curl -L https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
 ```
 
 To verify that it has been installed, let's display the version.
 
 ```console
 $ docker compose version
-Docker Compose version v2.2.3
+Docker Compose version v2.18.1
 ```
 
 > If you are using Docker Compose v1, run with `docker-compose` instead of `docker compose`. All examples shown in this document are for Docker Compose v2; if you use v1, replace `docker-compose` with `docker-compose`. Docker Compose version 1.27.1 or higher is required.
@@ -138,13 +135,15 @@ Docker Compose version v2.2.3
 Zabbix is built using git command. git command should be installed on the node where Zabbix server is built, e.g. by using OS packages.
 
 For CentOS / RHEL, run the following command.
+
 ```command
-$ sudo yum install git
+sudo yum install git
 ```
 
 For Debian / Ubuntu, issue the following command: ``command $ sudo yum install git ```
+
 ```command
-$ sudo apt install git
+sudo apt install git
 ```
 
 ## 3. Building Kafka Broker
@@ -161,7 +160,7 @@ Parameters of the Kafka broker are set as environment variables of the container
 
 `.env` is a file in which each line is formatted as "(parameter name)=(value)". An example is shown below.
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 ```
 
@@ -181,11 +180,11 @@ If an IP address is specified, the client must be able to access the server at t
 
 The configuration parameters for the Kafka broker can be specified as described in [Kafka Documentation - 3.1 Broker Configs](https://kafka.apache.org/documentation/#brokerconfigs). In the Confluent Kafka container used here, Kafka broker properties can be set using the container's environment variables. The environment variable name to be specified in this case is the name of the property to be set for the Kafka broker, converted using the following rules.
 
-* Prefix the environment variable name with `KAFKA_`
-* Convert to all uppercase
-* Convert periods `. ` to underscores `_`
-* Replace hyphens `-` with a 2-letter underscore `__`.
-* replace an underscore `_` with a three-letter underscore `___`
+- Prefix the environment variable name with `KAFKA_`
+- Convert to all uppercase
+- Convert periods `.` to underscores `_`
+- Replace hyphens `-` with a 2-letter underscore `__`.
+- replace an underscore `_` with a three-letter underscore `___`
 
 For example, the property `message.max.bytes` is specified as the environment variable `KAFKA_MESSAGE_MAX_BYTES`.
 
@@ -196,7 +195,7 @@ For details on how to specify environment variables, see [Confluent Kafka config
 Execute the following command in the directory where you placed `docker-compose.yml` on the node where you want to run Kafka.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > Here is an example of running Docker Compose v2; if you are using v1, use `docker-compose` instead of `docker compose`.
@@ -215,17 +214,17 @@ Make sure that the state (STATUS) of the `broker` and `zookeeper` containers are
 If the STATUS value is not `running`, check the container logs to determine the cause of the error.
 
 ```console
-$ docker compose logs
+docker compose logs
 ```
 
 ### 3.4. Checking Operation
 
 You can confirm that the Kafka broker is ready to use by running the test producer and consumer. For instructions on how to run each of the test programs, please review the instructions at the following links.
 
-* Producer
-  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
-* Consumer
-  * [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
+- Producer
+  - [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
+- Consumer
+  - [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 ## 4. Building Zabbix Server
 
@@ -234,7 +233,7 @@ You can confirm that the Kafka broker is ready to use by running the test produc
 Get materials to build Zabbix from [zabbix/zabbix-docker](https://github.com/zabbix/zabbix-docker) on GitHub. Run the following command on the node where you want to build Zabbix server.
 
 ```console
-$ git clone https://github.com/zabbix/zabbix-docker.git -b 6.0 --depth 1
+git clone https://github.com/zabbix/zabbix-docker.git -b 6.0 --depth 1
 ```
 
 > The build procedure presented here assumes Zabbix server version 6.0. Therefore, we specify the `6.0` branch for material acquisition.
@@ -245,17 +244,16 @@ Zabbix server consists of three containers: database, web server (nginx) and Zab
 
 The following base OS images are provided:
 
-* [Alpine Linux 3.12](https://hub.docker.com/_/alpine/)
-* [Ubuntu 20.04](https://hub.docker.com/_/ubuntu/)
-* [Oracle Linux 8](https://hub.docker.com/_/oraclelinux/)
+- [Alpine Linux 3.12](https://hub.docker.com/_/alpine/)
+- [Ubuntu 20.04](https://hub.docker.com/_/ubuntu/)
+- [Oracle Linux 8](https://hub.docker.com/_/oraclelinux/)
 
 > CentOS 8 is no longer supported and has been replaced by Oracle Linux because the base image is out of date (see [reference](https://github.com/zabbix/zabbix-docker#base-docker-image)).
 
-
 The following databases are available:
 
-* [MySQL](https://www.mysql.com/jp/)
-* [PostgreSQL](https://www.postgresql.org/)
+- [MySQL](https://www.mysql.com/jp/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 For more information about the provided Docker Compose configuration files, see [Zabbix Documentation - Installation from containers - Docker Compose](https://www.zabbix.com/documentation/current/en/manual/installation/containers#docker-compose).
 
@@ -303,8 +301,8 @@ zabbix-docker-zabbix-agent-1   "/sbin/tini -- /usr/…"   zabbix-agent        ru
 If you want to change Zabbix Agent to v2 container image, run the following command. This is an optional operation since Zabbix Agent v2 is not used to display sensor data.
 
 ```console
-$ sed -i -e '/image:/s/zabbix-agent:/zabbix-agent2:/' docker-compose.yaml
-$ docker compose up -d zabbix-agent
+sed -i -e '/image:/s/zabbix-agent:/zabbix-agent2:/' docker-compose.yaml
+docker compose up -d zabbix-agent
 ```
 
 ### 4.3. Configuring Zabbix Server
@@ -319,11 +317,11 @@ Enter `Admin` as username and `zabbix` as password to login as an initial user.
 
 After that, here is what you need to do:
 
-* Modify Zabbix server address
-* Configure timezone
-* Configure visualization and monitoring of sensor data
-  * Register templates
-  * Register hosts
+- Modify Zabbix server address
+- Configure timezone
+- Configure visualization and monitoring of sensor data
+  - Register templates
+  - Register hosts
 
 Description of each of these settings is given below.
 
@@ -401,8 +399,8 @@ Click on [Create host] button indicated by red frame in the above figure. You wi
 
 To register a host, you need to fill in the following two mandatory fields:
 
-* Host name
-* Groups
+- Host name
+- Groups
 
 and specify the [SINETStream connector] template registered earlier in the [Templates] field.
 
@@ -436,12 +434,12 @@ This section describes the settings included in the template `SINETStream connec
 
 The template includes the following settings:
 
-* The item to which the sensor data will be sent
-    - `sinetstream.connector`
-* Discovery rules for sensor type and sender client name
-    - Source client name: `{#SENSOR_NODE}`
-    - Sensor type: `{#SENSOR}`
-* Trigger to detect a break in the transmission of sensor data.
+- The item to which the sensor data will be sent
+  - `sinetstream.connector`
+- Discovery rules for sensor type and sender client name
+  - Source client name: `{#SENSOR_NODE}`
+  - Sensor type: `{#SENSOR}`
+- Trigger to detect a break in the transmission of sensor data.
 
 Data sent to item `sinetstream.connector` is assumed to be in JSON format as follows:
 
@@ -454,7 +452,6 @@ Data sent to item `sinetstream.connector` is assumed to be in JSON format as fol
 ```
 
 In this JSON data, the `node` is interpreted as a value to identify the Raspberry Pi that sent the sensor data (usually the host name), and the other key values are the sensor type and its measured value. In the case of the JSON data shown in the example, the temperature sensor (`temperature`) from the host named `raspi3b` indicates a measurement of 24.1 °C and the humidity sensor (`humidity`) indicates a measurement of 48.4 %.
-
 
 The discovery rule set in the template detects the source client name `{#SENSOR_NODE}` from the `node` value of the data sent to the item `sinetstream.connector` and the sensor type `{#SENSOR}` from other keys. The detected `{#SENSOR_NODE}` is used as the sensor type. An item prototype and graph prototype are defined to add new items and graphs based on the detected `{#SENSOR_NODE}` and `{#SENSOR}`. This will automatically add items and graphs based on changes in the sensor type and the Raspberry Pi from which the data is being sent.
 
@@ -498,8 +495,6 @@ Place files in subdirectory `zabbix-sender/` on the node where Zabbix sender wil
 
 ### 5.2. Parameter Settings
 
-![Configuration](img/system-2.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph B["Kafka broker<br><br><br>BROKER_HOSTNAME"]
@@ -512,7 +507,6 @@ flowchart LR
 
   ST==>|SINETStream|ZS==>|Zabbix trapper|ZH
 ```
--->
 
 Specify the following parameters in the file `.env` that sets environment variables for the Docker container. In `.env`, specify values in the format `{environment variable name}={parameter value}`.
 
@@ -543,7 +537,7 @@ ZABBIX_HOST=SINETStream
 Start Kafka container.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 The first time you start the container, it will take some time to complete the startup because the container image is being built. After launching, check the state of the container.
@@ -570,10 +564,10 @@ If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` value in 
 ### 5.4. Sending Test Data
 
 By running the test producer, you can send test data to the Kafka broker and check the behavior of the server side such as Zabbix, etc. It is recommended to check with the test program before sending the actual sensor data from the Raspberry Pi.
- 
+
 For instructions on how to run the test program, please refer to the following link.
 
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README_en.md)
+- [NumericalSensorData/Sensor/template/README](../../Sensor/template/README_en.md)
 
 > In the test program, random values are sent instead of actual sensor readings. Therefore, the sensor type of the sent data is named `random`.
 
@@ -581,8 +575,6 @@ For instructions on how to run the test program, please refer to the following l
 
 ### 6.1. Monitoring Kafka Broker with Zabbix
 
-![Configuration 3](img/system-3.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph K[Kafka]
@@ -596,7 +588,6 @@ flowchart LR
 
   B==>|JMX|ZJG===ZS-.->W
 ```
--->
 
 The template [Apache Kafka by JMX](https://www.zabbix.com/integrations/kafka) provided by Zabbix can be used to monitor Kafka broker from Zabbix. This section describes the configuration procedure.
 

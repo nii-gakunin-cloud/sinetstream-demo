@@ -2,8 +2,6 @@
 
 Send the measurements from the sensor device connected to the Raspberry Pi to the Kafka broker using SINETStream.
 
-![System configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph C1[Raspberry Pi]
@@ -17,17 +15,14 @@ flowchart LR
   end
   S1---P
   P1==>B
-
-  style P y:35,height:93
 ```
--->
 
 ## 1. Prerequisites
 
 * Raspberry Pi
   * The steps shown here have been tested on the Raspberry Pi OS.
 * Python
-  * Python 3.7 or later
+  * Python 3.8 or later
 
 The Kafka broker to which the sensor data will be sent must be available. Please build the Kafka broker in advance with one of the following configurations.
 
@@ -133,14 +128,14 @@ def get_sensor_data(device):
 The following are implementation examples for some sensors.
 
 * DHT11: temperature/humidity sensor
-    * Example implementation: [dht11/producer-dht11.py](dht11/producer-dht11.py)
-    * Procedure: [dht11/README.en.md](dht11/README.en.md)
+  * Example implementation: [dht11/producer-dht11.py](dht11/producer-dht11.py)
+  * Procedure: [dht11/README.en.md](dht11/README.en.md)
 * [SHT3x](https://sensirion.com/jp/products/product-catalog/?filter_series=370b616d-de4c-469f-a22b-e5e8737481b5): Temperature/humidity sensor
-    * Example implementation: [sht3x/producer-sht3x.py](sht3x/producer-sht3x.py)
-    * Procedure: [sht3x/README.en.md](sht3x/README.en.md)
+  * Example implementation: [sht3x/producer-sht3x.py](sht3x/producer-sht3x.py)
+  * Procedure: [sht3x/README.en.md](sht3x/README.en.md)
 * [SCD41](https://sensirion.com/jp/products/product-catalog/SCD41/): CO2 sensor
-    * Implementation example: [scd41/producer-scd41.py](scd41/producer-scd41.py)
-    * Procedure: [scd41/README.en.md](scd41/README.en.md)
+  * Implementation example: [scd41/producer-scd41.py](scd41/producer-scd41.py)
+  * Procedure: [scd41/README.en.md](scd41/README.en.md)
 
 ## 3. Execute the program to send sensor data
 
@@ -149,7 +144,7 @@ The following are implementation examples for some sensors.
 Install the Python libraries that the transmitter program will use.
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-cmd
+pip install -U --user sinetstream-kafka sinetstream-cmd
 ````
 
 > If you get an error because of conflicts with libraries you have already installed, use [venv](https://docs.python.org/ja/3/library/venv.html) or [pipenv](https://github.com/pypa/pipenv). Also, the `pip` command may be `pip3` in some environments. Replace it as necessary.
@@ -194,20 +189,20 @@ optional arguments:
 ```
 
 * `-n`
-    * hostname of data source
-    * default value: ホスト名
+  * hostname of data source
+  * default value: ホスト名
 * `-I`
-    * Sensor measurement interval
-    * Default value: 60 (seconds)
+  * Sensor measurement interval
+  * Default value: 60 (seconds)
 * `-v`
-    * Display transmitted data on console
+  * Display transmitted data on console
 * `-s`
-    * Service names defined in the SINETStream configuration file
-    * Default value: `sensors`
+  * Service names defined in the SINETStream configuration file
+  * Default value: `sensors`
 * `-R`
-    * Number of retries on error
-    * If a negative value is specified, retry indefinitely
-    * Default value: -1
+  * Number of retries on error
+  * If a negative value is specified, retry indefinitely
+  * Default value: -1
 
 ### 3.4. Service Registration
 
@@ -250,7 +245,7 @@ Change `Description`, `User`, `WorkingDirectory`, and `ExecStart` appropriately 
 To tell systemd to read the configuration file you created in `/etc/systemd/system/`, issue the following command.
 
 ```console
-$ sudo systemctl daemon-reload
+sudo systemctl daemon-reload
 ````
 
 Confirm that the service has been registered with the `systemctl status` command. The following is an example of execution when the service is registered with the service name ``sensor``.

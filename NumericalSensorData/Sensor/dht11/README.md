@@ -9,7 +9,7 @@
 * Raspberry Pi
   * ここで示す手順は Raspberry Pi OS で動作確認を行っています
 * Python
-  * 3.7 以降
+  * 3.8 以降
 
 センサーデータの送信先となる Kafka ブローカが利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを事前に構築してください。
 
@@ -22,7 +22,7 @@
 送信プログラムが利用する Python ライブラリをインストールします。ここではSINETStreamのライブラリに加えて、温度湿度センサー(DHT11)を利用するためのライブラリ[dht11](https://github.com/szazo/DHT11_Python)をインストールします。
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-cmd dht11 --user
+pip install -U --user sinetstream-kafka sinetstream-cmd dht11 --user
 ```
 
 > 既にインストールしているライブラリとconflictしてしまいエラーとなる場合は [venv](https://docs.python.org/ja/3/library/venv.html) や [pipenv](https://github.com/pypa/pipenv) などの仮想環境の利用を検討してください。また環境によっては `pip` コマンドは `pip3` となっていることがあります。必要に応じて読み替えて下さい。
@@ -48,7 +48,7 @@ sensors:
 以下のコマンドを実行すると１分毎に DHT11 で温度と湿度を測定し、設定ファイル`.sinetstream_config.yml`に指定したKafkaブローカに測定結果を送信します。
 
 ```console
-$ ./producer-dht11.py
+./producer-dht11.py
 ```
 
 Kafkaブローカには、以下のようなJSONデータが送信されます。
@@ -75,7 +75,7 @@ $ ./producer-dht11.py -v
 センサーの測定間隔を１分以外にしたい場合は、コマンドライン引数 `-I` に測定間隔（秒）を指定してください。例えば測定間隔を５分にする場合は以下のように指定します。
 
 ```console
-$ ./producer-dht11.py -I 300
+./producer-dht11.py -I 300
 ```
 
 ## 3. 動作確認

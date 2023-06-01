@@ -2,8 +2,6 @@
 
 Build a [Kafka broker](https://kafka.apache.org/) that is responsible for passing data acquired by the Raspberry Pi's camera, sensors, etc. to and from visualization tools such as Viewer and Zabbix/Grafana.
 
-![Configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -20,7 +18,6 @@ flowchart LR
   B-.->V2
   B-.->V3
 ```
--->
 
 ## 1. About the configuration
 
@@ -36,7 +33,7 @@ The Kafka broker built by the procedure shown here has the following configurati
 
 The Kafka broker runs in a Docker container. Therefore, it is necessary to install Docker Engine or other software in advance.
 
-#### 2.1.1.
+#### 2.1.1. Docker Engine
 
 Please install Docker Engine by referring to "[Install Docker Engine](https://docs.docker.com/engine/install/)" etc. Docker version 19.03.0 or higher is required.
 
@@ -56,7 +53,7 @@ Parameters of the Kafka broker are set as environment variables of the container
 
 The format of the `.env` file is as follows: `.env` is a file in which each line is formatted as "(parameter name) = (value)". An example is shown below.
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 KAFKA_MESSAGE_MAX_BYTES=20971520
 ```
@@ -77,7 +74,7 @@ The configuration parameters for the Kafka broker can be specified as described 
 
 * Prefix the environment variable name with `KAFKA_`
 * Convert to all uppercase
-* Convert periods `. ` to underscores `_`
+* Convert periods `.` to underscores `_`
 * Replace hyphens `-` with a 2-letter underscore `__`.
 * replace an underscore `_` with a three-letter underscore `___`
 
@@ -85,13 +82,12 @@ For example, the property `message.max.bytes` is specified as the environment va
 
 For details on how to specify environment variables, see [Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration).
 
-
 ## 4. Execution
 
 Run the following command in the directory where you placed ``docker-compose.yml``.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > Here is an example of running Docker Compose v2; if you are using v1, use `docker-compose` instead of `docker compose`.
@@ -110,5 +106,5 @@ Make sure that the state (STATUS) of the `broker` and `zookeeper` containers are
 If the STATUS value is not `running`, check the container logs to determine the cause of the error.
 
 ```console
-$ docker compose logs
+docker compose logs
 ```

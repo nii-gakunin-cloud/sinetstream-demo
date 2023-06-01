@@ -2,8 +2,6 @@
 
 We will build a system in which images captured by a Raspberry Pi camera are processed by a GPU node and the results are displayed on the client. The system configuration is shown in the following figure.
 
-![System configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R["Sensor: Raspberry Pi"]
@@ -27,7 +25,6 @@ flowchart LR
   end
   WR==>B===>RD
 ```
--->
 
 The system to be built consists of three parts:
 

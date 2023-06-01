@@ -9,7 +9,7 @@ The data measured by the temperature and humidity sensor ([SHT3x](https://sensir
 * Raspberry Pi
   * The procedure shown here has been tested on the Raspberry Pi OS.
 * Python
-  * 3.7 or later
+  * 3.8 or later
 
 The Kafka broker to which the sensor data will be sent must be available. Please build the Kafka broker in advance with one of the following configurations.
 
@@ -21,8 +21,8 @@ The Kafka broker to which the sensor data will be sent must be available. Please
 
 To enable I2C on the RaspberryPi, execute the following command.
 
-```
-$ sudo raspi-config nonint do_i2c 0
+```console
+sudo raspi-config nonint do_i2c 0
 ```
 
 ### 1.3. Installing Libraries
@@ -30,7 +30,7 @@ $ sudo raspi-config nonint do_i2c 0
 Install the Python libraries that the sending program will use. In addition to the SINETStream library, we will install the library [sensirion-i2c-sht](https://github.com/sensirion/python-i2c-sht) to use the temperature and humidity sensor (SHT3x).
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-cmd sensirion-i2c-sht
+pip install -U --user sinetstream-kafka sinetstream-cmd sensirion-i2c-sht
 ```
 
 > If you get an error because of conflicts with libraries you have already installed, use [venv](https://docs.python.org/ja/3/library/venv.html) or [pipenv](https://github.com/pypa/pipenv). Also, the `pip` command may be `pip3` in some environments. Replace it as necessary.
@@ -56,7 +56,7 @@ The data sent to the broker by the send program includes the sensor type and the
 Execute the following command to measure temperature and humidity with SHT3x every minute and send the measurement results to the Kafka broker specified in the configuration file ``.sinetstream_config.yml``:
 
 ```console
-$ . /producer-sht3x.py
+. /producer-sht3x.py
 ```
 
 The following JSON data will be sent to the Kafka broker:
@@ -83,7 +83,7 @@ $ . /producer-sht3x.py -v
 If you want the measurement interval of the sensor to be something other than 1 minute, specify the measurement interval (in seconds) in the command line argument `-I`. For example, to set the interval to 5 minutes, specify the following.
 
 ```console
-$ . /producer-sht3x.py -I 300
+. /producer-sht3x.py -I 300
 ```
 
 ## 3. Verify Operation

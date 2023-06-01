@@ -31,8 +31,6 @@ Raspberry Piから送信されたセンサーデータを[Elasticsearch](https:/
 
 ## 1. 構成
 
-![システム構成](img/system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph C1[Raspberry Pi 1]
@@ -53,20 +51,19 @@ flowchart LR
   P2-.->B
   B==>KC==>ES==>G-.->W
 ```
--->
 
 ここで構築するサーバは４つのコンポーネントにより構成されます。
 
-* Kafka Broker
-  * 送信されたセンサーデータを受け取るブローカ
-* Kafka Connect
-  * Kafkaと他のコンポーネントとの間でデータを受け渡すフレームワーク
-  * Kafka ブローカから Elasticsearch にメッセージを転送するのに利用する
-* Elasticsearch
-  * 検索／分析エンジン
-  * センサーデータの最終的な保存先として利用する
-* Grafana
-  * Elasticsearchに保存されたセンサーデータを可視化する
+- Kafka Broker
+  - 送信されたセンサーデータを受け取るブローカ
+- Kafka Connect
+  - Kafkaと他のコンポーネントとの間でデータを受け渡すフレームワーク
+  - Kafka ブローカから Elasticsearch にメッセージを転送するのに利用する
+- Elasticsearch
+  - 検索／分析エンジン
+  - センサーデータの最終的な保存先として利用する
+- Grafana
+  - Elasticsearchに保存されたセンサーデータを可視化する
 
 各コンポーネントは同一のノードで実行することもできますし、別々のノードで実行することもできます。
 
@@ -76,23 +73,23 @@ flowchart LR
 
 |ソフトウェア|バージョン|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
-|[ElasticSearch Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch)|11.1.10|
-|[Elasticsearch](https://www.elastic.co/jp/elasticsearch/)|7.17.2|
-|[Grafana](https://grafana.com/grafana/)|8.4.6|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[ElasticSearch Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch)|14.0.6|
+|[Elasticsearch](https://www.elastic.co/jp/elasticsearch/)|7.17.10|
+|[Grafana](https://grafana.com/grafana/)|9.5.2|
 
 ### 1.2. 制限
 
 ここで構築するシステムは SINETStream を利用した構築例を示すことを目的としています。そのため Kafkaブローカや Elasticserch は簡易に構築することを優先して以下のような構成となっています。
 
-* Kafka ブローカ
-  * 1ノード構成
-  * 通信路の暗号化なし
-  * 認証なし
-* Elasticsearch
-  * 1ノード構成
-  * 通信路の暗号化なし
-  * 認証なし
+- Kafka ブローカ
+  - 1ノード構成
+  - 通信路の暗号化なし
+  - 認証なし
+- Elasticsearch
+  - 1ノード構成
+  - 通信路の暗号化なし
+  - 認証なし
 
 実際の運用に利用する際は、複数ノード構成にするなど必要に応じて適切な対応を行ってください。
 
@@ -106,14 +103,14 @@ flowchart LR
 
 以下のページなどを参照し Docker Engine のインストールを行ってください。Dockerのバージョンは 19.03.0 以上が必要となります。
 
-* [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
-* [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-* [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
+- [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
+- [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+- [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 
 上記のインストール手順にも記されていますが、ユーザを `docker` グループに追加することで、管理者権限なしで `docker` コマンドを実行できるようになります。必要に応じてグループ設定を行ってください。
 
 ```console
-$ sudo gpasswd -a $USER docker
+sudo gpasswd -a $USER docker
 ```
 
 以降の説明では、管理者権限なしで `docker` コマンドを実行できる前提で実行例を示します。
@@ -125,16 +122,16 @@ $ sudo gpasswd -a $USER docker
 Docker Compose のインストール手順を以下に示します。ここでは Docker Compose v2のインストール手順を示しています。
 
 ```console
-$ sudo mkdir -p /usr/local/libexec/docker/cli-plugins
-$ sudo curl -L https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
-$ sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo mkdir -p /usr/local/libexec/docker/cli-plugins
+sudo curl -L https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
 ```
 
 インストールされたことを確認するためにバージョンを表示してみます。
 
 ```console
 $ docker compose version
-Docker Compose version v2.2.3
+Docker Compose version v2.18.1
 ```
 
 > Docker Compose v1 を利用している場合は `docker compose`のかわりに `docker-compose` を指定して実行してください。このドキュメントに示す実行例は全て Docker Compose v2 のものになります。v1 を利用する場合は`docker-compose`に読み替えてください。Docker Compose のバージョンは 1.27.1 以上が必要となります。
@@ -153,7 +150,7 @@ Kafkaブローカのパラメータはコンテナの環境変数として設定
 
 `.env` は各行が「（パラメータ名）=（値）」の形式になっているファイルとなります。記述例を以下に示します。
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 ```
 
@@ -173,11 +170,11 @@ KAFKAブローカのアドレスとしてクライアントに知らせるホス
 
 Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1 Broker Configs](https://kafka.apache.org/documentation/#brokerconfigs) に記されているものを指定することができます。ここで利用するConfluentのKafkaコンテナでは、コンテナの環境変数によりKafkaブローカのプロパティを設定することができます。この際に指定する環境変数名は、以下のようなルールでKafkaブローカに設定するプロパティ名を変換したものになります。
 
-* 環境変数名のプレフィックスに `KAFKA_` をつける
-* 全て大文字に変換する
-* ピリオド `.` を アンダースコア `_` に置き換える
-* ハイフン `-` を ２文字のアンダースコア `__` に置き換える
-* アンダースコア`_` を ３文字のアンダースコア `___` に置き換える
+- 環境変数名のプレフィックスに `KAFKA_` をつける
+- 全て大文字に変換する
+- ピリオド `.` を アンダースコア `_` に置き換える
+- ハイフン `-` を ２文字のアンダースコア `__` に置き換える
+- アンダースコア`_` を ３文字のアンダースコア `___` に置き換える
 
 例えば、プロパティ`message.max.bytes`は環境変数`KAFKA_MESSAGE_MAX_BYTES`として指定します。
 
@@ -188,7 +185,7 @@ Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1
 Kafkaを実行するノードの`docker-compose.yml`を配置したディレクトリで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > ここでは Docker Compose v2 の実行例を示しています。v1を利用している場合は`docker compose`のかわりに`docker-compose`を用いてください。
@@ -207,17 +204,17 @@ zookeeper           "/etc/confluent/dock…"   zookeeper           running
 STATUSの値が`running`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
 
 ```console
-$ docker compose logs
+docker compose logs
 ```
 
 ### 3.4. 動作確認
 
 テスト用のプロデューサとコンシューマを実行することで Kafka ブローカが利用可能な状態になっていることを確認することができます。それぞれのテストプログラムの実行方法については以下のリンク先に記された手順を確認してください。
 
-* プロデューサ
-  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
-* コンシューマ
-  * [option/Consumer/NumericalSensorData/text-consumer/README.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.md)
+- プロデューサ
+  - [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
+- コンシューマ
+  - [option/Consumer/NumericalSensorData/text-consumer/README.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.md)
 
 ## 4. Elasticsearchの構築
 
@@ -230,7 +227,7 @@ $ docker compose logs
 Elasticsearchを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。
@@ -324,7 +321,7 @@ $ curl -s http://localhost:9200/_index_template/template_1?pretty
 Kafka Connectを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。STATUSが`running`となっていることを確認してください。
@@ -366,12 +363,12 @@ Kafkaブローカの`.env`に指定した`BROKER_HOSTNAME`の値が（IPアド�
 Kafka Connectのコンテナを起動した後で、センサーデータの送信先となっているトピックから Elasticsearch にデータを転送するコネクタを登録します。`docker-compose.yml`を配置したディレクトリにある`register.sh`を実行してください。`.env`に設定されているパラメータに応じたコネクタが登録されます。
 
 ```console
-$ ./register.sh
+./register.sh
 ```
 
 `register.sh` を実行すると次のコネクタが登録されます。
 
-* es-sink
+- es-sink
 
 コネクタの登録状態やタスクの状態は Kafka Connect のREST API を実行することで確認できます。
 
@@ -391,7 +388,7 @@ $ curl -s http://localhost:8083/connectors/es-sink/tasks/0/status | jq .
 `.env`のパラメータを変更してコネクタを登録し直す場合は、登録済のコネクタを削除してください。コネクタを削除するには以下のコマンドを実行してください。
 
 ```console
-$ curl -s -X DELETE http://localhost:8083/connectors/es-sink
+curl -s -X DELETE http://localhost:8083/connectors/es-sink
 ```
 
 > Kafka ConnectのREST APIの詳細については[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html)を参照してください。
@@ -416,7 +413,7 @@ green open sinetstream.sensor-20220417 rDq3QLb9Rq6IcYCv8P_egw 1 0 1774  0 226.3k
 
 テスト用のプロデューサを実行することでKafkaブローカにテストデータを送信することができます。テストプログラムの実行方法については以下のリンク先に記された手順を確認してください。
 
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
+- [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
 
 > テストプログラムでは、実際のセンサーの測定値のかわりに乱数値を送信します。
 
@@ -444,7 +441,7 @@ green open sinetstream.sensor-20220417 rDq3QLb9Rq6IcYCv8P_egw 1 0 1774  0 226.3k
 Grafanaを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。
@@ -481,8 +478,7 @@ Raspberry Piから送信されたデータをグラフ表示するダッシュ�
 
 テスト用のプロデューサを実行することでKafkaブローカにテストデータを送信することができます。Grafanaなどのサーバ側の動作確認に利用してください。テストプログラムの実行方法については以下のリンク先に記された手順を確認してください。
 
-
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
+- [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
 
 > 上記のリンクは「[5.6. テストデータの送信](#56-テストデータの送信)」と同じものになります。
 

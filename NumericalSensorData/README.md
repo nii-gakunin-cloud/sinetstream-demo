@@ -2,8 +2,6 @@
 
 Raspberry Piに接続したセンサーで計測した数値をサーバに送信し、Zabbix/Grafana で可視化を行います。
 
-![システム構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R["Sensor: Raspberry Pi"]
@@ -18,7 +16,6 @@ flowchart LR
   Z==>W
   G==>W
 ```
--->
 
 構築するシステムは２つのパートから構成されます。
 

@@ -2,8 +2,6 @@
 
 Raspberry Piのカメラで撮影した画像をサーバに送信する環境を構築する手順を示します。
 
-![構成図](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -21,10 +19,8 @@ flowchart LR
   end
   V==>|capture|PC---SS==>|publish|B-.->RD
 
-  style C y:37
   style R stroke-dasharray: 5 5
 ```
--->
 
 ## 1. 準備
 
@@ -35,8 +31,8 @@ flowchart LR
 venvを利用するために必要となるパッケージをインストールします。
 
 ```console
-$ sudo apt update
-$ sudo apt install python3-venv
+sudo apt update
+sudo apt install python3-venv
 ```
 
 ### 1.2. 資材の配置
@@ -48,9 +44,9 @@ $ sudo apt install python3-venv
 venv の仮想環境を作成して、画像を送信するのに必要となるライブラリのインストールを行います。前節で資材を配置したディレクトリで、以下のコマンドを実行してください。
 
 ```console
-$ python -m venv .
-$ source bin/activate
-$ pip install -r requirements.txt
+python -m venv .
+source bin/activate
+pip install -r requirements.txt
 ```
 
 ### 1.4. ホスト名の名前解決
@@ -71,7 +67,7 @@ Kafkaブローカの[advertise するアドレス](../../../option/Server/Kafka/
 
 環境変数は直接シェルに設定することも出来ますが`.env` ファイルにまとめて記述することができます。`.env`ファイルには(環境変数名)=(パラメータ値)の形式で記述を行います。記述例を以下に示します。
 
-```
+```bash
 SS_BROKERS=kafka.example.org:9092
 SS_TOPIC=sinetstream.image.camera
 PICAMERA_RESOLUTION=VGA
@@ -150,7 +146,7 @@ SINETStreamのパラメータに関する主な環境変数を次表に示しま
 
 フレームレートを指定して小さなサイズの画像を送信する場合の `.env` の例を示します。
 
-```
+```bash
 PICAMERA_RESOLUTION=QVGA
 PICAMERA_FRAMERATE=5
 SS_BROKERS=kafka.example.org:9092
@@ -168,7 +164,7 @@ SS_CONSISTENCY=AT_LEAST_ONCE
 
 タイムラプスのような一定の時間間隔で撮影したカメラ画像を送信する場合の`.env`の例を示します。
 
-```
+```bash
 PICAMERA_RESOLUTION=VGA
 SCHEDULE=10
 SS_BROKERS=kafka.example.org:9092
@@ -185,8 +181,8 @@ SS_CONSISTENCY=AT_LEAST_ONCE
 画像送信スクリプトを実行します。Pythonスクリプトなどの資材を配置したディレクトリで以下のコマンドを実行してください。スクリプトが正常に起動するとRaspberry Piのカメラからブローカへと画像送信が開始されます。
 
 ```console
-$ source bin/activate
-$ ./ss-camera.py
+source bin/activate
+./ss-camera.py
 ```
 
 ## 4. 動作確認
@@ -237,7 +233,7 @@ WantedBy=multi-user.target
 `/etc/systemd/system/` に作成した設定ファイルを systemd に読み込ませるために、以下のコマンドを実行してください。
 
 ```console
-$ sudo systemctl daemon-reload
+sudo systemctl daemon-reload
 ```
 
 `systemctl status`コマンドで、サービスが登録されたことを確認します。サービス名を`picamera`で登録した場合の実行例を以下に示します。
@@ -297,7 +293,7 @@ gpu_mem=256
 
 また画像送信スクリプトから送信するメッセージの最大サイズを変更するために `.env` で`SS_MAX_REQUEST_SIZE`を指定する必要があります。`.env`の記述例を以下に示します。
 
-```
+```bash
 PICAMERA_RESOLUTION=4K
 SCHEDULE=every minute
 SS_BROKERS=kafka.example.org:9092
@@ -312,7 +308,7 @@ Kafkaブローカが受け取るメッセージサイズの最大値を変更す
 
 [option/Server/Kafka](../../../option/Server/Kafka/README.md)などでKafkaブローカを構築している場合、`docker-compose.yml`を配置したディレクトリにある `.env` でに環境変数`KAFKA_MESSAGE_MAX_BYTES`の指定を追加することで、これを設定できます。`.env`の記述例を以下に示します。
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 KAFKA_MESSAGE_MAX_BYTES=8388620
 ```
@@ -347,7 +343,7 @@ KAFKA_MESSAGE_MAX_BYTES=8388620
 コンフィグサーバへのアクセスにHTTPプロキシを利用する場合は、環境変数`HTTPS_PROXY`にプロキシのアドレスを設定してください。
 
 ```console
-$ export HTTPS_PROXY=socks5h://proxy.example.org:1080
+export HTTPS_PROXY=socks5h://proxy.example.org:1080
 ```
 
 直接環境変数として設定するのではなく `.env` に記述することも可能です。

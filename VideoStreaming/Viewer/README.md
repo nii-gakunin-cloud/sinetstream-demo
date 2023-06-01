@@ -2,8 +2,6 @@
 
 Raspberry Pi から送信した画像や OpenPose/YOLO で処理された画像はサーバの Kafka ブローカに一時的に格納されています。ここでは Kafka ブローカの画像ストリームをクライアントで表示する `VideoViwer.py` の実行手順を示します。
 
-![構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -17,7 +15,6 @@ flowchart LR
   end
   C-.->B==>SUB
 ```
--->
 
 ## 1. 準備
 
@@ -38,13 +35,12 @@ flowchart LR
 * [VideoStreaming/Server/Kafka-YOLO](../Server/Kafka-YOLO/README.md)
 * [option/Server/Kafka](../../option/Server/Kafka/README.md)
 
-
 ### 1.2. ライブラリのインストール
 
 `VideoViewer.py`が利用する Python ライブラリをインストールします。
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-type-image
+pip install -U --user sinetstream-kafka sinetstream-type-image
 ```
 
 > 既にインストールしているライブラリとconflictしてしまいエラーとなる場合は [venv](https://docs.python.org/ja/3/library/venv.html) や [pipenv](https://github.com/pypa/pipenv) などの仮想環境の利用を検討してください。また環境によっては `pip` コマンドは `pip3` となっていることがあります。必要に応じて読み替えて下さい。
@@ -75,4 +71,3 @@ usage: VideoViewer.py -s <service name> [-T <window title>]
 ```
 
 `-s` に指定するサービス名は必須項目となります。SINETStreamの設定ファイル `.sinetstream_config.yml` には複数のパラメータセットを記述することができます。それぞれのパラメータセットの識別子をSINETStreamではサービス名と呼んでいます。サービス名は設定ファイルのトップレベルのマップのキーとして記述されています。例えば、このディレクトリにある設定ファイルの記述例 [example_sinetstream_config.yml](example_sinetstream_config.yml) には３つのパラメータセットが記述されており、サービス名は `camera`, `openpose`, `yolo` となっています。
-

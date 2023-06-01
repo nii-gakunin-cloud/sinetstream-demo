@@ -118,7 +118,7 @@
 
 {#if dialog}
   <div class="overlay active" />
-  <div class="modal active">
+  <dialog open>
     <h6>Warning</h6>
     <div>
       <i>warning</i>
@@ -131,5 +131,5 @@
       <button class="border" on:click={onCancel}>Cancel</button>
       <button on:click={forceUpdate}>OK</button>
     </nav>
-  </div>
+  </dialog>
 {/if}

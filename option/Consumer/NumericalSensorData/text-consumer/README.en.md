@@ -2,8 +2,6 @@
 
 Sensor readings and other data sent from the Raspberry Pi are temporarily stored in the Kafka broker on the server. Here is the procedure for running `consumer.py`, which displays the text data sent to the Kafka broker on the client.
 
-![Configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -17,7 +15,6 @@ flowchart LR
   end
   C-.->B==>SUB
 ```
--->
 
 ## 1. Preparation
 
@@ -26,7 +23,7 @@ flowchart LR
 The following are the prerequisites for running `consumer.py`.
 
 * Python
-  * Python 3.7 or later
+  * Python 3.8 or later
 
 The Kafka broker from which the text data will be retrieved must be available. Please pre-build the Kafka broker with one of the following configurations.
 
@@ -39,7 +36,7 @@ The Kafka broker from which the text data will be retrieved must be available. P
 Install the Python libraries used by ``consumer.py``.
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-mqtt
+pip install -U --user sinetstream-kafka sinetstream-mqtt
 ```
 
 > If you get an error because of conflicts with libraries you have already installed, you can use [venv](https://docs.python.org/ja/3/library/venv.html) or [pipenv](https://github.com/pypa/pipenv). Also, the `pip` command may be `pip3` in some environments. Replace it as necessary.

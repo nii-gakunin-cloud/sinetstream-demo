@@ -31,8 +31,6 @@ Sensor data sent from the Raspberry Pi is collected by [Elasticsearch](https://w
 
 ## 1. Configuration
 
-![System Configuration](img/system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph C1[Raspberry Pi 1]
@@ -53,20 +51,19 @@ flowchart LR
   P2-.->B
   B==>KC==>ES==>G-.->W
 ```
--->
 
 The server we are building here consists of four components:
 
-* Kafka Broker
-  * Kafka Broker, which receives sent sensor data
-* Kafka Connect
-  * A framework for passing data between Kafka and other components
-  * Used to forward messages from the Kafka broker to Elasticsearch
-* Elasticsearch
-  * Search/analysis engine
-  * Used as the final destination for sensor data
-* Grafana
-  * Visualize sensor data stored in Elasticsearch
+- Kafka Broker
+  - Kafka Broker, which receives sent sensor data
+- Kafka Connect
+  - A framework for passing data between Kafka and other components
+  - Used to forward messages from the Kafka broker to Elasticsearch
+- Elasticsearch
+  - Search/analysis engine
+  - Used as the final destination for sensor data
+- Grafana
+  - Visualize sensor data stored in Elasticsearch
 
 Each component can run on the same node or on separate nodes.
 
@@ -76,23 +73,23 @@ The version of each software component is listed below.
 
 |software|version|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
-|[ElasticSearch Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch)|11.1.10|
-|[Elasticsearch](https://www.elastic.co/jp/elasticsearch/)|7.17.2|
-|[Grafana](https://grafana.com/grafana/)|8.4.6|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[ElasticSearch Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch)|14.0.6|
+|[Elasticsearch](https://www.elastic.co/jp/elasticsearch/)|7.17.10|
+|[Grafana](https://grafana.com/grafana/)|9.5.2|
 
 ### 1.2. Limitations
 
 The system built here is intended to show an example of a system built using SINETStream. Therefore, the Kafka broker and Elasticserch are configured as follows in order to simplify the construction.
 
-* Kafka broker
-  * 1 node configuration
-  * No encryption of communication paths
-  * No authentication
-* Elasticsearch
-  * 1 node configuration
-  * No encryption of communication channel
-  * No authentication
+- Kafka broker
+  - 1 node configuration
+  - No encryption of communication paths
+  - No authentication
+- Elasticsearch
+  - 1 node configuration
+  - No encryption of communication channel
+  - No authentication
 
 When using the system in actual operation, please take appropriate measures as necessary, such as using a multi-node configuration.
 
@@ -106,14 +103,14 @@ Each component to be executed on the server runs as a Docker container. Therefor
 
 Please refer to the following page to install Docker Engine. 19.03.0 or later version of Docker is required.
 
-* [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
-* [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-* [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
+- [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
+- [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+- [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 
 As noted in the installation instructions above, adding users to the `docker` group will allow them to run `docker` commands without administrative privileges. Please configure the group settings as needed.
 
 ```console
-$ sudo gpasswd -a $USER docker
+sudo gpasswd -a $USER docker
 ```
 
 The following description assumes that you can execute `docker` commands without administrative privileges.
@@ -125,16 +122,16 @@ The following description assumes that you can execute `docker` commands without
 The installation procedure for Docker Compose is shown below. Here are the installation instructions for Docker Compose v2.
 
 ```console
-$ sudo mkdir -p /usr/local/libexec/docker/cli-plugins
-$ sudo curl -L https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
-$ sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo mkdir -p /usr/local/libexec/docker/cli-plugins
+sudo curl -L https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
 ```
 
 To verify that it has been installed, let's display the version.
 
 ```console
 $ docker compose version
-Docker Compose version v2.2.3
+Docker Compose version v2.18.1
 ```
 
 > All examples shown in this document are for Docker Compose v2. If you are using Docker Compose v1, run with `docker-compose` instead of `docker compose`. Docker Compose version 1.27.1 or higher is required.
@@ -153,7 +150,7 @@ Parameters of the Kafka broker are set as environment variables of the container
 
 `.env` is a file in which each line is formatted as "(parameter name)=(value)". An example is shown below.
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 ```
 
@@ -173,11 +170,11 @@ If an IP address is specified, the client must be able to access the server at t
 
 The configuration parameters for the Kafka broker can be specified as described in [Kafka Documentation - 3.1 Broker Configs](https://kafka.apache.org/documentation/#brokerconfigs). In the Confluent Kafka container used here, Kafka broker properties can be set using the container's environment variables. The environment variable name to be specified in this case is the name of the property to be set for the Kafka broker, converted using the following rules.
 
-* Prefix the environment variable name with `KAFKA_`
-* Convert to all uppercase
-* Convert periods `. ` to underscores `_`
-* Replace hyphens `-` with a 2-letter underscore `__`.
-* replace an underscore `_` with a three-letter underscore `___`
+- Prefix the environment variable name with `KAFKA_`
+- Convert to all uppercase
+- Convert periods `.` to underscores `_`
+- Replace hyphens `-` with a 2-letter underscore `__`.
+- replace an underscore `_` with a three-letter underscore `___`
 
 For example, the property `message.max.bytes` is specified as the environment variable `KAFKA_MESSAGE_MAX_BYTES`.
 
@@ -188,7 +185,7 @@ For details on how to specify environment variables, see [Confluent Kafka config
 Execute the following command in the directory where you placed `docker-compose.yml` on the node where you want to run Kafka.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > Here is an example of running Docker Compose v2; if you are using v1, use `docker-compose` instead of `docker compose`.
@@ -207,17 +204,17 @@ Make sure that the state (STATUS) of the `broker` and `zookeeper` containers are
 If the STATUS value is not `running`, check the container logs to determine the cause of the error.
 
 ```console
-$ docker compose logs
+docker compose logs
 ```
 
 ### 3.4. Checking Operation
 
 You can confirm that the Kafka broker is ready to use by running the test producer and consumer. For instructions on how to run each of the test programs, please review the instructions at the following links.
 
-* Producer
-  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
-* Consumer
-  * [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
+- Producer
+  - [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
+- Consumer
+  - [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.en.md)
 
 ## 4. Building Elasticsearch
 
@@ -230,7 +227,7 @@ Place the files in the subdirectory `elasticsearch/` on the node where you want 
 Execute the following command on the node where you want to run Elasticsearch.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the status of the container.
@@ -324,7 +321,7 @@ The following table shows the parameters that must be set.
 Run the following command on the node where you want to run Kafka Connect.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the status of the container, making sure that the STATUS is `running`.
@@ -366,12 +363,12 @@ If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` value in 
 After starting the Kafka Connect container, register a connector that will transfer data from the topic to which the sensor data is sent to Elasticsearch. Run `register.sh` in the directory where you placed `docker-compose.yml`. The connector will be registered according to the parameters set in ``.env``.
 
 ```console
-$ ./register.sh
+./register.sh
 ```
 
 Running ``register.sh`` will register the following connectors:
 
-* es-sink
+- es-sink
 
 You can check the status of connector registrations and tasks by running the Kafka Connect REST API.
 
@@ -391,7 +388,7 @@ $ curl -s http://localhost:8083/connectors/es-sink/tasks/0/status | jq .
 If you want to change the ``.env`` parameters and register the connector again, delete the already registered connector. To remove a connector, issue the following command.
 
 ```console
-$ curl -s -X DELETE http://localhost:8083/connectors/es-sink
+curl -s -X DELETE http://localhost:8083/connectors/es-sink
 ```
 
 > For more information on Kafka Connect's REST API, see [Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html).
@@ -416,7 +413,7 @@ green open sinetstream.sensor-20220417 rDq3QLb9Rq6IcYCv8P_egw 1 0 1774  0 226.3k
 
 You can send test data to the Kafka broker by executing a test producer. For instructions on how to run the test program, please review the instructions documented in the following link.
 
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
+- [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
 
 > The test program sends random values instead of actual sensor readings.
 
@@ -444,7 +441,7 @@ For general settings related to Grafana containers other than the above paramete
 Run the following command on the node where you want to run Grafana.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the status of the container.
@@ -481,8 +478,7 @@ The graphs displayed on the dashboard are added dynamically according to the sen
 
 You can send test data to the Kafka broker by executing a test producer, which can be used to check the operation of Grafana or other server-side applications. For instructions on how to run the test program, please review the instructions noted in the following link.
 
-
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
+- [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.en.md)
 
 > The above link is the same as "[5.6. Send Test Data](#56-sending-test-data)".
 

@@ -180,7 +180,7 @@ describe('SettingForm.svelt', () => {
     });
 
     describe('sensors', () => {
-      const DEFAULT_SENSORS = [];
+      const DEFAULT_SENSORS: string[] = [];
 
       it('default', async () => {
         render(SettingForm, { props: { prevIndex: 0 } });
@@ -682,6 +682,87 @@ describe('SettingForm.svelt', () => {
       const result = get(currentSetting);
       expect(result.name).toBe(NAME);
       expect(result.layout?.template).toBe(name);
+    });
+  });
+
+  describe('Delete', () => {
+    beforeEach(() => {
+      settings.set([
+        {
+          version: '1.0',
+          name: '#1',
+          player: {
+            from: '2023-05-30 11:19',
+            to: '2023-05-30 11:34',
+            tick: 1200,
+            speed: 10,
+            repeat: false,
+          },
+          android: {
+            publisher: '', map: false, lte: false, sensors: [],
+          },
+          image: { topic: '', visible: false, update: 'push' },
+          perftool: { name: '', visible: false },
+          layout: { template: 'horizontal' },
+          chart: {
+            line: { enabled: true, size: 1 },
+            point: { enabled: true, size: 2 },
+            minSize: { width: 310, height: 250 },
+          },
+        },
+        {
+          version: '1.0',
+          name: '#2',
+          player: {
+            from: '2023-05-30 11:19',
+            to: '2023-05-30 11:34',
+            tick: 1200,
+            speed: 10,
+            repeat: false,
+          },
+          android: {
+            publisher: '', map: false, lte: false, sensors: [],
+          },
+          image: { topic: '', visible: false, update: 'push' },
+          perftool: { name: '', visible: false },
+          layout: { template: 'horizontal' },
+          chart: {
+            line: { enabled: true, size: 1 },
+            point: { enabled: true, size: 2 },
+            minSize: { width: 310, height: 250 },
+          },
+        },
+        {
+          version: '1.0',
+          name: '#3',
+          player: {
+            from: '2023-05-30 11:19',
+            to: '2023-05-30 11:34',
+            tick: 1200,
+            speed: 10,
+            repeat: false,
+          },
+          android: {
+            publisher: '', map: false, lte: false, sensors: [],
+          },
+          image: { topic: '', visible: false, update: 'push' },
+          perftool: { name: '', visible: false },
+          layout: { template: 'horizontal' },
+          chart: {
+            line: { enabled: true, size: 1 },
+            point: { enabled: true, size: 2 },
+            minSize: { width: 310, height: 250 },
+          },
+        },
+      ]);
+    });
+
+    it.each([0, 1, 2])('delete %i', async (index) => {
+      settingsIndex.set(index);
+      render(SettingForm, { props: { prevIndex: 0 } });
+      expect(get(currentSetting).name).toBe(`#${index + 1}`);
+      await user.click(screen.getByRole('button', { name: 'Delete' }));
+      expect(get(settings)).toHaveLength(2);
     });
   });
 });

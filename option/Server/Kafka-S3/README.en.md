@@ -2,11 +2,8 @@
 
 Save messages sent to the Kafka broker using SINETStream to object storage such as Amazon S3. To store messages from the Kafka broker in object storage, use [Kafka Connect](https://kafka.apache.org/documentation/#connect).
 
-
 ## 1. Configuration
 
-![System Configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph P[Producer]
@@ -22,7 +19,6 @@ flowchart LR
   SS-.->B==>KC==>S3
   KC==>M
 ```
--->
 
 This section describes the construction procedure when the following object storage is used as the destination for messages.
 
@@ -37,9 +33,9 @@ The version of each software component is listed below.
 
 |Software|Version|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
-|[Amazon S3 Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-s3)|10.0.7|
-|[MinIO](https://min.io/)|RELEASE.2022-04-12T06-55-35Z(*)|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[Amazon S3 Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-s3)|10.4.3|
+|[MinIO](https://min.io/)|RELEASE.2023-05-27T05-56-19Z(*)|
 
 (*) The building procedure shown here uses the latest tag as the container image of MinIO. Therefore, the actual environment may differ from this version.
 
@@ -84,8 +80,6 @@ Set parameters as environment variables for the container. Create `.env` in the 
 
 An example of `.env` description can be found in [kafka-connect-s3/example_dot_env](kafka-connect-s3/example_dot_env). Use it as a template for creating `.env`.
 
-
-
 #### 2.2.1. When using Amazon S3
 
 If you use Amazon S3 as a storage destination, please create the bucket specified in `S3_BUCKET_NAME` in advance. It is also required that you have the permission to write objects to the bucket with the access ID specified in `AWS_ACCESS_KEY_ID`.
@@ -111,8 +105,6 @@ The extension `.bin` of the object name corresponding to the payload can be chan
 
 ### 4.1. Using Amazon S3
 
-![Amazon S3](system-2.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph S[Server]
@@ -123,17 +115,14 @@ flowchart LR
   end
   BK[("Amazon S3<br>S3_BUCKET_NAME")]
   T===KC==>BK
-
-  style B y:35
 ```
--->
 
 #### 4.1.1. Running Containers
 
 Run the following command on the node where you want to run Kafka Connect.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the status of the container, making sure that STATUS is ``running``.
@@ -165,7 +154,7 @@ If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` in the `.
 Register connectors according to the parameters set in ``.env``. Run `register.sh` in the same directory as `docker-compose.yml`.
 
 ```console
-$ . /register.sh
+. /register.sh
 ````
 
 Running `register.sh` will register the following two connectors.
@@ -198,16 +187,14 @@ $ curl -s -X GET http://localhost:8083/connectors/s3-sink-timestamp/tasks/0/stat
 If you want to change the ``.env`` parameters and register the connector again, delete the already registered connector. To remove a connector, issue the following command.
 
 ```console
-$ curl -s -X DELETE http://localhost:8083/connectors/s3-sink-data
-$ curl -s -X DELETE http://localhost:8083/connectors/s3-sink-timestamp
+curl -s -X DELETE http://localhost:8083/connectors/s3-sink-data
+curl -s -X DELETE http://localhost:8083/connectors/s3-sink-timestamp
 ```
 
 For more information on Kafka Connect's REST API, see [Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html).
 
 ### 4.2. Using MinIO
 
-![MinIO](system-3.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph S[Server].
@@ -222,7 +209,6 @@ flowchart LR
   M[MinIO] BK[S3_BUCKET_NAME] end
   T===KC==>BK
 ```
--->
 
 In addition to Kafka Connect, the container can run MinIO, an S3-compatible object storage.
 
@@ -233,7 +219,7 @@ MinIO objects are stored as files in a subdirectory `data/` created in the direc
 On the node where you want to run Kafka Connect, execute the following command:
 
 ```console
-$ docker compose --profile minio up -d
+docker compose --profile minio up -d
 ```
 
 Check the status of the container, making sure that the STATUS is ``running``.
@@ -255,7 +241,7 @@ After the container is started, it takes a few minutes for the Kafka Connect sta
 Register connectors according to the parameters set in `.env`. Run `register.sh` in the same directory as `docker-compose.yml`.
 
 ```console
-$ . /register.sh
+. /register.sh
 ````
 
 Running `register.sh` will register the following two connectors.

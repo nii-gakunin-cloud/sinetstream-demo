@@ -114,11 +114,12 @@
     data = $queryResult.data;
   }
 
-  let targets = $$slots.pane ? ["_pane", ...$charts] : [...$charts];
+  let targets: string[] = [];
   let rows = targets.length;
   let cols = 1;
   let offset = 0;
   $: {
+    targets = $$slots.pane ? ["_pane", ...$charts] : [...$charts];
     if (maxCols > 1) {
       rows = Math.ceil(targets.length / maxCols);
       cols = Math.ceil(targets.length / rows);

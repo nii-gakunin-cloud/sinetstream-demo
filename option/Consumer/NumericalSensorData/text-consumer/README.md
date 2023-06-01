@@ -2,8 +2,6 @@
 
 Raspberry Pi から送信したセンサーの測定値などはサーバの Kafka ブローカに一時的に格納されています。ここでは Kafka ブローカに送られたテキストデータをクライアントで表示する `consumer.py` の実行手順を示します。
 
-![構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -17,7 +15,6 @@ flowchart LR
   end
   C-.->B==>SUB
 ```
--->
 
 ## 1. 準備
 
@@ -26,7 +23,7 @@ flowchart LR
 `consumer.py` を実行するための前提条件を以下に示します。
 
 * Python
-  * 3.7 以降
+  * 3.8 以降
 
 テキストデータの取得先となる Kafka ブローカが利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを事前に構築してください。
 
@@ -39,7 +36,7 @@ flowchart LR
 `consumer.py`が利用する Python ライブラリをインストールします。
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-mqtt
+pip install -U --user sinetstream-kafka sinetstream-mqtt
 ```
 
 > 既にインストールしているライブラリとconflictしてしまいエラーとなる場合は [venv](https://docs.python.org/ja/3/library/venv.html) や [pipenv](https://github.com/pypa/pipenv) などの仮想環境の利用を検討してください。また環境によっては `pip` コマンドは `pip3` となっていることがあります。必要に応じて読み替えて下さい。

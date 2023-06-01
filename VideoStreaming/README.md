@@ -2,8 +2,6 @@
 
 Raspberry Piのカメラで撮影した画像をGPUノードで処理し、その結果をクライアントで表示するシステムを構築します。システム構成を次図に示します。
 
-![システム構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R["Sensor: Raspberry Pi"]
@@ -27,7 +25,6 @@ flowchart LR
   end
   WR==>B===>RD
 ```
--->
 
 構築するシステムは３つのパートから構成されます。
 

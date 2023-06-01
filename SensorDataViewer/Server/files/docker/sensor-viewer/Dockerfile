@@ -5,6 +5,6 @@ COPY . ./
 RUN npm install && \
     npm run build
 
-FROM nginx:1.24.0
+FROM nginx:1.25.0
 
 COPY --from=builder /home/node/dist /var/www/html/

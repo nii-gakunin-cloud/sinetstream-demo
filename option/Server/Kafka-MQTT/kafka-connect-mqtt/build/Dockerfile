@@ -1,4 +1,4 @@
-FROM confluentinc/cp-kafka-connect:7.2.1
+FROM confluentinc/cp-kafka-connect:7.4.0
 
 ARG URL_KAFKA_CONNECT_MQTT=https://github.com/lensesio/stream-reactor/releases/download/3.0.1/kafka-connect-mqtt-3.0.1-2.5.0-all.tar.gz
 

@@ -4,8 +4,6 @@ SINETStreamを利用してMQTTブローカに送信されたメッセージをKa
 
 ## 1. 構成
 
-![システム構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph P[Producer]
@@ -18,7 +16,6 @@ flowchart LR
   end
   SS-.->|MQTT|MQTT===KC==>KB
 ```
--->
 
 ### 1.1. バージョン
 
@@ -26,8 +23,8 @@ flowchart LR
 
 |ソフトウェア|バージョン|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
-|[Eclipse Mosquitto](https://mosquitto.org/)|2.0.14|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[Eclipse Mosquitto](https://mosquitto.org/)|2.0.15|
 |[Stream Reactor](https://github.com/lensesio/stream-reactor)|3.0.1|
 
 ### 1.2. 前提条件
@@ -65,11 +62,10 @@ MQTTブローカとなる[Eclipse Mosquitto](https://mosquitto.org/)のコンテ
 MQTTブローカを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。STATUSが`running`となっていることを確認してください。
-
 
 ```console
 $ docker compose ps 
@@ -107,7 +103,6 @@ sensors:
   consistency: AT_LEAST_ONCE
 ```
 
-
 ## 3. Kafka Connect の構築
 
 ### 3.1. 資材の配置
@@ -134,7 +129,7 @@ sensors:
 Kafka Connectを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。STATUSが`running`となっていることを確認してください。
@@ -152,7 +147,7 @@ kafka-connect-mqtt-kafka-connect-mqtt-1   "/etc/confluent/dock…"   kafka-conne
 `.env`に設定されているパラメータに応じたコネクタを登録します。`docker-compose.yml`と同じディレクトリにある `register.sh`を実行してください。
 
 ```console
-$ ./register.sh
+./register.sh
 ```
 
 `register.sh` を実行すると次のコネクタが登録されます。
@@ -177,7 +172,7 @@ $ curl -s -X GET http://localhost:8083/connectors/mqtt-source/tasks/0/status  | 
 `.env`のパラメータを変更してコネクタを登録しなおす場合は、登録済のコネクタを削除してください。コネクタを削除するには以下のコマンドを実行してください。
 
 ```console
-$ curl -s -X DELETE http://localhost:8083/connectors/mqtt-source
+curl -s -X DELETE http://localhost:8083/connectors/mqtt-source
 ```
 
 Kafka ConnectのREST APIの詳細については[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html)を参照してください。

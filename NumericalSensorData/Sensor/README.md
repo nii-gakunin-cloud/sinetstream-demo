@@ -2,8 +2,6 @@
 
 Raspberry Piに接続されたセンサーデバイスの測定値を SINETStream を利用してKafkaブローカに送信します。
 
-![システム構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph C1[Raspberry Pi]
@@ -17,17 +15,14 @@ flowchart LR
   end
   S1---P
   P1==>B
-
-  style P y:35,height:93
 ```
--->
 
 ## 1. 前提条件
 
 * Raspberry Pi
   * ここで示す手順は Raspberry Pi OS で動作確認を行っています
 * Python
-  * 3.7 以降
+  * 3.8 以降
 
 センサーデータの送信先となる Kafka ブローカが利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを事前に構築してください。
 
@@ -133,14 +128,14 @@ def get_sensor_data(device):
 いくつかのセンサーにおける実装例を示します。
 
 * DHT11: 温度湿度センサー
-    * 実装例: [dht11/producer-dht11.py](dht11/producer-dht11.py)
-    * 手順書: [dht11/README.md](dht11/README.md)
+  * 実装例: [dht11/producer-dht11.py](dht11/producer-dht11.py)
+  * 手順書: [dht11/README.md](dht11/README.md)
 * [SHT3x](https://sensirion.com/jp/products/product-catalog/?filter_series=370b616d-de4c-469f-a22b-e5e8737481b5): 温度湿度センサー
-    * 実装例: [sht3x/producer-sht3x.py](sht3x/producer-sht3x.py)
-    * 手順書: [sht3x/README.md](sht3x/README.md)
+  * 実装例: [sht3x/producer-sht3x.py](sht3x/producer-sht3x.py)
+  * 手順書: [sht3x/README.md](sht3x/README.md)
 * [SCD41](https://sensirion.com/jp/products/product-catalog/SCD41/): CO2センサー
-    * 実装例: [scd41/producer-scd41.py](scd41/producer-scd41.py)
-    * 手順書: [scd41/README.md](scd41/README.md)
+  * 実装例: [scd41/producer-scd41.py](scd41/producer-scd41.py)
+  * 手順書: [scd41/README.md](scd41/README.md)
 
 ## 3. センサーデータの送信プログラムを実行する
 
@@ -149,7 +144,7 @@ def get_sensor_data(device):
 送信プログラムが利用する Python ライブラリをインストールします。
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-cmd
+pip install -U --user sinetstream-kafka sinetstream-cmd
 ```
 
 > 既にインストールしているライブラリとconflictしてしまいエラーとなる場合は [venv](https://docs.python.org/ja/3/library/venv.html) や [pipenv](https://github.com/pypa/pipenv) などの仮想環境の利用を検討してください。また環境によっては `pip` コマンドは `pip3` となっていることがあります。必要に応じて読み替えて下さい。
@@ -178,7 +173,7 @@ sensors:
 
 送信スクリプトのコマンドライン引数について説明します。
 
-```
+```console
 $ ./producer.py --help
 usage: producer.py [-h] [-s SERVICE] [-n NODE_NAME] [-I INTERVAL] [-v] [-R MAX_RETRY]
 
@@ -194,20 +189,20 @@ optional arguments:
 ```
 
 * `-n`
-    * データ送信元のホスト名
-    * デフォルト値: ホスト名
+  * データ送信元のホスト名
+  * デフォルト値: ホスト名
 * `-I`
-    * センサーの測定間隔
-    * デフォルト値: 60 (秒)
+  * センサーの測定間隔
+  * デフォルト値: 60 (秒)
 * `-v`
-    * 送信データをコンソールに表示する
+  * 送信データをコンソールに表示する
 * `-s`
-    * SINETStream設定ファイルに定義されているサービス名
-    * デフォルト値: `sensors`
+  * SINETStream設定ファイルに定義されているサービス名
+  * デフォルト値: `sensors`
 * `-R`
-    * エラー時のリトライ回数
-    * マイナスの値が指定された場合は無限にリトライを行う
-    * デフォルト値: -1
+  * エラー時のリトライ回数
+  * マイナスの値が指定された場合は無限にリトライを行う
+  * デフォルト値: -1
 
 ### 3.4. サービス登録
 
@@ -250,7 +245,7 @@ WantedBy=multi-user.target
 `/etc/systemd/system/` に作成した設定ファイルを systemd に読み込ませるために、以下のコマンドを実行してください。
 
 ```console
-$ sudo systemctl daemon-reload
+sudo systemctl daemon-reload
 ```
 
 `systemctl status`コマンドで、サービスが登録されたことを確認します。サービス名を`sensor`で登録した場合の実行例を以下に示します。

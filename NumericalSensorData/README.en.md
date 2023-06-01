@@ -2,8 +2,6 @@
 
 Send numerical values measured by sensors connected to Raspberry Pi to server for visualization with Zabbix/Grafana.
 
-![System configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R["Sensor: Raspberry Pi"]
@@ -18,7 +16,6 @@ flowchart LR
   Z==>W
   G==>W
 ```
--->
 
 The system to be built consists of two parts:
 

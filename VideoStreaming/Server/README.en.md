@@ -7,7 +7,6 @@ Here are examples of GPU processing using [OpenPose](https://github.com/CMU-Perc
 * YOLOv5
   * [Kafka-YOLO/README.en.md](Kafka-YOLO/README.en.md)
 
-
 If you only want to build a Kafka broker without image processing such as OpenPose, YOLOv5, etc., you can use `../../option/Server/` for instructions.
 
 * Kafka broker

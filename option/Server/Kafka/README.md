@@ -2,8 +2,6 @@
 
 Raspberry Piのカメラやセンサーなどで取得したデータを、ViewerやZabbix/Grafanaなどの可視化ツールとの間で受け渡す役割を果たす[Kafkaブローカ](https://kafka.apache.org/)を構築します。
 
-![構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph R[Raspberry Pi]
@@ -20,7 +18,6 @@ flowchart LR
   B-.->V2
   B-.->V3
 ```
--->
 
 ## 1. 構成について
 
@@ -56,7 +53,7 @@ Kafkaブローカのパラメータはコンテナの環境変数として設定
 
 `.env` は各行が「（パラメータ名）=（値）」の形式になっているファイルとなります。記述例を以下に示します。
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 KAFKA_MESSAGE_MAX_BYTES=20971520
 ```
@@ -85,13 +82,12 @@ Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1
 
 環境変数の指定方法の詳細については[Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration)を参照してください。
 
-
 ## 4. 実行
 
 `docker-compose.yml`を配置したディレクトリで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > ここでは Docker Compose v2 の実行例を示しています。v1を利用している場合は`docker compose`のかわりに`docker-compose`を用いてください。
@@ -110,5 +106,5 @@ zookeeper           "/etc/confluent/dock…"   zookeeper           running
 STATUSの値が`running`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
 
 ```console
-$ docker compose logs
+docker compose logs
 ```

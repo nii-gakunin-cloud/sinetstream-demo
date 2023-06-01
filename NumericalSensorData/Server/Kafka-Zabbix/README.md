@@ -28,8 +28,6 @@ Raspberry Piから送信されたセンサーデータを Zabbix で収集し可
 
 ## 1. 構成
 
-![構成-1](img/system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph C1[Raspberry Pi 1]
@@ -55,19 +53,18 @@ flowchart LR
   P2-.->B
   B==>KC==>|Zabbix trapper|ZS-.->W
 ```
--->
 
 ここで構築するサーバは３つのノードで構成されます。
 
-* Broker ノード
-  * 送信されたセンサーデータを受け取るKafkaブローカを実行するノード
-* Zabbix Sender ノード
-  * Kafkaブローカに送信されたデータをZabbixサーバに転送するノード
-  * KafkaブローカとZabbixとの間のメッセージ形式の変換などを行う
-* Zabbix ノード
-  * Zabbix サーバを実行するノード
-  * Zabbix サーバはグラフ表示などの可視化や監視を行う
-  * Zabbix サーバは送信されたデータの最終的な保管場所となる
+- Broker ノード
+  - 送信されたセンサーデータを受け取るKafkaブローカを実行するノード
+- Zabbix Sender ノード
+  - Kafkaブローカに送信されたデータをZabbixサーバに転送するノード
+  - KafkaブローカとZabbixとの間のメッセージ形式の変換などを行う
+- Zabbix ノード
+  - Zabbix サーバを実行するノード
+  - Zabbix サーバはグラフ表示などの可視化や監視を行う
+  - Zabbix サーバは送信されたデータの最終的な保管場所となる
 
 各ノードで実行するソフトウェアコンポーネントは同一のノードで実行することもできます。
 
@@ -77,16 +74,16 @@ flowchart LR
 
 |ソフトウェア|バージョン|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
 |[Zabbix](https://www.zabbix.com/)|6.0 LTS|
 
 ### 1.2. 制限
 
 ここで構築するシステムは SINETStream を利用した構築例を示すことを目的としています。そのため Kafkaブローカは簡易に構築することを優先して以下のような構成となっています。
 
-* 1ノード構成
-* 通信路の暗号化なし
-* 認証なし
+- 1ノード構成
+- 通信路の暗号化なし
+- 認証なし
 
 実際の運用に利用する際は、複数ノード構成にするなど必要に応じて適切な対応を行ってください。
 
@@ -100,14 +97,14 @@ flowchart LR
 
 以下のページなどを参照し Docker Engine のインストールを行ってください。Dockerのバージョンは 19.03.0 以上が必要となります。
 
-* [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
-* [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
-* [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
+- [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
+- [Install Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/)
+- [Install Docker Engine on Debian](https://docs.docker.com/engine/install/debian/)
 
 上記のインストール手順にも記されていますが、ユーザを `docker` グループに追加することで、管理者権限なしで `docker` コマンドを実行できるようになります。必要に応じてグループ設定を行ってください。
 
 ```console
-$ sudo gpasswd -a $USER docker
+sudo gpasswd -a $USER docker
 ```
 
 以降の説明では、管理者権限なしで `docker` コマンドを実行できる前提で実行例を示します。
@@ -119,16 +116,16 @@ $ sudo gpasswd -a $USER docker
 Docker Compose のインストール手順を以下に示します。ここでは Docker Compose v2のインストール手順を示しています。
 
 ```console
-$ sudo mkdir -p /usr/local/libexec/docker/cli-plugins
-$ sudo curl -L https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
-$ sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo mkdir -p /usr/local/libexec/docker/cli-plugins
+sudo curl -L https://github.com/docker/compose/releases/download/v2.18.1/docker-compose-linux-x86_64 -o /usr/local/libexec/docker/cli-plugins/docker-compose
+sudo chmod +x /usr/local/libexec/docker/cli-plugins/docker-compose
 ```
 
 インストールされたことを確認するためにバージョンを表示してみます。
 
 ```console
 $ docker compose version
-Docker Compose version v2.2.3
+Docker Compose version v2.18.1
 ```
 
 > Docker Compose v1 を利用している場合は `docker compose`のかわりに `docker-compose` を指定して実行してください。このドキュメントに示す実行例は全て Docker Compose v2 のものになります。v1 を利用する場合は`docker-compose`に読み替えてください。Docker Compose のバージョンは 1.27.1 以上が必要となります。
@@ -138,13 +135,15 @@ Docker Compose version v2.2.3
 Zabbixの構築には git コマンドを利用します。Zabbixサーバを構築するノードでは、OSのパッケージなどを利用してgitコマンドをインストールしてください。
 
 CentOS / RHEL の場合は次のコマンドを実行してください。
+
 ```command
-$ sudo yum install git
+sudo yum install git
 ```
 
 Debian / Ubuntu の場合は次のコマンドを実行してください。
+
 ```command
-$ sudo apt install git
+sudo apt install git
 ```
 
 ## 3. Kafkaブローカの構築
@@ -161,7 +160,7 @@ Kafkaブローカのパラメータはコンテナの環境変数として設定
 
 `.env` は各行が「（パラメータ名）=（値）」の形式になっているファイルとなります。記述例を以下に示します。
 
-```
+```bash
 BROKER_HOSTNAME=kafka.example.org
 ```
 
@@ -181,11 +180,11 @@ KAFKAブローカのアドレスとしてクライアントに知らせるホス
 
 Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1 Broker Configs](https://kafka.apache.org/documentation/#brokerconfigs) に記されているものを指定することができます。ここで利用するConfluentのKafkaコンテナでは、コンテナの環境変数によりKafkaブローカのプロパティを設定することができます。この際に指定する環境変数名は、以下のようなルールでKafkaブローカに設定するプロパティ名を変換したものになります。
 
-* 環境変数名のプレフィックスに `KAFKA_` をつける
-* 全て大文字に変換する
-* ピリオド `.` を アンダースコア `_` に置き換える
-* ハイフン `-` を ２文字のアンダースコア `__` に置き換える
-* アンダースコア`_` を ３文字のアンダースコア `___` に置き換える
+- 環境変数名のプレフィックスに `KAFKA_` をつける
+- 全て大文字に変換する
+- ピリオド `.` を アンダースコア `_` に置き換える
+- ハイフン `-` を ２文字のアンダースコア `__` に置き換える
+- アンダースコア`_` を ３文字のアンダースコア `___` に置き換える
 
 例えば、プロパティ`message.max.bytes`は環境変数`KAFKA_MESSAGE_MAX_BYTES`として指定します。
 
@@ -196,7 +195,7 @@ Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1
 Kafkaを実行するノードの`docker-compose.yml`を配置したディレクトリで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 > ここでは Docker Compose v2 の実行例を示しています。v1を利用している場合は`docker compose`のかわりに`docker-compose`を用いてください。
@@ -215,17 +214,17 @@ zookeeper           "/etc/confluent/dock…"   zookeeper           running
 STATUSの値が`running`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
 
 ```console
-$ docker compose logs
+docker compose logs
 ```
 
 ### 3.4. 動作確認
 
 テスト用のプロデューサとコンシューマを実行することで Kafka ブローカが利用可能な状態になっていることを確認することができます。それぞれのテストプログラムの実行方法については以下のリンク先に記された手順を確認してください。
 
-* プロデューサ
-  * [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
-* コンシューマ
-  * [option/Consumer/NumericalSensorData/text-consumer/README.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.md)
+- プロデューサ
+  - [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
+- コンシューマ
+  - [option/Consumer/NumericalSensorData/text-consumer/README.md](../../../option/Consumer/NumericalSensorData/text-consumer/README.md)
 
 ## 4. Zabbixサーバの構築
 
@@ -234,7 +233,7 @@ $ docker compose logs
 GitHubの[zabbix/zabbix-docker](https://github.com/zabbix/zabbix-docker) からZabbixを構築するための資材を取得します。Zabbixサーバを構築するノードで以下のコマンドを実行してください。
 
 ```console
-$ git clone https://github.com/zabbix/zabbix-docker.git -b 6.0 --depth 1
+git clone https://github.com/zabbix/zabbix-docker.git -b 6.0 --depth 1
 ```
 
 > ここで提示する構築手順では Zabbix サーバのバージョンとして 6.0 を想定しています。そのため `6.0` ブランチを指定して資材の取得を行っています。
@@ -245,17 +244,16 @@ Zabbixサーバはデータベース、Webサーバ(nginx)、Zabbixサーバ本�
 
 ベースイメージのOSは以下のもの用意されています。
 
-* [Alpine Linux 3.12](https://hub.docker.com/_/alpine/)
-* [Ubuntu 20.04](https://hub.docker.com/_/ubuntu/)
-* [Oracle Linux 8](https://hub.docker.com/_/oraclelinux/)
+- [Alpine Linux 3.12](https://hub.docker.com/_/alpine/)
+- [Ubuntu 20.04](https://hub.docker.com/_/ubuntu/)
+- [Oracle Linux 8](https://hub.docker.com/_/oraclelinux/)
 
 > CentOS 8 はサポート期間外となりベースイメージが古くなったためOracle Linuxに置き換えられたとのことです([参照](https://github.com/zabbix/zabbix-docker#base-docker-image))。
 
-
 データベースには以下のもの用意されています。
 
-* [MySQL](https://www.mysql.com/jp/)
-* [PostgreSQL](https://www.postgresql.org/)
+- [MySQL](https://www.mysql.com/jp/)
+- [PostgreSQL](https://www.postgresql.org/)
 
 提供されている Docker Composeの設定ファイルの詳細については[Zabbix Documentation - Installation from containers - Docker Compose](https://www.zabbix.com/documentation/current/en/manual/installation/containers#docker-compose)を参照してください。
 
@@ -303,8 +301,8 @@ zabbix-docker-zabbix-agent-1   "/sbin/tini -- /usr/…"   zabbix-agent        ru
 Zabbix Agent を v2 のコンテナイメージに変更する場合は、以下のコマンドを実行してください。センサーデータの表示には Zabbix Agent v2 を利用していないので任意の操作となります。
 
 ```console
-$ sed -i -e '/image:/s/zabbix-agent:/zabbix-agent2:/' docker-compose.yaml
-$ docker compose up -d zabbix-agent
+sed -i -e '/image:/s/zabbix-agent:/zabbix-agent2:/' docker-compose.yaml
+docker compose up -d zabbix-agent
 ```
 
 ### 4.3. Zabbixサーバの設定
@@ -319,11 +317,11 @@ Usernameに `Admin` を Password に `zabbix` を入力することで、初期�
 
 この後、行う設定内容を以下に示します。
 
-* Zabbix serverのアドレスを修正する
-* タイムゾーンを設定する
-* センサーデータの可視化、監視を設定する
-  * テンプレートの登録
-  * ホストの登録
+- Zabbix serverのアドレスを修正する
+- タイムゾーンを設定する
+- センサーデータの可視化、監視を設定する
+  - テンプレートの登録
+  - ホストの登録
 
 それぞれの設定内容に関する説明を以下に記します。
 
@@ -401,8 +399,8 @@ Zabbixにホストの登録を行います。
 
 ホストを登録するには必須項目である以下の２項目
 
-* Host name
-* Groups
+- Host name
+- Groups
 
 を入力し、さらに[Templates]欄に先ほど登録した[SINETStream connector]テンプレートを指定する操作を行います。
 
@@ -436,12 +434,12 @@ Zabbixにホストの登録を行います。
 
 テンプレートには以下の設定が含まれています。
 
-* センサーデータの送信先となるアイテム
-    - `sinetstream.connector`
-* センサー種別、送信元クライアント名のディスカバリールール
-    - 送信元クライアント名: `{#SENSOR_NODE}`
-    - センサー種別: `{#SENSOR}`
-* センサーデータの送信が途切れたことを検出するトリガー
+- センサーデータの送信先となるアイテム
+  - `sinetstream.connector`
+- センサー種別、送信元クライアント名のディスカバリールール
+  - 送信元クライアント名: `{#SENSOR_NODE}`
+  - センサー種別: `{#SENSOR}`
+- センサーデータの送信が途切れたことを検出するトリガー
 
 アイテム`sinetstream.connector`に送信されるデータは、以下のような JSON の形式であることを想定しています。
 
@@ -454,7 +452,6 @@ Zabbixにホストの登録を行います。
 ```
 
 このJSONデータでは`node`にセンサーデータを送信した Raspberry Pi を特定するための値（通常はホスト名）が指定され、他のキーバリューには、センサー種別とその測定値が指定されているものとして解釈します。例示したJSONデータの場合`raspi3b`というホストから温度センサー(`temperature`)の測定値が 24.1 °Ｃで 湿度センサー(`humidity`)の測定値が 48.4 % であることを表しています。
-
 
 テンプレートに設定されているディスカバリールールでは、アイテム`sinetstream.connector`に送信されたデータの `node` の値から送信元クライアント名 `{#SENSOR_NODE}`を、他のキーからセンサー種別 `{#SENSOR}` を検出します。また検出した`{#SENSOR_NODE}`と`{#SENSOR}`に基づいた、新たなアイテムとグラフを追加するアイテムプロトタイプとグラフプロトタイプが定義されています。これによりセンサー種別や送信元となるRaspberry Piの変化に応じてアイテムやグラフが自動的に追加されます。
 
@@ -498,8 +495,6 @@ Latest data にはKafkaからの送信先となるアイテム`sinetstream.conne
 
 ### 5.2. パラメータの設定
 
-![構成](img/system-2.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph B["Kafka broker<br><br><br>BROKER_HOSTNAME"]
@@ -512,7 +507,6 @@ flowchart LR
 
   ST==>|SINETStream|ZS==>|Zabbix trapper|ZH
 ```
--->
 
 Dockerコンテナの環境変数を設定するファイル `.env` で以下に示すパラメータを指定します。`.env`では`{環境変数名}={パラメータの値}`の形式で値を指定します。
 
@@ -543,7 +537,7 @@ ZABBIX_HOST=SINETStream
 Kafkaのコンテナを起動します。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 初回起動時はコンテナイメージをビルドするので起動が完了するまでに時間がかかります。起動後にコンテナの状態を確認します。
@@ -570,10 +564,10 @@ Kafkaブローカの`.env`に指定した`BROKER_HOSTNAME`の値が（IPアド�
 ### 5.4. テストデータの送信
 
 テスト用のプロデューサを実行することでKafkaブローカにテストデータを送信し、Zabbixなどのサーバ側の動作を確認することができます。Raspberry Piから実際のセンサーデータを送信する前にテストプログラムによる確認を行うことを推奨します。
- 
+
 テストプログラムの実行方法については以下のリンク先に記された手順を確認してください。
 
-* [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
+- [NumericalSensorData/Sensor/template/README](../../Sensor/template/README.md)
 
 > テストプログラムでは、実際のセンサーの測定値のかわりに乱数値を送信します。そのため送信データのセンサー種別は`random`という名前になっています。
 
@@ -581,8 +575,6 @@ Kafkaブローカの`.env`に指定した`BROKER_HOSTNAME`の値が（IPアド�
 
 ### 6.1. ZabbixによるKafkaブローカの監視
 
-![構成3](img/system-3.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph K[Kafka]
@@ -596,7 +588,6 @@ flowchart LR
 
   B==>|JMX|ZJG===ZS-.->W
 ```
--->
 
 Zabbixが提供しているテンプレート[Apache Kafka by JMX](https://www.zabbix.com/integrations/kafka)を利用するとKafkaブローカをZabbixから監視することが出来ます。ここでは、その設定手順を説明します。
 

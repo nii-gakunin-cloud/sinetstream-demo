@@ -2,11 +2,8 @@
 
 SINETStreamを利用してKafkaブローカに送信されたメッセージをAmazon S3などのオブジェクトストレージに保存します。Kafkaブローカからメッセージをオブジェクトストレージに保管するために[Kafka Connect](https://kafka.apache.org/documentation/#connect)を利用します。
 
-
 ## 1. 構成
 
-![システム構成](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph P[Producer]
@@ -22,7 +19,6 @@ flowchart LR
   SS-.->B==>KC==>S3
   KC==>M
 ```
--->
 
 メッセージの保存先となるオブジェクトストレージとして、以下のものを利用する場合の構築手順を説明します。
 
@@ -37,9 +33,9 @@ MinIOはKafka Connectと同じサーバ内のコンテナとして実行しま�
 
 |ソフトウェア|バージョン|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.1.0|
-|[Amazon S3 Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-s3)|10.0.7|
-|[MinIO](https://min.io/)|RELEASE.2022-04-12T06-55-35Z(*)|
+|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[Amazon S3 Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-s3)|10.4.3|
+|[MinIO](https://min.io/)|RELEASE.2023-05-27T05-56-19Z(*)|
 
 (*) ここで示す構築手順では MinIO のコンテナイメージとして latest タグのものを利用しています。そのため実際の構築環境ではこのバージョンと異なる場合があります。
 
@@ -84,8 +80,6 @@ Docker Engine は 19.03.0 以上、Docker Compose は 1.27.1 以上が必要と�
 
 `.env`の記述例が [kafka-connect-s3/example_dot_env](kafka-connect-s3/example_dot_env) にあります。`.env`を作成する際のテンプレートとして利用してください。
 
-
-
 #### 2.2.1. Amazon S3を利用する場合
 
 Amazon S3を保存先とする場合、`S3_BUCKET_NAME`に指定したバケットをあらかじめ作成しておいてください。また`AWS_ACCESS_KEY_ID` に指定したアクセスIDでバケットにオブジェクトを書き込む権限が設定されていることを必要とします。
@@ -111,8 +105,6 @@ SINETStreamによってKafkaブローカに送信されたメッセージは、�
 
 ### 4.1. Amazon S3を利用する場合
 
-![Amazon S3](system-2.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph S[Server]
@@ -123,17 +115,14 @@ flowchart LR
   end
   BK[("Amazon S3<br>S3_BUCKET_NAME")]
   T===KC==>BK
-
-  style B y:35
 ```
--->
 
 #### 4.1.1. コンテナの実行
 
 Kafka Connectを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 コンテナの状態を確認します。STATUSが`running`となっていることを確認してください。
@@ -165,7 +154,7 @@ Kafkaブローカの`.env`に指定した`BROKER_HOSTNAME`の値が（IPアド�
 `.env`に設定されているパラメータに応じたコネクタを登録します。`docker-compose.yml`と同じディレクトリにある `register.sh`を実行してください。
 
 ```console
-$ ./register.sh
+./register.sh
 ```
 
 `register.sh` を実行すると次の２つのコネクタが登録されます。
@@ -198,16 +187,14 @@ $ curl -s -X GET http://localhost:8083/connectors/s3-sink-timestamp/tasks/0/stat
 `.env`のパラメータを変更してコネクタを登録しなおす場合は、登録済のコネクタを削除してください。コネクタを削除するには以下のコマンドを実行してください。
 
 ```console
-$ curl -s -X DELETE http://localhost:8083/connectors/s3-sink-data
-$ curl -s -X DELETE http://localhost:8083/connectors/s3-sink-timestamp
+curl -s -X DELETE http://localhost:8083/connectors/s3-sink-data
+curl -s -X DELETE http://localhost:8083/connectors/s3-sink-timestamp
 ```
 
 Kafka ConnectのREST APIの詳細については[Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html)を参照してください。
 
 ### 4.2. MinIOを利用する場合
 
-![MinIO](system-3.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph S[Server]
@@ -222,7 +209,6 @@ flowchart LR
   end
   T===KC==>BK
 ```
--->
 
 Kafka Connectに加えS3互換のオブジェクトストレージ のMinIO をコンテナで実行します。
 
@@ -233,7 +219,7 @@ MinIOのオブジェクトは docker compose を実行したディレクトリ�
 Kafka Connectを実行するノードで以下のコマンドを実行してください。
 
 ```console
-$ docker compose --profile minio up -d
+docker compose --profile minio up -d
 ```
 
 コンテナの状態を確認します。STATUSが`running`となっていることを確認してください。
@@ -255,7 +241,7 @@ kafka-connect-s3-minio-1           "/usr/bin/docker-ent…"   minio             
 `.env`に設定されているパラメータに応じたコネクタを登録します。`docker-compose.yml`と同じディレクトリにある `register.sh`を実行してください。
 
 ```console
-$ ./register.sh
+./register.sh
 ```
 
 `register.sh` を実行すると次の２つのコネクタが登録されます。

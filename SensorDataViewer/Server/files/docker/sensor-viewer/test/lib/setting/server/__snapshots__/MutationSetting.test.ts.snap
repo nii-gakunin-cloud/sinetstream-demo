@@ -1,15 +1,15 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`MutationSetting.svelt > error > update error 1`] = `
-"<div><div class=\\"overlay active\\"></div> <div class=\\"modal active\\"><h6>Warning</h6> <div><i>warning</i> <span>サーバに登録されている設定を上書き更新しようとしています。
-        よろしいですか？</span></div> <nav class=\\"right-align\\"><button class=\\"border\\">Cancel</button> <button>OK</button></nav></div><!--<MutationSetting>--></div>"
+"<div><div class=\\"overlay active\\"></div> <dialog open=\\"\\"><h6>Warning</h6> <div><i>warning</i> <span>サーバに登録されている設定を上書き更新しようとしています。
+        よろしいですか？</span></div> <nav class=\\"right-align\\"><button class=\\"border\\">Cancel</button> <button>OK</button></nav></dialog><!--<MutationSetting>--></div>"
 `;
 
 exports[`MutationSetting.svelt > error > update error 2`] = `"<div><!--<MutationSetting>--></div>"`;
 
 exports[`MutationSetting.svelt > mutation > cancel update 1`] = `
-"<div><div class=\\"overlay active\\"></div> <div class=\\"modal active\\"><h6>Warning</h6> <div><i>warning</i> <span>サーバに登録されている設定を上書き更新しようとしています。
-        よろしいですか？</span></div> <nav class=\\"right-align\\"><button class=\\"border\\">Cancel</button> <button>OK</button></nav></div><!--<MutationSetting>--></div>"
+"<div><div class=\\"overlay active\\"></div> <dialog open=\\"\\"><h6>Warning</h6> <div><i>warning</i> <span>サーバに登録されている設定を上書き更新しようとしています。
+        よろしいですか？</span></div> <nav class=\\"right-align\\"><button class=\\"border\\">Cancel</button> <button>OK</button></nav></dialog><!--<MutationSetting>--></div>"
 `;
 
 exports[`MutationSetting.svelt > mutation > cancel update 2`] = `"<div><!--<MutationSetting>--></div>"`;
@@ -17,8 +17,8 @@ exports[`MutationSetting.svelt > mutation > cancel update 2`] = `"<div><!--<Muta
 exports[`MutationSetting.svelt > mutation > insert 1`] = `"<div><!--<MutationSetting>--></div>"`;
 
 exports[`MutationSetting.svelt > mutation > update 1`] = `
-"<div><div class=\\"overlay active\\"></div> <div class=\\"modal active\\"><h6>Warning</h6> <div><i>warning</i> <span>サーバに登録されている設定を上書き更新しようとしています。
-        よろしいですか？</span></div> <nav class=\\"right-align\\"><button class=\\"border\\">Cancel</button> <button>OK</button></nav></div><!--<MutationSetting>--></div>"
+"<div><div class=\\"overlay active\\"></div> <dialog open=\\"\\"><h6>Warning</h6> <div><i>warning</i> <span>サーバに登録されている設定を上書き更新しようとしています。
+        よろしいですか？</span></div> <nav class=\\"right-align\\"><button class=\\"border\\">Cancel</button> <button>OK</button></nav></dialog><!--<MutationSetting>--></div>"
 `;
 
 exports[`MutationSetting.svelt > mutation > update 2`] = `"<div><!--<MutationSetting>--></div>"`;

@@ -4,8 +4,6 @@ Forward messages sent to the MQTT broker using SINETStream to the Kafka broker. 
 
 ## 1. Configuration
 
-![System Configuration](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph P[Producer]
@@ -18,7 +16,6 @@ flowchart LR
   end
   SS-.->|MQTT|MQTT===KC==>KB
 ```
--->
 
 ### 1.1. Version
 
@@ -26,8 +23,8 @@ The version of each software component is shown below.
 
 | Software                                                     | Version |
 |--------------------------------------------------------------|---------|
-| [Apache Kafka](https://kafka.apache.org/)                    | 3.1.0   |
-| [Eclipse Mosquitto](https://mosquitto.org/)                  | 2.0.14  |
+| [Apache Kafka](https://kafka.apache.org/)                    | 3.4.0   |
+| [Eclipse Mosquitto](https://mosquitto.org/)                  | 2.0.15  |
 | [Stream Reactor](https://github.com/lensesio/stream-reactor) | 3.0.1   |
 
 ### 1.2. Prerequisites
@@ -65,11 +62,10 @@ Place the files in the subdirectory `mqtt/` on the node where you want to run th
 Execute the following command on the node where the MQTT broker is to be executed.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the status of the container, making sure that the STATUS is ``running``.
-
 
 ```console
 $ docker compose ps 
@@ -107,7 +103,6 @@ sensors:
   consistency: AT_LEAST_ONCE
 ```
 
-
 ## Building Kafka Connect
 
 ### 3.1. Deploying Materials
@@ -134,7 +129,7 @@ An example of `.env` description can be found in [kafka-connect-mqtt/example_dot
 Run the following command on the node where you want to run Kafka Connect.
 
 ```console
-$ docker compose up -d
+docker compose up -d
 ```
 
 Check the status of the container, making sure that the STATUS is ``running``.
@@ -152,7 +147,7 @@ After the container is started, it takes a few minutes for the Kafka Connect sta
 Register connectors according to the parameters set in `.env`. Run `register.sh` in the same directory as `docker-compose.yml`.
 
 ```console
-$ . /register.sh
+. /register.sh
 ````
 
 Running `register.sh` will register the following connectors.
@@ -177,7 +172,7 @@ $ curl -s -X GET http://localhost:8083/connectors/mqtt-source/tasks/0/status  | 
 To change the ``.env`` parameters and re-register the connector, delete the already registered connector. To remove a connector, issue the following command.
 
 ```console
-$ curl -s -X DELETE http://localhost:8083/connectors/mqtt-source
+curl -s -X DELETE http://localhost:8083/connectors/mqtt-source
 ```
 
 For more information on Kafka Connect's REST API, see [Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html).

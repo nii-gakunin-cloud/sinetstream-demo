@@ -7,7 +7,7 @@ The following is an example implementation that serves as a model for a sensor d
 ### 1.1. Prerequisites
 
 * Python
-  * Python 3.7 or later
+  * Python 3.8 or later
 
 The Kafka broker to which the sensor data will be sent must be available. Please pre-build the Kafka broker with one of the following configurations.
 
@@ -20,7 +20,7 @@ The Kafka broker to which the sensor data will be sent must be available. Please
 Install the Python libraries that the sending program will use.
 
 ```console
-$ pip install -U --user sinetstream-cmd sinetstream-kafka sinetstream-mqtt
+pip install -U --user sinetstream-cmd sinetstream-kafka sinetstream-mqtt
 ```
 
 > If you get an error because of conflicts with libraries you have already installed, use [venv](https://docs.python.org/ja/3/library/venv.html) or [pipenv](https://github.com/pypa/pipenv). Also, the `pip` command may be `pip3` in some environments. Replace it as necessary.
@@ -46,7 +46,7 @@ Modify the values of `brokers` and `topic` to match your environment. See [SINET
 Execute the following command to send data to the broker every minute. The destination broker is the one described in the configuration file `.sinetstream_config.yml`.
 
 ```console
-$ . /producer.py
+. /producer.py
 ```
 
 The following JSON data will be sent to the Kafka broker.
@@ -72,7 +72,7 @@ $ ./producer.py -v
 If you want to set the interval between sensor measurements to something other than 1 minute, specify the measurement interval (in seconds) in the command line argument `-I`. For example, to set the interval to 5 minutes, specify the following.
 
 ```console
-$ ./producer.py -I 300
+./producer.py -I 300
 ```
 
 ## 3. Verify operation

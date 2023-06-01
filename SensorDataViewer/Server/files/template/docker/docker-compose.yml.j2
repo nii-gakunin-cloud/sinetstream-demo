@@ -136,7 +136,7 @@ services:
       kafka:
         condition: service_healthy
   graphql:
-    image: hasura/graphql-engine:v2.25.1-ce.cli-migrations-v3
+    image: hasura/graphql-engine:v2.26.0-ce.cli-migrations-v3
     restart: always
     volumes:
       - ./init/hasura:/hasura-metadata
@@ -151,7 +151,7 @@ services:
       postgres:
         condition: service_healthy
   nginx:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.1
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.2
     ports:
   {%- if www.protocol == "https" %}
       - "443:443"

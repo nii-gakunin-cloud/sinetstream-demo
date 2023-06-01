@@ -2,8 +2,6 @@
 
 動画ファイルから切り出した画像をサーバに送信する環境を構築する手順を示します。
 
-![構成図](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph S[image-sender]
@@ -19,7 +17,6 @@ flowchart LR
   F==>S
   SS==>|publish|B-.->RD
 ```
--->
 
 ## 1. 準備
 
@@ -28,7 +25,7 @@ flowchart LR
 `image-sender` を実行するための前提条件を以下に示します。
 
 * Python
-  * 3.7 以降
+  * 3.8 以降
 
 また画像ストリームの送信先となる Kafka ブローカが利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを事前に構築してください。
 
@@ -41,7 +38,7 @@ flowchart LR
 `image-sender`が利用する Python ライブラリをインストールします。
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-type-image
+pip install -U --user sinetstream-kafka sinetstream-type-image
 ```
 
 > 既にインストールしているライブラリとconflictしてしまいエラーとなる場合は [venv](https://docs.python.org/ja/3/library/venv.html) や [pipenv](https://github.com/pypa/pipenv) などの仮想環境の利用を検討してください。また環境によっては `pip` コマンドは `pip3` となっていることがあります。必要に応じて読み替えて下さい。

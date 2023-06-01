@@ -2,8 +2,6 @@
 
 The following is the procedure for building an environment to send images cut from a video file to a server.
 
-![Configuration diagram](system-1.svg)
-<!--
 ```mermaid
 flowchart LR
   subgraph S[image-sender]
@@ -19,7 +17,6 @@ flowchart LR
   F==>S
   SS==>|publish|B-.->RD
 ```
--->
 
 ## 1. Preparation
 
@@ -28,7 +25,7 @@ flowchart LR
 The following are the prerequisites for running `image-sender`.
 
 * Python
-  * 3.7 or later
+  * 3.8 or later
 
 The Kafka broker to which the image stream will be sent must be available. Please pre-build the Kafka broker with one of the following configurations.
 
@@ -41,7 +38,7 @@ The Kafka broker to which the image stream will be sent must be available. Pleas
 Install the Python libraries that ``image-sender`` uses.
 
 ```console
-$ pip install -U --user sinetstream-kafka sinetstream-type-image
+pip install -U --user sinetstream-kafka sinetstream-type-image
 ```
 
 > If you get an error because of conflicts with libraries you have already installed, use [venv](https://docs.python.org/ja/3/library/venv.html) or [pipenv](https://github.com/pypa/pipenv). Also, the `pip` command may be `pip3` in some environments. Replace it as necessary.

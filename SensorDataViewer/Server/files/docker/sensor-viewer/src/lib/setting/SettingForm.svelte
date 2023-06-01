@@ -103,7 +103,7 @@
   }
 
   function onDelete(_event) {
-    $settings.splice($settingsIndex);
+    $settings.splice($settingsIndex, 1);
     $settings = $settings;
     navigate(`/${$mode}/${$settingsIndex > 0 ? $settingsIndex - 1 : 0}`);
   }

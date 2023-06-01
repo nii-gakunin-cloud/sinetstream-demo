@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   kafka-connect:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sample/kafka-connect:latest
+    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.1.0
     hostname: ${REST_ADVERTISED_HOST_NAME:-kafka-connect}
     environment:
       CONNECT_BOOTSTRAP_SERVERS: ${BROKER_HOSTNAME}:9092
@@ -22,7 +22,7 @@ services:
     ports:
       - "${REST_PORT:-8083}:8083"
   minio:
-    image: minio/minio
+    image: quay.io/minio/minio:latest
     command: server /data
     environment:
       MINIO_BROWSER: off
@@ -40,7 +40,7 @@ services:
       timeout: 20s
       retries: 3
   create-bucket:
-    image: minio/mc
+    image: quay.io/minio/mc:latest
     depends_on:
       - minio
     profiles:
