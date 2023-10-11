@@ -11,6 +11,8 @@
     settings,
     settingsIndex,
     viewerSettingSchemaV1,
+    type ViewerSetting,
+    type ViewerSettingV1,
   } from "../settings";
   import AndroidSensorsForm from "./AndroidSensorsForm.svelte";
   import ChartForm from "./ChartForm.svelte";
@@ -20,7 +22,7 @@
   import PlayerForm, { validate as playerValidate } from "./PlayerForm.svelte";
   import { settingParameters } from "./server/server";
 
-  export let prevIndex;
+  export let prevIndex: number;
 
   const schema = viewerSettingSchemaV1
     .omit({ name: true, version: true })
@@ -28,7 +30,7 @@
       name: zod.string().min(1),
     });
 
-  const onSubmit = (values) => {
+  const onSubmit = (values: ViewerSetting) => {
     let setting = {
       version: "1.0",
       ...values,
@@ -42,8 +44,8 @@
     navigate(`/${$mode}/${$settingsIndex}`);
   };
 
-  const validateName = (values) => {
-    const errors = {};
+  const validateName = (values: Record<string, any>) => {
+    const errors: Record<string, string> = {};
     const unique = $settings
       .filter((_, idx) => idx !== Number($settingsIndex))
       .every((it) => it.name !== values.name);
@@ -77,7 +79,7 @@
         const oldValue = getValue($data, path);
         const newValue = $settingParameters[key0][key1];
         if (oldValue !== newValue) {
-          setFields(path, newValue, true);
+          setFields(path as keyof ViewerSettingV1, newValue, true);
           setIsDirty(true);
         }
       });
@@ -90,23 +92,27 @@
     validate();
   });
 
-  function onCancel(_event) {
+  function onCancel(_event: unknown) {
     if ($settingsIndex < $settings.length) {
       navigate(`/${$mode}/${$settingsIndex}`);
     } else {
       navigate(`/${$mode}/${prevIndex}`);
     }
   }
-  function onReset(_event) {
+  function onReset(_event: unknown) {
     reset();
     validate();
   }
 
-  function onDelete(_event) {
+  function onDelete(_event: unknown) {
     $settings.splice($settingsIndex, 1);
     $settings = $settings;
     navigate(`/${$mode}/${$settingsIndex > 0 ? $settingsIndex - 1 : 0}`);
   }
+
+  const androidSensors = (params: Record<string, any>) => {
+    return (params as ViewerSettingV1)?.android?.sensors ?? [];
+  };
 </script>
 
 <div>
@@ -126,7 +132,7 @@
         updateDirty={() => {
           $isDirty = true;
         }}
-        selected={$data.android.sensors}
+        selected={androidSensors($data)}
       />
       <PicameraForm />
       <PerftoolForm />

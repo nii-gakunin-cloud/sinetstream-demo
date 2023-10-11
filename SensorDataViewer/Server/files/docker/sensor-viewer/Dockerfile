@@ -1,10 +1,10 @@
-FROM node:18.16.0 AS builder
+FROM node:18.18.0 AS builder
 
 WORKDIR /home/node
 COPY . ./
-RUN npm install && \
+RUN npm install --legacy-peer-deps && \
     npm run build
 
-FROM nginx:1.25.0
+FROM nginx:1.25.2
 
 COPY --from=builder /home/node/dist /var/www/html/

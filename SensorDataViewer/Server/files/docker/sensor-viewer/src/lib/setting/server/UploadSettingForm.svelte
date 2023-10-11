@@ -16,15 +16,15 @@
   const targets = writable([] as string[]);
   setContext(formKey, {
     targets,
-    updateTargets: (targets) => {
+    updateTargets: (targets: string[]) => {
       setFields("targets", targets);
     },
   });
 
   let configName: string | null = null;
-  const onSubmit = (values) => {
+  const onSubmit = (_values: unknown) => {
     let { name } = $data;
-    configName = name;
+    configName = name as string;
   };
 
   const schema = zod.object({
@@ -46,13 +46,13 @@
     navigate(`/setting/${$settingsIndex}`);
   }
 
-  function onCancel(_event) {
+  function onCancel(_event: unknown) {
     back();
   }
 
   let gqlError: string | null = null;
 
-  function handleNotify(event) {
+  function handleNotify(event: CustomEvent) {
     const { error, mutation } = event?.detail ?? {};
     gqlError = error != null ? error.message : null;
     if (mutation != null) {
@@ -66,7 +66,12 @@
   }
 
   $: {
-    targets.set($data?.targets ?? []);
+    const new_targets = $data?.targets;
+    if (new_targets != null && Array.isArray(new_targets)) {
+      targets.set(new_targets);
+    } else {
+      targets.set([]);
+    }
   }
 </script>
 
@@ -75,7 +80,7 @@
     <ValidationMessage for="name" let:messages>
       <UploadNameInput
         name={"name"}
-        value={$data?.name ?? ""}
+        value={($data?.name ?? "").toString()}
         error={messages}
         on:notify={handleNotify}
       />
@@ -102,7 +107,7 @@
   </form>
   <MutationSetting
     name={configName}
-    comment={$data?.comment ?? ""}
+    comment={($data?.comment ?? "").toString()}
     targets={$targets}
     on:notify={handleNotify}
     on:cancel={handleCancelUpdate}

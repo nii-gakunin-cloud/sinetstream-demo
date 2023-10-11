@@ -1,10 +1,10 @@
-FROM eclipse-temurin:11.0.19_7-jdk-focal AS builder
+FROM eclipse-temurin:11.0.20_8-jdk-focal AS builder
 
 WORKDIR /build/perftool/
 COPY sinetstream-java/sample/perftool /build/perftool
 RUN ./gradlew build
 
-FROM python:3.11.3-slim-bullseye
+FROM python:3.12.0-slim-bullseye
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends openjdk-11-jre-headless \

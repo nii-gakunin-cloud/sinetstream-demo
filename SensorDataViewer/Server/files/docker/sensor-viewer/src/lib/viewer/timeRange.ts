@@ -136,7 +136,11 @@ export const refreshInterval = persisted('refreshInterval', refreshIntervals[3],
   },
 });
 
-export function findIndex(target, items, defaultValue = 1): number {
+export function findIndex<T extends Record<string, any>>(
+  target: T,
+  items: T[],
+  defaultValue = 1,
+): number {
   const ret = items.findIndex((x) => x.label === target.label);
   return ret >= 0 ? ret : defaultValue;
 }
@@ -171,7 +175,7 @@ export function toResolution(params: ResolutionParameter): ResolutionSuffix {
   return '_10min';
 }
 
-export const endTime: Readable<Date | null> = derived(
+export const endTime: Readable<Date> = derived(
   [refreshInterval],
   ([$refreshInterval], set) => {
     if ($refreshInterval.interval > 0) {

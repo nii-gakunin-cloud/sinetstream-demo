@@ -2,7 +2,7 @@
   import { Pane, Splitpanes } from "svelte-splitpanes";
   import { charts, pane } from "../settings";
 
-  export let panes;
+  export let panes: Record<string, any>;
 
   let initPanes = 0;
   if ($charts.length > 0) {
@@ -29,7 +29,7 @@
   let mapHeight = initHeight;
   let chartHeight = initHeight;
 
-  function handleMessage(ev) {
+  function handleMessage(ev: CustomEvent) {
     if ($pane.map) {
       const v = ev.detail[0].size;
       mapHeight = `calc(${v}vh - ${(4 * v) / 100}rem)`;

@@ -6,14 +6,12 @@ const itemKey = Symbol('download item context key');
 const formKey = Symbol('download form context key');
 const settingParameters: Writable<Record<string, any>> = writable({});
 
-const pickupParameter = (
-  cfg: ViewerSettingV1,
-  targets: string[],
-  init: Record<string, any> = {},
-) => targets.sort().reduce((rst: ViewerSettingV1, item) => {
+const pickup1 = (cfg: ViewerSettingV1, rst: Record<string, any>, item: string) => {
   if (item in cfg) {
-    return { ...rst, [item]: cfg[item] };
-  } if (item === 'player.from') {
+    return { ...rst, [item]: cfg[item as keyof ViewerSettingV1] };
+  }
+
+  if (item === 'player.from') {
     const { from, to } = cfg.player ?? {};
     if (from != null && to != null) {
       rst.player = { ...(rst.player ?? {}), from, to };
@@ -35,7 +33,16 @@ const pickupParameter = (
     }
   }
   return rst;
-}, init);
+};
+
+const pickupParameter = (
+  cfg: ViewerSettingV1,
+  targets: string[],
+  init: Record<string, any> = {},
+) => targets.sort().reduce(
+  (rst: Record<string, any>, item: string) => pickup1(cfg, rst, item),
+  init,
+);
 
 export {
   itemKey, formKey, settingParameters, pickupParameter,

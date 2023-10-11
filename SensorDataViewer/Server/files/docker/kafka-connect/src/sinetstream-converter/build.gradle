@@ -12,16 +12,15 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.apache.kafka', name: 'connect-runtime', version: '3.4.0'
-    implementation group: 'org.apache.avro', name: 'avro', version: '1.11.1'
-    implementation group: 'net.sinetstream', name: 'sinetstream-kafka-serde', version: '0.1.3'
-    implementation group: 'io.confluent', name: 'kafka-connect-avro-data', version: '7.4.0'
+    implementation group: 'org.apache.kafka', name: 'connect-runtime', version: '3.6.0'
+    implementation group: 'org.apache.avro', name: 'avro', version: '1.11.3'
+    implementation group: 'net.sinetstream', name: 'sinetstream-kafka-serde', version: '0.1.11'
+    implementation group: 'io.confluent', name: 'kafka-connect-avro-data', version: '7.5.0'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.0'
 }
 
 test {
     useJUnitPlatform()
 }
-

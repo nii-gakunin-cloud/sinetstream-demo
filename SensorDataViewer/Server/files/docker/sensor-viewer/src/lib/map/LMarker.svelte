@@ -7,9 +7,9 @@
 
   const map = getContext<() => LMap>("map")();
 
-  export let longitude;
-  export let latitude;
-  export let timestamp;
+  export let longitude: number;
+  export let latitude: number;
+  export let timestamp: string;
 
   const icon = L.icon({
     iconUrl,

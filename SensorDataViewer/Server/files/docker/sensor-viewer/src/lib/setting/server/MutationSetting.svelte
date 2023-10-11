@@ -29,7 +29,7 @@
     variables: { name: name ?? "" },
   });
 
-  let mutationResult = undefined;
+  let mutationResult: any;
   const insertConfig = () => {
     if ($mutationResult != null) {
       return;
@@ -58,7 +58,7 @@
     if ($mutationResult != null) {
       return;
     }
-    const newComment = comment?.length > 0 ? comment : cmt;
+    const newComment = (comment?.length ?? 0) > 0 ? comment : cmt;
     const config = pickupParameter($currentSetting, targets, cfg);
     mutationResult = mutationStore({
       client,

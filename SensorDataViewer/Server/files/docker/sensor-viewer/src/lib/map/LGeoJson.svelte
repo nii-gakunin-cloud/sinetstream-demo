@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-  export function toGeoJson(items) {
+  export function toGeoJson(items: Record<string, any>[]) {
     return {
       type: "Feature",
       properties: {
@@ -22,10 +22,10 @@
 
   export let geoJson: any;
 
-  const layer = L.geoJSON(null, {
+  const layer = L.geoJSON(undefined, {
     style: {
       color: "red",
-    }
+    },
   });
   layer.addTo(map);
   layers.addOverlay(layer, "GeoJSON");

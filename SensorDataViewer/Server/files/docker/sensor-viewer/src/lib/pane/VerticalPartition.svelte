@@ -4,19 +4,21 @@
   import { charts, pane } from "../settings";
   import { chartColumns } from "./layout";
 
-  export let panes;
+  export let panes: Record<string, any>;
 
   const mapHeight = "calc(100vh - 4rem)";
   let mapWidth = $pane.image && $charts.length > 0 ? "50vw" : "100vw";
   const chartHeight = "calc(100vh - 4rem)";
   let maxCols = 1;
-  let chartWidth;
+  let chartWidth: number;
 
   $: {
-    maxCols = chartColumns($charts.length, chartWidth, $chartMinSize.width);
+    if (chartWidth != null) {
+      maxCols = chartColumns($charts.length, chartWidth, $chartMinSize.width);
+    }
   }
 
-  function handleMessage(ev) {
+  function handleMessage(ev: CustomEvent) {
     if ($pane.map) {
       const v0 = ev.detail[0].size;
       mapWidth = `calc(${v0}vw)`;
@@ -47,11 +49,13 @@
           style:height={chartHeight}
           style:padding-bottom={0}
         >
-          <svelte:component this={panes["chart"]} {maxCols}>
-            <svelte:fragment slot="pane">
-              <svelte:component this={panes["image"]} />
-            </svelte:fragment>
-          </svelte:component>
+          {#if chartWidth != null}
+            <svelte:component this={panes["chart"]} {maxCols}>
+              <svelte:fragment slot="pane">
+                <svelte:component this={panes["image"]} />
+              </svelte:fragment>
+            </svelte:component>
+          {/if}
         </div>
       </Pane>
     {:else}
@@ -65,7 +69,9 @@
         style:height={chartHeight}
         style:padding-bottom={0}
       >
-        <svelte:component this={panes["chart"]} {maxCols} />
+        {#if chartWidth != null}
+          <svelte:component this={panes["chart"]} {maxCols} />
+        {/if}
       </div>
     </Pane>
   {/if}

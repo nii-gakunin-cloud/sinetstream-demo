@@ -4,18 +4,16 @@
 
   export let visible = false;
 
-  const onClick = (ev) => {
+  const onClick = (ev: MouseEvent) => {
     if (visible) {
-      if (
-        ev.target.closest("dialog") == null &&
-        ev.target.closest("button") == null
-      ) {
+      let tgt = ev?.target as Element | null;
+      if (tgt?.closest("dialog") == null && tgt?.closest("button") == null) {
         visible = false;
       }
     }
   };
 
-  const onKeydown = (ev) => {
+  const onKeydown = (ev: KeyboardEvent) => {
     if (visible && ev.key === "Escape") {
       visible = false;
     }

@@ -18,13 +18,8 @@
   const protocol = loc.protocol == "https:" ? "wss:" : "ws:";
 
   const apiUrl =
-    process.env.URL_API != null && process.env.URL_API !== ""
-      ? process.env.URL_API
-      : `${loc.protocol}//${loc.host}/v1/graphql`;
-  const wsUrl =
-    process.env.URL_API_WS != null && process.env.URL_API_WS !== ""
-      ? process.env.URL_API_WS
-      : `${protocol}//${loc.host}/v1/graphql`;
+    process.env.URL_API ?? `${loc.protocol}//${loc.host}/v1/graphql`;
+  const wsUrl = process.env.URL_API_WS ?? `${protocol}//${loc.host}/v1/graphql`;
 
   const wsClient = createWSClient({ url: wsUrl });
   initContextClient({
@@ -36,7 +31,7 @@
         forwardSubscription: (request) => ({
           subscribe: (sink) => ({
             unsubscribe: wsClient.subscribe(
-              { ...request, query: request.query },
+              { ...request, query: request.query! },
               sink
             ),
           }),
@@ -50,14 +45,20 @@
 
 <Router {url}>
   <div>
-    <Route path="/viewer/:id" let:params><Viewer id={params.id} /></Route>
-    <Route path="/player/:id" let:params><Player id={params.id} /></Route>
-    <Route path="/setting/:id" let:params><Setting id={params.id} /></Route>
+    <Route path="/viewer/:id" let:params>
+      <Viewer id={parseInt(params.id)} />
+    </Route>
+    <Route path="/player/:id" let:params>
+      <Player id={parseInt(params.id)} />
+    </Route>
+    <Route path="/setting/:id" let:params>
+      <Setting id={parseInt(params.id)} />
+    </Route>
     <Route path="/setting-upload/:id" let:params>
-      <SettingUpload id={params.id} />
+      <SettingUpload id={parseInt(params.id)} />
     </Route>
     <Route path="/setting-download/:id" let:params>
-      <SettingDownload id={params.id} />
+      <SettingDownload id={parseInt(params.id)} />
     </Route>
     <Route path="/"><Home /></Route>
   </div>

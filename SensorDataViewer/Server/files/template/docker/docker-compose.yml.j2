@@ -1,7 +1,7 @@
 services:
 {%- if "android" in target or "perftool" in target %}
   nats:
-    image: nats:2.9.17
+    image: nats:2.10.2
     restart: always
     ports:
       - ${MQTT_PORT:-1883}:1883
@@ -20,7 +20,7 @@ services:
         condition: service_healthy
 {%- endif %}
   kafka:
-    image: confluentinc/cp-kafka:7.4.0
+    image: confluentinc/cp-kafka:7.5.1
     restart: always
     volumes:
       - kafka-data:/var/lib/kafka/data
@@ -49,7 +49,7 @@ services:
       timeout: 5s
       retries: 3
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.4.0
+    image: confluentinc/cp-zookeeper:7.5.1
     restart: always
     volumes:
       - zookeeper-data:/var/lib/zookeeper/data
@@ -65,7 +65,7 @@ services:
       retries: 3
 {%- if "picamera" in target %}
   minio:
-    image: quay.io/minio/minio:RELEASE.2023-05-18T00-05-36Z
+    image: quay.io/minio/minio:RELEASE.2023-09-30T07-02-29Z
     restart: always
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
@@ -83,7 +83,7 @@ services:
       postgres:
         condition: service_healthy
   thumbnail:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/picamera-thumbnail:0.1.6
+    image: harbor.vcloud.nii.ac.jp/sinetstream/picamera-thumbnail:0.1.10
     environment:
       TOPIC: minio-sinetstream-picamera
     secrets:
@@ -93,7 +93,7 @@ services:
         condition: service_healthy
 {%- endif %}
   postgres:
-    image: timescale/timescaledb:2.11.0-pg15-oss
+    image: timescale/timescaledb:2.12.0-pg15-oss
     restart: always
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
@@ -114,7 +114,7 @@ services:
       timeout: 5s
       retries: 5
   kafka-connect:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.1.0
+    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.1.5
     restart: always
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:19092
@@ -136,7 +136,7 @@ services:
       kafka:
         condition: service_healthy
   graphql:
-    image: hasura/graphql-engine:v2.26.0-ce.cli-migrations-v3
+    image: hasura/graphql-engine:v2.34.0-ce.cli-migrations-v3
     restart: always
     volumes:
       - ./init/hasura:/hasura-metadata
@@ -151,7 +151,7 @@ services:
       postgres:
         condition: service_healthy
   nginx:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.2
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.7
     ports:
   {%- if www.protocol == "https" %}
       - "443:443"

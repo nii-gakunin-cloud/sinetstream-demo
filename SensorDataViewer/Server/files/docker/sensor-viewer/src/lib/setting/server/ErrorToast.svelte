@@ -1,6 +1,6 @@
 <script lang="ts">
   export let timeout = 6000;
-  export let message;
+  export let message: string;
   export let position: "top" | "bottom" = "top";
 
   let classes = ["toast", "pink", "white-text", "active"];

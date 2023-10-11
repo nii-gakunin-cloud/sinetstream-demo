@@ -2,8 +2,8 @@
   import BaseMapPane from "../pane/BaseMapPane.svelte";
   import { endTime, startTime, timeRange } from "./timeRange";
 
-  export let height;
-  export let width;
+  export let height: number;
+  export let width: number;
   $: tablename = `location${$timeRange.resolution}`;
 </script>
 

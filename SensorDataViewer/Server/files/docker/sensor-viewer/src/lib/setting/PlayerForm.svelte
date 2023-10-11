@@ -1,8 +1,8 @@
 <script lang="ts" context="module">
   import { compareAsc, parseISO } from "date-fns";
 
-  export const validate = (values) => {
-    const errors = {};
+  export const validate = (values: Record<string, any>) => {
+    const errors: Record<string, string> = {};
     const { from, to } = values;
     const fromTime = parseISO(from);
     const toTime = parseISO(to);

@@ -5,7 +5,7 @@
   import { current, fromTime, repeat, step, tick, toTime } from "./player";
 
   let playing = false;
-  let interval = null;
+  let interval = 0;
   $: {
     if ($current < $fromTime || $current > $toTime) {
       $current = $fromTime;
@@ -33,22 +33,22 @@
 
   $: {
     if (playing) {
-      if (interval == null) {
-        interval = setInterval(() => {
+      if (interval === 0) {
+        interval = window.setInterval(() => {
           nextStep();
         }, $tick);
       }
     } else {
-      if (interval != null) {
+      if (interval !== 0) {
         clearInterval(interval);
-        interval = null;
+        interval = 0;
       }
     }
   }
   onDestroy(() => {
-    if (interval != null) {
+    if (interval !== 0) {
       clearInterval(interval);
-      interval = null;
+      interval = 0;
     }
   });
 

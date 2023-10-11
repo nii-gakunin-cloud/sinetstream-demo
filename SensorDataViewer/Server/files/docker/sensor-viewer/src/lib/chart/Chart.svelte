@@ -5,18 +5,19 @@
   import Title from "./Title.svelte";
 
   export let title: string;
-  export let fields = [];
-  export let rawData = [];
+  export let fields: string[] = [];
+  export let rawData: Record<string, any>[] = [];
   export let from: Date;
   export let to: Date;
 
-  const { getMinSize, getSettings } = getContext<Record<string, any>>("chart-pane");
+  const { getMinSize, getSettings } =
+    getContext<Record<string, any>>("chart-pane");
   let { minHeight, minWidth } = getMinSize();
 
   let titleFontSize = 24;
   let showLegend = true;
 
-  let data = { datasets: [] };
+  let data = { datasets: [] as any[] };
   $: if (Array.isArray(rawData)) {
     const newData = {
       datasets: fields.map((label) => ({
@@ -55,7 +56,7 @@
     responsive: true,
     maintainAspectRatio: false,
     animation: false,
-    onResize: (_chart, size) => {
+    onResize: (_chart: unknown, size: Record<string, number>) => {
       showLegend = Array.isArray(data.datasets) && data.datasets.length > 1;
       if (size.height < 300) {
         titleFontSize = 18;
@@ -67,7 +68,7 @@
     },
   };
   setContext("chart", {
-    updateOptions: (path, value) => {
+    updateOptions: (path: string, value: Record<string, any>) => {
       options = options;
       let { parent, name } = path.split(".").reduce(
         ({ target: tgt }, curr) => {
@@ -92,9 +93,9 @@
     options.scales.x = { ...options.scales.x, min: from, max: to };
   }
 
-  let chartWidth;
-  let chartHeight;
-  let chartPadding;
+  let chartWidth: number;
+  let chartHeight: number;
+  let chartPadding: string;
 
   $: if (chartWidth <= 500 || chartHeight <= 400) {
     chartPadding = "8px";

@@ -8,7 +8,7 @@
   const { updateOptions } = getContext<Record<string, any>>("chart");
 
   $: {
-    const scaleY = {
+    const scaleY: Record<string, any> = {
       grid: {
         color: gridColor,
       },

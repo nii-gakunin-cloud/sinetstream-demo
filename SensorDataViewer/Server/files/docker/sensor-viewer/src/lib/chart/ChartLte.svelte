@@ -1,12 +1,15 @@
+<script lang="ts" context="module">
+  export const fields = ["rssi", "rsrp", "rsrq", "rssnr"];
+  export const table: string = "lte";
+</script>
+
 <script lang="ts">
   import Chart from "./Chart.svelte";
   import YAxis from "./YAxis.svelte";
 
-  export const fields = ["rssi", "rsrp", "rsrq", "rssnr"];
-  export const table = "lte";
   export let from: Date;
   export let to: Date;
-  export let rawData = [];
+  export let rawData: Record<string, any>[] = [];
 </script>
 
 <Chart {fields} title="LTE" {from} {to} {rawData}>

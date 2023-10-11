@@ -35,16 +35,16 @@
     },
   });
 
-  export let height;
-  export let width;
+  export let height: number;
+  export let width: number;
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-  let basemap;
-  let point;
+  let basemap: any;
+  let point: Record<string, any> | null;
   $: if ($queryResult.data && $queryResult.data["point"].length > 0) {
     point = $queryResult.data["point"][0];
-    if (basemap != null) {
-      basemap.panInside(point.latitude, point.longitude);
+    if (point) {
+      basemap?.panInside(point.latitude, point.longitude);
     }
   }
 </script>

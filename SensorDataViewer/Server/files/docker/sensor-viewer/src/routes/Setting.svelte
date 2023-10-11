@@ -3,8 +3,8 @@
   import SettingForm from "../lib/setting/SettingForm.svelte";
   import { settings, settingsIndex } from "../lib/settings";
 
-  export let id;
-  let prevIndex;
+  export let id: number;
+  let prevIndex: number;
   $: {
     prevIndex = $settingsIndex;
     $settingsIndex = id;

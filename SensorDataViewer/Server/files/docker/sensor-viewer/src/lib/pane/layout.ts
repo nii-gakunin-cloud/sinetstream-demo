@@ -11,7 +11,7 @@ export const layoutTemplate: Readable<LayoutTemplate> = derived(
   },
 );
 
-export function chartColumns(count, width, minWidth) {
+export function chartColumns(count: number, width: number, minWidth: number) {
   if (width < 576 || width / minWidth < 2.0) {
     return 1;
   }

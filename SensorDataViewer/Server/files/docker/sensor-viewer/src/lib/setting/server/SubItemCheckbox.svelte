@@ -25,7 +25,9 @@
     } else {
       const current = $targets ?? [];
       if (!current.includes(parent)) {
-        updateTargets(current.filter((item) => !children.includes(item)));
+        updateTargets(
+          current.filter((item: string) => !children.includes(item))
+        );
       }
     }
   };

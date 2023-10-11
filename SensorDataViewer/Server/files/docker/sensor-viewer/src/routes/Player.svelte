@@ -3,7 +3,7 @@
   import SensorView from "../lib/player/SensorView.svelte";
   import { mode, settingsIndex } from "../lib/settings";
 
-  export let id;
+  export let id: number;
   $: {
     $settingsIndex = id;
     $mode = "player";

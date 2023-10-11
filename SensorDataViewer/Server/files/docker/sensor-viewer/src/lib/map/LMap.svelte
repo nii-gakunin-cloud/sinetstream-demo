@@ -11,8 +11,8 @@
   export let center: LatLng = new LatLng(35.65, 139.8);
   export let zoom: number = 12;
   export let options: MapOptions = { minZoom: 6 };
-  export let height;
-  export let width;
+  export let height: number;
+  export let width: number;
 
   const controlOptions = {
     hideSingleBase: true,
@@ -32,18 +32,18 @@
       zoom,
       ...options,
     });
-    layers = L.control.layers(null, null, controlOptions).addTo(map);
+    layers = L.control.layers(undefined, undefined, controlOptions).addTo(map);
 
     return {
       destroy: () => {
-        layers.remove();
-        map.remove();
+        layers?.remove();
+        map?.remove();
       },
     };
   }
 
   export const panInside = (point: LatLng) => {
-    map.panInside(point, { padding: [48, 48] });
+    map?.panInside(point, { padding: [48, 48] });
   };
 </script>
 

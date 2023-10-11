@@ -2,7 +2,7 @@
   import DownloadSettingForm from "../lib/setting/server/DownloadSettingForm.svelte";
   import { currentSetting, settingsIndex } from "../lib/settings";
 
-  export let id;
+  export let id: number;
   let prevIndex;
   $: {
     prevIndex = $settingsIndex;

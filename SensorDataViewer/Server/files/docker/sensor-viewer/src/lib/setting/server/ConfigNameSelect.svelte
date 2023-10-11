@@ -18,13 +18,13 @@
   });
   const dispatch = createEventDispatcher();
 
-  export let name;
+  export let name: string;
   export let selected = -1;
-  let container;
+  let container: any;
 
   $: if (container && $queryNames?.data && selected < 0) {
     const rst = $queryNames.data.viewer_config.filter(
-      (item) => item.name === $currentSetting.name
+      (item: Record<string, any>) => item.name === $currentSetting.name
     );
     if (rst.length > 0) {
       dispatch("match", { id: rst[0].id });

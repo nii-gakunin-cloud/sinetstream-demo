@@ -7,14 +7,14 @@
   import { navigate } from "svelte-routing";
   import { writable } from "svelte/store";
   import * as zod from "zod";
-  import { settingsIndex } from "../../settings";
+  import { settingsIndex, type ViewerSettingV1 } from "../../settings";
   import ConfigNameSelect from "./ConfigNameSelect.svelte";
   import { formKey, pickupParameter, settingParameters } from "./server";
   import ServerItemFieldset, { initTargets } from "./ServerItemFieldset.svelte";
 
   const targets = writable([] as string[]);
   setContext(formKey, {
-    updateTargets: (targets) => {
+    updateTargets: (targets: string[]) => {
       setFields("targets", targets);
     },
     targets,
@@ -36,7 +36,7 @@
     variables: { id: configId },
   });
 
-  function handleNameSelect(ev) {
+  function handleNameSelect(ev: CustomEvent) {
     const { id } = ev.detail;
     if (id >= 0) {
       setFields("name", id.toString());
@@ -50,7 +50,7 @@
     const { name: idText } = $data;
     if (!$touched.name && configId >= 0) {
       setFields("name", configId.toString());
-    } else if (idText && idText.length > 0) {
+    } else if ((idText as string)?.length > 0) {
       configId = Number(idText);
     }
   }
@@ -59,13 +59,13 @@
     settingParameters.set({});
   });
 
-  const onSubmit = (values) => {
+  const onSubmit = (values: Record<string, any>) => {
     const { config } = $queryConfig.data.viewer_config_by_pk ?? {};
     settingParameters.set(pickupParameter(config, values.targets));
     navigate(`/setting/${$settingsIndex}`);
   };
 
-  function onCancel(_event) {
+  function onCancel(_event: unknown) {
     settingParameters.set({});
     navigate(`/setting/${$settingsIndex}`);
   }
@@ -83,10 +83,10 @@
     extend: [validator({ schema }), reporter],
   });
 
-  let setting;
+  let setting: ViewerSettingV1 | null = null;
   $: {
     setting = $queryConfig?.data?.viewer_config_by_pk?.config ?? {};
-    targets.set($data?.targets ?? []);
+    targets.set(($data?.targets as string[]) ?? []);
   }
 </script>
 

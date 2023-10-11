@@ -1,8 +1,8 @@
 <script lang="ts">
   import { getContext } from "svelte";
 
-  export let value;
-  export let name;
+  export let value: Date;
+  export let name: string;
   export let borderColor = "rgb(255, 99, 132)";
   export let borderWidth = 2;
 

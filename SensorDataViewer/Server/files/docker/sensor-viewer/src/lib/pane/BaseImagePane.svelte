@@ -11,15 +11,15 @@
   import { imageTopic, imageUpdateMethod, mode } from "../settings";
   import { refreshInterval } from "../viewer/timeRange";
 
-  let image;
-  let viewer;
+  let image: HTMLElement;
+  let viewer: Viewer | undefined;
   $: if (image) {
     viewer = new Viewer(image, {
       button: false,
       navbar: false,
       toolbar: false,
       viewed() {
-        viewer.zoomTo(1);
+        viewer?.zoomTo(1);
       },
     });
   }
@@ -79,10 +79,10 @@
           },
         });
 
-  let timestamp;
-  let path;
-  let srcset = "";
-  let sizes = "";
+  let timestamp: string;
+  let path: string;
+  let srcset: string | null = "";
+  let sizes: string | null = "";
   $: if ($queryResult.data && $queryResult.data.picamera.length > 0) {
     timestamp = format(
       parseISO($queryResult.data.picamera[0].timestamp),
@@ -105,10 +105,10 @@
 
   function showViewer() {
     if (responsive) {
-      srcset = undefined;
-      sizes = undefined;
+      srcset = null;
+      sizes = null;
     }
-    viewer.show();
+    viewer?.show();
   }
 </script>
 
@@ -117,7 +117,7 @@
     <figcaption class="center-align">
       {timestamp != null ? timestamp : ""}
     </figcaption>
-    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <!-- svelte-ignore a11y-no-noninteractive-element-interactions a11y-click-events-have-key-events -->
     <img
       src={path}
       {srcset}

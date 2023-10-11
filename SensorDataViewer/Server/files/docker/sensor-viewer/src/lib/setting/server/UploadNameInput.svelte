@@ -23,6 +23,9 @@
   } else if ($queryNames?.data != null) {
     dispatch("notify", { data: $queryNames.data.viewer_config });
   }
+
+  const config2names = (cfg: Record<string, any>) =>
+    cfg.map((x: Record<string, any>) => x.name);
 </script>
 
 <div class="field label" class:invalid={error != null}>
@@ -36,7 +39,7 @@
   {#if error}
     <span class="error">{error}</span>
   {:else if $queryNames?.data}
-    {@const names = $queryNames.data.viewer_config.map((x) => x.name) ?? []}
+    {@const names = config2names($queryNames.data.viewer_config)}
     <span class="helper">
       {#if names.includes(value)}
         登録済みの名前。登録済みの設定内容が更新されます。

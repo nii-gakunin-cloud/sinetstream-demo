@@ -9,11 +9,11 @@
   import LTileLayer, { layerList } from "../map/LTileLayer.svelte";
   import { publisher } from "../settings";
 
-  export let height;
-  export let width;
+  export let height: number;
+  export let width: number;
   export let from: Date;
   export let to: Date;
-  export let tablename;
+  export let tablename: string;
   export let showMarker = false;
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -38,7 +38,7 @@
     },
   });
 
-  let map;
+  let map: any;
   export const panInside = (latitude: number, longitude: number) => {
     if (map != null) {
       const point = latLng(latitude, longitude);
@@ -46,8 +46,8 @@
     }
   };
 
-  let data = [];
-  let point;
+  let data: Record<string, any>[] = [];
+  let point: Record<string, any> | null;
   $: if ($queryResult.data) {
     data = $queryResult.data[tablename];
     if (showMarker && data.length > 0) {
