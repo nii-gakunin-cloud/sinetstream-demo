@@ -29,11 +29,7 @@ The version of each software component is shown below.
 
 ### 1.2. Prerequisites
 
-The Kafka broker must be available. Please refer to the following procedures and others to build the Kafka broker.
-
-* [option/Server/Kafka](../Kafka/README.en.md)
-
-Use [Docker](https://www.docker.com/) and [Docker Compose](https://github.com/docker/compose) to run Kafka Connector and Mosquitto (MQTT broker). Please refer to the following links for installation.
+Use [Docker](https://www.docker.com/) and [Docker Compose](https://github.com/docker/compose) to run Zookeeper, Kafka broker, Kafka Connector and Mosquitto (MQTT broker). Please refer to the following links for installation.
 
 * [Install Docker Engine
   * [Install Docker Engine on CentOS](https://docs.docker.com/engine/install/centos/)
@@ -44,135 +40,162 @@ Use [Docker](https://www.docker.com/) and [Docker Compose](https://github.com/do
 
 Docker Engine requires at least version 19.03.0 and Docker Compose requires at least 1.27.1.
 
-## 2. Building the MQTT broker
+## 2. Building and deploying the Zookeeper, Kafka broker, Kafka Connector and Mosquitto (MQTT broker)
 
-Build the MQTT broker using the container of [Eclipse Mosquitto](https://mosquitto.org/), which serves as the MQTT broker. The configuration of the MQTT broker to be built here is shown below.
+### 2.1 General information about the MQTT broker
+
+The MQTT broker uses [Eclipse Mosquitto](https://mosquitto.org/). The configuration of the MQTT broker to be built here is shown below.
 
 * Port number
   * 1883
 * No authentication
 * No encryption of communication channel
 
-### 2.1. Deploying Materials
 
-Place the files in the subdirectory `mqtt/` on the node where you want to run the MQTT broker.
 
-### 2.2. Executing the container
+### 2.2. Building and Executing the containers
 
-Execute the following command on the node where the MQTT broker is to be executed.
-
-```console
+Execute the following command.
+```bash
 docker compose up -d
 ```
 
-Check the status of the container, making sure that the STATUS is ``running``.
-
-```console
-$ docker compose ps 
-NAME                    COMMAND                  SERVICE             STATUS              PORTS
-mosquitto-mosquitto-1   "/docker-entrypoint.…"   mosquitto           running             0.0.0.0:1883->1883/tcp, :::1883->1883/tcp
+### 2.3 Make sure containers are running
+```bash
+docker compose ps
 ```
+Expected output
+```text
+NAME                     IMAGE                              COMMAND                  SERVICE             CREATED             STATUS                            PORTS
+connect                  kafka-mqtt-connect                 "/etc/confluent/dock…"   connect             5 seconds ago       Up 3 seconds (health: starting)   0.0.0.0:8083->8083/tcp, :::8083->8083/tcp, 9092/tcp
+kafka                    confluentinc/cp-kafka:latest       "/etc/confluent/dock…"   kafka               5 seconds ago       Up 3 seconds                      0.0.0.0:9092->9092/tcp, :::9092->9092/tcp, 0.0.0.0:29092->29092/tcp, :::29092->29092/tcp
+kafka-mqtt-mosquitto-1   eclipse-mosquitto:2.0.15           "/docker-entrypoint.…"   mosquitto           5 seconds ago       Up 4 seconds                      0.0.0.0:1883->1883/tcp, :::1883->1883/tcp
+zookeeper                confluentinc/cp-zookeeper:latest   "/etc/confluent/dock…"   zookeeper           5 seconds ago       Up 4 seconds                      2888/tcp, 0.0.0.0:2181->2181/tcp, :::2181->2181/tcp, 3888/tcp
 
-If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` in the `.env` of the Kafka broker, Kafka Connect must be able to resolve the name of the host in its environment. If you specify a hostname that is not registered in DNS, etc. as `BROKER_HOSTNAME`, please make sure to enable name resolution for the Kafka broker by specifying [extra_hosts](https://docs.docker.com/compose/compose-file/compose-file-v3/#extra_hosts) in `docker-compose.yml`. An example of specifying extra_hosts in `docker-compose.yml` is shown below with the modified difference. In this example, an entry for the Kafka broker `kafka.example.org` with IP address `192.168.1.100` is registered in `extra_hosts`.
-
-```diff
-@@ -19,3 +19,5 @@ services:
-       CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components,/usr/share/java/stream-reactor
-     ports:
-       - "${REST_PORT:-8083}:8083"
-+    extra_hosts:
-+      - "kafka.example.org:192.168.1.100"
 ```
+Note that you must wait until container `connect` status switch from `(health: starting)` to `(healthy)`
 
-### 2.3. Check Operation
+Connections to the kafka broker are made using its hostname `kafka`
 
-You can confirm that the MQTT broker is available by running the test producer and consumer. For instructions on how to run each of the test programs, please review the procedures described in the links below.
+# 3 Registering Connectors: allow Kafka Connector to forward MQTT msg from MQTT-broker to Kafka-broker
 
-* Producer
-  * [NumericalSensorData/Sensor/template/README.en.md](../../../NumericalSensorData/Sensor/template/README.en.md)
-* Consumer
-  * [option/Consumer/NumericalSensorData/text-consumer/README.en.md](../../Consumer/NumericalSensorData/text-consumer/README.en.md)
-
-However, please specify `mqtt` as the type (type) and the address of the MQTT broker as the address of the message broker (brokers) in the `.sinetstream_config.yml` configuration file for SINETStream. An example of a configuration file is shown below.
-
-```yaml
-sensors:
-  topic: sinetstream.sensor
-  brokers: mqtt.example.org:1883
-  type: mqtt
-  consistency: AT_LEAST_ONCE
+Set key `"connect.mqtt.hosts"` in [mqtt-source-config.json](./mqtt-source-config.json) with the IP address of the MQTT-borker.
+```bash
+mqtt_broker_ip=$(docker inspect kafka-mqtt-mosquitto-1 | jq '.[0]["NetworkSettings"]["Networks"]["kafka-mqtt_default"]["IPAddress"]' | tr -d '"')
+sed -i "/\"connect.mqtt.hosts\"/c\         \"connect.mqtt.hosts\": \"tcp://$mqtt_broker_ip:1883\"," mqtt-source-config.json
 ```
-
-## Building Kafka Connect
-
-### 3.1. Deploying Materials
-
-Place the files in the subdirectory `kafka-connect-mqtt/` on the node where you want to run Kafka Connect.
-
-### 3.2. Parameter Settings
-
-Set parameters as environment variables for the container. Create `.env` in the directory where you placed `docker-compose.yml` and write the parameters there. The parameters are listed in the following table.
-
-|environment variable name|required|description|example|
-|---|---|---|---|
-|BROKER_HOSTNAME|&check;|Hostname of the Kafka broker|BROKER_HOSTNAME=kafka.example.org|
-|KAFKA_TOPIC|&check;|Topic name of the Kafka broker to which you are forwarding|KAFKA_TOPIC=sinetstream.sensor|
-|MQTT_URL|&check;|MQTT broker address|MQTT_URL=tcp://mqtt.example.org:1883|
-|MQTT_TOPIC|-|Topic name of MQTT broker from which to forward<br>Default value: value specified in KAFKA_TOPIC|MQTT_TOPIC=sinetstream.sensor|
-|MQTT_QOS|-|QoS specification for MQTT<br>Default value: 1|MQTT_QOS=1|
-|REST_PORT|-|Kafka Connect REST API port number<br>Default value: 8083|REST_PORT=8083|
-
-An example of `.env` description can be found in [kafka-connect-mqtt/example_dot_env](kafka-connect-mqtt/example_dot_env). Use it as a template for creating `.env`.
-
-### 3.3. Running the Container
-
-Run the following command on the node where you want to run Kafka Connect.
-
-```console
-docker compose up -d
+Send the configuration to the Kafka Connector
+```bash
+curl -s -X POST -H 'Content-Type: application/json' --data @mqtt-source-config.json http://localhost:8083/connectors | jq .
 ```
-
-Check the status of the container, making sure that the STATUS is ``running``.
-
-```console
-$ docker compose ps
-NAME                                      COMMAND                  SERVICE              STATUS              PORTS
-kafka-connect-mqtt-kafka-connect-mqtt-1   "/etc/confluent/dock…"   kafka-connect-mqtt   running (healthy)   0.0.0.0:8083->8083/tcp, :::8083->8083/tcp
+The output should be the content of the file [mqtt-source-config.json](./mqtt-source-config.json).
+The IP (172.22.0.2) might be different.
+```json
+{
+  "name": "source-mqtt",
+  "config": {
+    "connector.class": "com.datamountaineer.streamreactor.connect.mqtt.source.MqttSourceConnector",
+    "tasks.max": "1",
+    "connect.mqtt.hosts": "tcp://172.22.0.2:1883",
+    "connect.mqtt.converter.throw.on.error": "true",
+    "connect.mqtt.service.quality": "2",
+    "connect.mqtt.kcql": "INSERT INTO kafka-topic SELECT * FROM mqtt-topic",
+    "name": "source-mqtt"
+  },
+  "tasks": [],
+  "type": "source"
+}
 ```
+- `http://localhost:8083` allows to read/write files in the container `connect` using [the kafka-connect REST API](https://developer.confluent.io/courses/kafka-connect/rest-api/)
+- traffic from mqtt-topic `mqtt-topic` will be redirected to kafka-topic `kafka-topic`
 
-After the container is started, it takes a few minutes for the Kafka Connect startup process to complete; STATUS is `running (starting)` during the Kafka Connect startup process, but becomes `running (healthy)` when the startup process is complete.
+### 4 Check Operation
 
-### 3.4. Registering Connectors
+## 4.1 Kafka connector
 
-Register connectors according to the parameters set in `.env`. Run `register.sh` in the same directory as `docker-compose.yml`.
-
-```console
-. /register.sh
-````
-
-Running `register.sh` will register the following connectors.
-
-* mqtt-source
-
-You can check the status of connector registrations and tasks by running the Kafka Connect REST API.
-
-```console
-$ curl -s -X GET http://localhost:8083/connectors | jq .
+Check that the connector has been created
+```bash
+curl -s -X GET http://localhost:8083/connectors | jq .
+```
+Expected output
+```
 [
   "mqtt-source"
 ]
-$ curl -s -X GET http://localhost:8083/connectors/mqtt-source/tasks/0/status  | jq .
-{
-  "id": 0,
-  "state": "RUNNING",
-  "worker_id": "kafka-connect-mqtt:8083"
-}
 ```
 
-To change the ``.env`` parameters and re-register the connector, delete the already registered connector. To remove a connector, issue the following command.
+## 4.2 Check that messages are forwarded
+
+### 4.2.1 Send MQTT messages to MQTT-broker
+
+Start sending messages (`mqtt-topic` is the topic defined in [mqtt-source-config.json](./mqtt-source-config.json))
+
+Note that `client.py` requires to install the python library `paho-mqtt` (e.g. using `pip install paho-mqtt`)
+
+```bash
+mqtt_broker_ip=$(docker inspect kafka-mqtt-mosquitto-1 | jq '.[0]["NetworkSettings"]["Networks"]["kafka-mqtt_default"]["IPAddress"]' | tr -d '"')
+./client.py $mqtt_broker_ip mqtt-topic
+```
+Expected output
+```text
+[  setup  ] selected MQTT topic: mqtt-topic
+PING 172.22.0.2 (172.22.0.2) 56(84) bytes of data.
+64 bytes from 172.22.0.2: icmp_seq=1 ttl=64 time=0.038 ms
+
+--- 172.22.0.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.038/0.038/0.038/0.000 ms
+[  ping   ] pinging 172.22.0.2...[telemetry] starting thread
+PING 172.22.0.2 (172.22.0.2) 56(84) bytes of data.
+64 bytes from 172.22.0.2: icmp_seq=1 ttl=64 time=0.026 ms
+
+--- 172.22.0.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.026/0.026/0.026/0.000 ms
+...OK.
+[  ping   ] sleeping for 119.25819000117056s
+[  main   ] starting loop
+[  main   ] telemetry ON
+[telemetry] sending to `172.22.0.2' topic: `mqtt-topic'; payload: `iOc262KX9PeDXMqWUWFp14ff7vJ7Nj'
+[telemetry] sleeping for 5.0s
+[telemetry] sending to `172.22.0.2' topic: `mqtt-topic'; payload: `yraitkDqFOraBHFlTZKITib1RKNIHC'
+...
+```
+
+### 4.2.2 Optional: make sure the mqtt broker receives the messages
+```bash
+mqttbroker_container_name="kafka-mqtt-mosquitto-1"
+docker container exec -it $mqttbroker_container_name mosquitto_sub -t "#"
+```
+
+### 4.2.3 Make sure the kafka broker receives the messages
+```bash
+docker container exec kafka /bin/kafka-console-consumer --topic kafka-topic --from-beginning --bootstrap-server localhost:9092
+```
+Expected output
+```text
+[2023-12-20 07:31:09,417] WARN [Consumer clientId=console-consumer, groupId=console-consumer-18086] Error while fetching metadata with correlation id 2 : {kafka-topic=LEADER_NOT_AVAILABLE} (org.apache.kafka.clients.NetworkClient)
+{"schema":{"type":"bytes","optional":false},"payload":"aU9jMjYyS1g5UGVEWE1xV1VXRnAxNGZmN3ZKN05q"}
+{"schema":{"type":"bytes","optional":false},"payload":"eXJhaXRrRHFGT3JhQkhGbFRaS0lUaWIxUktOSUhD"}
+{"schema":{"type":"bytes","optional":false},"payload":"YmtSNHA5VWlhVkJ0RzdycGVZS1VXYzJCTzZkWlln"}
+...
+```
+
+# 5 Modify parameters of the connector
+To change the parameters and re-register the connector, delete the already registered connector. To remove a connector, issue the following command.
 
 ```console
 curl -s -X DELETE http://localhost:8083/connectors/mqtt-source
 ```
+# 6 clean up 
 
-For more information on Kafka Connect's REST API, see [Connect REST Interface](https://docs.confluent.io/platform/current/connect/references/restapi.html).
+## 6.1 Stop containers
+
+```bash
+docker compose stop
+```
+
+## 6.2 Remove containers
+```bash
+docker compose rm -f
+```
