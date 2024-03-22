@@ -28,6 +28,9 @@ Demo package for SINETStream
     * Viewer<br>
     SINETStreamライブラリを利用してサーバ(Kafkaブローカ)の画像をクライアントで表示する Pythonプログラムと実行手順を示します。
 
+* [audio streaming](AudioStreaming/README.md)
+  * 音声データを収集し、そのデータを別のPCなどで保存、再生するIoTシステムを構築することができます。
+
 * [sensor data viewer](SensorDataViewer/README.md)
   * Android端末、Raspberry Piから収集したセンサーデータ、位置情報、カメラ画像などを可視化するIoTシステムを構築することができます。
     * Sensor
