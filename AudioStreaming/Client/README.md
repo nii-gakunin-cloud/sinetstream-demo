@@ -89,36 +89,24 @@ $ ./producer.py --list-device
 
 ### 2.2. 音声データの受信
 
-デフォルトのブローカからデータを受信する場合は以下のようにコマンドを実行してください。音声データの受信を終了するにはキーボードで ctrl-c を押してください。受信したデータを音声ファイル`output.flac`に保存します。
+デフォルトのブローカからデータを受信する場合は以下のようにコマンドを実行してください。音声データの受信を終了するにはキーボードで ctrl-c を押してください。受信したデータを音声ファイル`output_{yyyymmddHHMMSS}.flac`に保存します。なお、必ず音声ファイルを分割する仕様のため、ファイル名の`{yyyymmddHHMMSS}`の部分にその音声ファイルが作成された日時を設定し、ファイル名の重複を防ぎます。
 
 ```console
 $ ./consumer.py 
 
-recording start: output.flac
+recording start: output_20240401134038.flac
 ^C
-recording finished: output.flac
+recording finished: output_20240401134038.flac
 ```
 
-出力先となる音声ファイルの名前を変更する場合は`-f`オプションを指定してください。
+出力先となる音声ファイルの名前を変更する場合は`-f`オプションを指定してください。なお、必ず音声ファイルを分割する仕様によるファイル名の重複を防ぐため、ファイル名（拡張子の前の部分）にその音声ファイルが作成された日時を付与します。
 
 ```console
 $ ./consumer.py -f sound-01.flac
 
-recording start: sound-01.flac
+recording start: sound-01_20240401134038.flac
 ^C
-recording finished: sound-01.flac
-```
-
-出力先となるファイルが既に存在している場合はエラーとなります。上書きする場合は`--force`を指定してください。
-
-```console
-$ ./consumer.py             
-File exists: 'output.flac'
-$ ./consumer.py --force
-
-recording start: output.flac
-^C
-recording finished: output.flac
+recording finished: sound-01_20240401134038.flac
 ```
 
 デフォルトの音声ファイルフォーマットはFLACになっています。他のフォーマットで保存する場合は`--format`オプションを指定してください。
@@ -126,9 +114,9 @@ recording finished: output.flac
 ```console
 $ ./consumer.py --format wav
 
-recording start: output.wav
+recording start: output_20240401134038.wav
 ^C
-recording finished: output.wav
+recording finished: output_20240401134038.wav
 ```
 
 SINETStreamの設定ファイル`.sinetstream_config.yml`に複数のサービス設定がある場合は`-s`オプションでどちらのブローカを利用するのか指定する必要があります。
@@ -137,10 +125,21 @@ SINETStreamの設定ファイル`.sinetstream_config.yml`に複数のサービ�
 ./consumer.py -s sound
 ```
 
-`./consumer.py`では一定時間毎の音声データに分割してファイルへ保存します。デフォルトでは１分毎の音声データに分割します。分割する間隔を変更する場合は`--rotation`オプションを指定してください。指定する値は分単位の値となります。
+`./consumer.py`では一定時間毎（分単位以上）の音声データに分割してファイルへ保存します。デフォルトでは１分毎の音声データに分割します。分割する間隔を変更する場合は`--rotation`オプションを指定してください。指定する値は分単位の値となります。
 
 ```console
 ./consumer.py --rotation 2
+
+recording start: output_20240401134038.flac
+recording finished: output_20240401134038.flac
+
+recording start: output_20240401134138.flac
+recording finished: output_20240401134138.flac
+
+recording start: output_20240401134238.flac
+recording finished: output_20240401134238.flac
+
+（以下省略）
 ```
 
 ### 2.3. 音声データの再生

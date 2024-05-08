@@ -19,11 +19,11 @@
 # specific language governing permissions and limitations
 # under the License.
 
+import datetime
 from argparse import ArgumentParser, Namespace
 
 from sinetstream import MessageReader
 from soundfile import SoundFile, available_formats, available_subtypes
-from math import floor
 
 
 def consumer(params: Namespace) -> None:
@@ -33,36 +33,68 @@ def consumer(params: Namespace) -> None:
         ) as reader,
     ):
         try:
-            file_name = "01_" + params.file
-            i = 1
-            rotation_bytes = 10700000 * params.rotation
-            f = SoundFile(
-                    file=file_name,
-                    mode="x" if not params.force else "w",
-                    samplerate=params.samplerate,
-                    channels=params.channels,
-                    format=params.format,
-                    subtype=params.subtype,
+            time_delta = datetime.timedelta(hours=9)
+            jst = datetime.timezone(time_delta, "JST")
+
+            border = params.file.rfind(".")
+            if border == -1:
+                file_name = (
+                    params.file
+                    + "_"
+                    + datetime.datetime.now(jst).strftime("%Y%m%d%H%M%S")
                 )
+            else:
+                file_name = (
+                    params.file[0:border]
+                    + "_"
+                    + datetime.datetime.now(jst).strftime("%Y%m%d%H%M%S")
+                    + params.file[border:]
+                )
+
+            standard_bytes = 10680000 * params.rotation
+            file_rotation_bytes = standard_bytes
+
+            f = SoundFile(
+                file=file_name,
+                mode="x" if not params.force else "w",
+                samplerate=params.samplerate,
+                channels=params.channels,
+                format=params.format,
+                subtype=params.subtype,
+            )
             print(f"\nrecording start: {file_name}")
             for message in reader:
                 f.write(message.value)
                 f.flush()
                 m = reader.metrics
-                if m.msg_bytes_total > rotation_bytes * i:
+                if m.msg_bytes_total > file_rotation_bytes:
                     print(f"recording finished: {file_name}\n")
                     f.flush()
                     f.close()
-                    i += 1
-                    file_name = format(str(i).zfill(2)) + "_" + params.file
-                    f = SoundFile(
-                            file=file_name,
-                            mode="x" if not params.force else "w",
-                            samplerate=params.samplerate,
-                            channels=params.channels,
-                            format=params.format,
-                            subtype=params.subtype,
+                    file_rotation_bytes += standard_bytes
+
+                    if border == -1:
+                        file_name = (
+                            params.file
+                            + "_"
+                            + datetime.datetime.now(jst).strftime("%Y%m%d%H%M%S")
                         )
+                    else:
+                        file_name = (
+                            params.file[0:border]
+                            + "_"
+                            + datetime.datetime.now(jst).strftime("%Y%m%d%H%M%S")
+                            + params.file[border:]
+                        )
+
+                    f = SoundFile(
+                        file=file_name,
+                        mode="x" if not params.force else "w",
+                        samplerate=params.samplerate,
+                        channels=params.channels,
+                        format=params.format,
+                        subtype=params.subtype,
+                    )
                     print(f"recording start: {file_name}")
         except KeyboardInterrupt:
             f.flush()
