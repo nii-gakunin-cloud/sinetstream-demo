@@ -6,4 +6,3 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN mkdir -p /usr/share/java/stream-reactor \
  && ( curl -sL $URL_KAFKA_CONNECT_MQTT | \
       tar xzf - -C /usr/share/java/stream-reactor )
-
