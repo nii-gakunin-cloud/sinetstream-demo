@@ -50,7 +50,7 @@ flowchart LR
 * [NGINX](https://nginx.org/)
   * Webサーバ
   * カメラ画像データを可視化するWebアプリを配信する
-  
+
 また、コンポーネント間でのデータを受け渡すために以下のものを利用します。
 
 * [Kafka Connect](https://kafka.apache.org/documentation/#connect)
@@ -328,7 +328,7 @@ mkdir -p ${target_dir}/conf/nginx
 cat ${target_dir}/params/*.yml | \
 jinja2 --strict \
     -o ${target_dir}/conf/nginx/default.conf \
-    files/template/nginx/default.conf.j2 
+    files/template/nginx/default.conf.j2
 ```
 
 設定ファイル`nginx/default.conf`の記述例を示します。
@@ -744,7 +744,7 @@ docker compose --project-directory ${target_dir} exec postgres \
 $ docker compose --project-directory ${target_dir} exec postgres \
   psql -U $POSTGRES_USER -d $POSTGRES_DB -c "\d"
                         List of relations
-     Schema |            Name            |   Type   | Owner  
+     Schema |            Name            |   Type   | Owner
     --------+----------------------------+----------+--------
      public | image-sinetstream-picamera | table    | sensor
      public | minio_event                | table    | sensor

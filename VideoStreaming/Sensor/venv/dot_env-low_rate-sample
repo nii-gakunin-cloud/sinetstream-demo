@@ -1,4 +1,4 @@
-PICAMERA_RESOLUTION=VGA
+PICAMERA2_SIZE=VGA
 SCHEDULE=10
 SS_BROKERS=kafka.example.org:9092
 SS_TOPIC=sinetstream.image.camera

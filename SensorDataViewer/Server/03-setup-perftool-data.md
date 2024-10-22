@@ -37,7 +37,7 @@ flowchart LR
 * [NGINX](https://nginx.org/)
   * Webサーバ
   * perftoolデータを可視化するWebアプリを配信する
-  
+
 また、コンポーネント間でのデータを受け渡すために以下のものを利用します。
 
 * [Kafka Connect](https://kafka.apache.org/documentation/#connect)
@@ -342,7 +342,7 @@ mkdir -p ${target_dir}/conf/nginx
 cat ${target_dir}/params/*.yml | \
 jinja2 --strict \
     -o ${target_dir}/conf/nginx/default.conf \
-    files/template/nginx/default.conf.j2 
+    files/template/nginx/default.conf.j2
 ```
 
 設定ファイル`nginx/default.conf`の記述例を示します。

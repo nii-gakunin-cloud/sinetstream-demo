@@ -1,10 +1,9 @@
-version: '3.7'
 services:
   picamera:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sample/sensor-picamera
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.2.13
     privileged: true
-    init: true
-    devices:
-    - /dev/vchiq:/dev/vchiq
+    volumes:
+      - /dev:/dev
+      - /run/udev:/run/udev
     restart: on-failure:5
     env_file: .env

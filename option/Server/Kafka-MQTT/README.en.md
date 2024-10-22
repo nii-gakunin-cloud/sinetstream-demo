@@ -23,7 +23,7 @@ The version of each software component is shown below.
 
 | Software                                                     | Version |
 |--------------------------------------------------------------|---------|
-| [Apache Kafka](https://kafka.apache.org/)                    | 3.4.0   |
+| [Apache Kafka](https://kafka.apache.org/)                    | 3.8.0   |
 | [Eclipse Mosquitto](https://mosquitto.org/)                  | 2.0.15  |
 | [Stream Reactor](https://github.com/lensesio/stream-reactor) | 3.0.1   |
 
@@ -68,7 +68,7 @@ docker compose up -d
 Check the status of the container, making sure that the STATUS is ``running``.
 
 ```console
-$ docker compose ps 
+$ docker compose ps
 NAME                    COMMAND                  SERVICE             STATUS              PORTS
 mosquitto-mosquitto-1   "/docker-entrypoint.…"   mosquitto           running             0.0.0.0:1883->1883/tcp, :::1883->1883/tcp
 ```

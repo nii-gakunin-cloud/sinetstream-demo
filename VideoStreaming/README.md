@@ -36,7 +36,7 @@ flowchart LR
 * Server
   * Raspberry PiとViewerの間で画像の送信を中継します
   * ブローカに送信された画像を GPU ノードの OpenPose/YOLO で処理します
-  
+
 * Viewer
   * Kafkaブローカに送信された画像のストリームをクライアントで表示します
   * Kafkaのトピック名を指定することでビューアが表示する画像を選択することができます

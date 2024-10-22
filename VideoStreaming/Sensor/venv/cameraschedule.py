@@ -2,9 +2,9 @@ import re
 from logging import getLogger
 from os import getenv
 from threading import Event, Thread
-from time import sleep
 
 import schedule
+from exttool import call_exttool
 
 from cameraparams import get_param
 
@@ -12,17 +12,13 @@ logger = getLogger(__name__)
 logger.setLevel(getenv("LOG_LEVEL", "WARNING"))
 
 
-def start_scheduler():
-    ev = Event()
-
+def start_scheduler_thread(done):
     def schedule_loop():
         logger.debug("start schedule loop")
-        while not ev.is_set():
+        while not done.wait(timeout=1):
             schedule.run_pending()
-            sleep(1)
 
     Thread(target=schedule_loop).start()
-    return ev
 
 
 def _get_job():
@@ -79,20 +75,31 @@ def _get_job():
     return job.at(m.group(3))
 
 
-def setup_scheduler(error_event):
+def setup_scheduler(params, done):
     ev = Event()
     job = _get_job()
+
+    if "server" in params:
+
+        def ext_tool():
+            call_exttool(params)
+
+    else:
+
+        def ext_tool():
+            pass
 
     def wakeup():
         ev.set()
 
-    def waiter():
+    def wait():
         ev.clear()
-        while not (ev.wait(1) or error_event.is_set()):
+        ext_tool()
+        while not (ev.wait(1) or done.is_set()):
             pass
 
     if job is None:
-        return lambda: None
+        return ext_tool
 
     job.do(wakeup)
-    return waiter
+    return wait

@@ -23,11 +23,11 @@ The system to be built consists of two parts:
   * Sends the values measured by the sensors connected to the Raspberry Pi to the server.
   * The measurement process for a sensor is different for each sensor actually connected. Here are some examples.
   * Sensor measurements are sent to the Kafka broker on the server via the [SINETStream library](https://www.sinetstream.net/).
-  
+
 * Server
   * The Kafka broker receives sensor readings sent from the Raspberry Pi.
   * Grafana/Zabbix visualizes the sensor readings sent to the Kafka broker.
-  
+
 Instructions and materials for building each part of the system are stored in a subdirectory.
 
 * [Sensor/README.en.md](Sensor/README.en.md)

@@ -1,0 +1,5 @@
+.venv
+.tool-versions
+*.pyc
+__pycache__
+.sinetstream_config.yml

@@ -73,7 +73,7 @@ flowchart LR
 
 |ソフトウェア|バージョン|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[Apache Kafka](https://kafka.apache.org/)|3.8.0|
 |[ElasticSearch Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-elasticsearch)|14.0.6|
 |[Elasticsearch](https://www.elastic.co/jp/elasticsearch/)|7.17.10|
 |[Grafana](https://grafana.com/grafana/)|9.5.2|
@@ -173,12 +173,12 @@ Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1
 - 環境変数名のプレフィックスに `KAFKA_` をつける
 - 全て大文字に変換する
 - ピリオド `.` を アンダースコア `_` に置き換える
-- ハイフン `-` を ２文字のアンダースコア `__` に置き換える
-- アンダースコア`_` を ３文字のアンダースコア `___` に置き換える
+- アンダースコア `_` を 2文字のアンダースコア `__` に置き換える
+- ハイフン `-` を 3文字のアンダースコア `___` に置き換える
 
 例えば、プロパティ`message.max.bytes`は環境変数`KAFKA_MESSAGE_MAX_BYTES`として指定します。
 
-環境変数の指定方法の詳細については[Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration)を参照してください。
+環境変数の指定方法の詳細については[Kafka Docker Image Usage Guide](https://github.com/apache/kafka/blob/trunk/docker/examples/README.md#using-environment-variables)を参照してください。
 
 ### 3.3. コンテナの実行
 
@@ -193,15 +193,15 @@ docker compose up -d
 コンテナの状態を確認します。
 
 ```console
-$ docker compose ps 
-NAME                COMMAND                  SERVICE             STATUS              PORTS
-broker              "/etc/confluent/dock…"   broker              running             
-zookeeper           "/etc/confluent/dock…"   zookeeper           running             
+$ docker compose ps -a
+NAME                 IMAGE                COMMAND                  SERVICE      CREATED         STATUS         PORTS
+kafka-broker-1       apache/kafka:3.8.0   "/__cacert_entrypoin…"   broker       4 seconds ago   Up 3 seconds   0.0.0.0:9092->9092/tcp, :::9092->9092/tcp
+kafka-controller-1   apache/kafka:3.8.0   "/__cacert_entrypoin…"   controller   4 seconds ago   Up 4 seconds   9092/tcp
 ```
 
-`broker`コンテナ`zookeeper`コンテナの状態(STATUS)がいずれも`running`となっていることを確認してください。
+`broker`コンテナ`controller`コンテナの状態(STATUS)がいずれも`Up`となっていることを確認してください。
 
-STATUSの値が`running`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
+STATUSの値が`Up`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
 
 ```console
 docker compose logs
@@ -266,7 +266,7 @@ $ curl -s http://localhost:9200/_cluster/health?pretty
 この手順で起動した Elasticsearch は１ノード構成となっています。Elasticsearchのデフォルト設定ではレプリカの数が 1 となっているため、この状態でインデックスを作成すると status が `yellow` となってしまいます。このことに対応するために、デフォルトのレプリカ数の設定を変更します。`docker-compose.yml`と同じディレクトリにある `setup.sh` を実行してください。
 
 ```console
-$ setup.sh
+$ ./setup.sh
 {"acknowledged":true}
 ```
 

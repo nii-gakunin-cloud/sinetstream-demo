@@ -43,7 +43,7 @@ flowchart LR
 * [NGINX](https://nginx.org/)
   * Webサーバ
   * センサーデータを可視化するWebアプリを配信する
-  
+
 また、コンポーネント間でのデータを受け渡すために以下のものを利用します。
 
 * [NATS-Kafka Bridge](https://github.com/nats-io/nats-kafka)
@@ -313,11 +313,11 @@ jinja2 --strict \
 nats: {
   Servers: ["nats:4222"],
 }
-  
+
 jetstream: {
   maxwait: 5000,
 }
-    
+
 connect: [
   {
     type: "NATSToKafka",
@@ -340,7 +340,7 @@ mkdir -p ${target_dir}/conf/nginx
 cat ${target_dir}/params/*.yml | \
 jinja2 --strict \
     -o ${target_dir}/conf/nginx/default.conf \
-    files/template/nginx/default.conf.j2 
+    files/template/nginx/default.conf.j2
 ```
 
 設定ファイル`conf/nginx/default.conf`の記述例を示します。
@@ -349,7 +349,7 @@ jinja2 --strict \
 server {
     listen 443 ssl;
     server_name www.example.org;
-    
+
     ssl_certificate /etc/nginx/certs/server.crt;
     ssl_certificate_key /etc/nginx/certs/server.key;
     ssl_session_timeout 1d;
@@ -358,38 +358,38 @@ server {
     ssl_protocols TLSv1.3;
     ssl_prefer_server_ciphers off;
     add_header Strict-Transport-Security "max-age=63072000" always;
-    
+
     ignore_invalid_headers off;
     client_max_body_size 0;
     proxy_buffering off;
-    
+
     location /v1/graphql {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
-    
+
         proxy_connect_timeout 300;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         chunked_transfer_encoding off;
-    
+
         proxy_pass http://graphql:8080;
     }
-    
+
     location / {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
         proxy_set_header Host $http_host;
-  
+
         proxy_connect_timeout 300;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
         chunked_transfer_encoding off;
-    
+
         alias /var/www/html/;
         try_files $uri $uri/ /index.html;
     }
@@ -683,7 +683,7 @@ docker compose --project-directory ${target_dir} exec postgres \
 $ docker compose --project-directory ${target_dir} exec postgres \
   psql -U $POSTGRES_USER -d $POSTGRES_DB -c "\pset pager off" -c "\d"
                            List of relations
-     Schema |               Name                |   Type   | Owner  
+     Schema |               Name                |   Type   | Owner
     --------+-----------------------------------+----------+--------
      public | accelerometer                     | table    | sensor
      public | accelerometer_10min               | view     | sensor

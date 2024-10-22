@@ -1,0 +1,5 @@
+.venv
+.tool-versions
+__pycache__
+*.pyc
+.env*

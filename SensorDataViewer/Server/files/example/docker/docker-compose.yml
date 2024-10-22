@@ -1,6 +1,6 @@
 services:
   nats:
-    image: nats:2.10.2
+    image: nats:2.10.3
     restart: always
     ports:
       - ${MQTT_PORT:-1883}:1883
@@ -71,7 +71,7 @@ services:
       postgres:
         condition: service_healthy
   thumbnail:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/picamera-thumbnail:0.1.10
+    image: harbor.vcloud.nii.ac.jp/sinetstream/picamera-thumbnail:0.1.11
     environment:
       TOPIC: minio-sinetstream-picamera
     secrets:
@@ -80,7 +80,7 @@ services:
       kafka:
         condition: service_healthy
   postgres:
-    image: timescale/timescaledb:2.12.0-pg15-oss
+    image: timescale/timescaledb:2.12.2-pg15-oss
     restart: always
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
@@ -101,7 +101,7 @@ services:
       timeout: 5s
       retries: 5
   kafka-connect:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.1.5
+    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.1.6
     restart: always
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:19092
@@ -138,7 +138,7 @@ services:
       postgres:
         condition: service_healthy
   nginx:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.7
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.3.8
     ports:
       - "443:443"
     restart: always

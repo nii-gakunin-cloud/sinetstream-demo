@@ -77,7 +77,7 @@ PICAMERA2_SIZE=VGA
 * camera controlsのように子要素があるパラメータは、パラメータ名の後に_でつなげる
 * またcontrol名のように大文字、小文字が混在している場合は大文字の箇所を_で区切る
   * 例えばcontrol名AwbModeに対応する環境変数名は`PICAMERA2_CONTROLS_AWB_MODE`になる
-  
+
 環境変数の設定例を次の表に示します。
 
 |環境変数名|説明|設定例|

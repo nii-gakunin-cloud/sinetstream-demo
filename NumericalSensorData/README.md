@@ -27,7 +27,7 @@ flowchart LR
 * Server
   * Raspberry Piから送信されたセンサーの計測値をKafkaブローカが受け取ります
   * Kafkaブローカに送信されたセンサーの計測値をGrafana/Zabbixでグラフ表示などの可視化を行います
-  
+
 システムの各パートの構築手順と構築のための資材がサブディレクトリに格納されています。
 
 * [Sensor/README.md](Sensor/README.md)

@@ -90,12 +90,12 @@ The parameters for the Kafka broker are the properties described in "[Kafka Docu
 * Prefix the environment variable name with `KAFKA_`
 * Convert to all uppercase
 * Convert periods `.` to underscores `_`
-* Replace hyphens `-` with a 2-letter underscore `__`.
-* replace an underscore `_` with a three-letter underscore `___`
+* Replace an underscore `_` with a 2-letter underscore `__`
+* Replace hyphens `-` with a three-letter underscore `___`.
 
 For example, the property `message.max.bytes` is specified as the environment variable `KAFKA_MESSAGE_MAX_BYTES`.
 
-For details on how to specify environment variables, see [Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration).
+For details on how to specify environment variables, see [Kafka Docker Image Usage Guide](https://github.com/apache/kafka/blob/trunk/docker/examples/README.md#using-environment-variables).
 
 ### 3.3. YOLOv5 Container
 
@@ -202,14 +202,14 @@ docker compose up -d
 Check the state of the container:
 
 ```console
-$ docker compose ps 
-NAME                COMMAND                  SERVICE             STATUS              PORTS
-broker              "/etc/confluent/dock…"   broker              running             
-zookeeper           "/etc/confluent/dock…"   zookeeper           running             
+$ docker compose ps -a
+NAME                 IMAGE                COMMAND                  SERVICE      CREATED         STATUS         PORTS
+kafka-broker-1       apache/kafka:3.8.0   "/__cacert_entrypoin…"   broker       4 seconds ago   Up 3 seconds   0.0.0.0:9092->9092/tcp, :::9092->9092/tcp
+kafka-controller-1   apache/kafka:3.8.0   "/__cacert_entrypoin…"   controller   4 seconds ago   Up 4 seconds   9092/tcp
 ```
 
-Make sure that the state (STATUS) of the `broker` and `zookeeper` containers are both `running`.
-If the STATUS value is not `running`, check the container logs to determine the cause of the error.
+Make sure that the state (STATUS) of the `broker` and `controller` containers are both `Up`.
+If the STATUS value is not `Up`, check the container logs to determine the cause of the error.
 
 ```console
 docker compose logs
@@ -232,10 +232,10 @@ docker compose up -d
 Check the state of the container:
 
 ```console
-docker compose ps 
+docker compose ps
 ```
 
-Make sure that both container states (STATUS) are ``running``.
+Make sure that both container states (STATUS) are ``Up``.
 
 If you specify a hostname (not an IP address) as the `BROKER_HOSTNAME` value in the `.env` of the Kafka broker, the YOLOv5 environment must be able to resolve the name of the host. If you specify a hostname that is not registered in DNS, etc. as `BROKER_HOSTNAME`, please make sure to enable name resolution for the Kafka broker by specifying [extra_hosts](https://docs.docker.com/compose/compose-file/compose-file-v3/#extra_hosts) in `docker-compose.yml`. An example of specifying extra_hosts in `docker-compose.yml` is shown below with the change diff. In this example, an entry for the Kafka broker `kafka.example.org` with IP address `192.168.1.100` is registered in `extra_hosts`.
 

@@ -33,7 +33,7 @@ MinIOはKafka Connectと同じサーバ内のコンテナとして実行しま�
 
 |ソフトウェア|バージョン|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[Apache Kafka](https://kafka.apache.org/)|3.8.0|
 |[Amazon S3 Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-s3)|10.4.3|
 |[MinIO](https://min.io/)|RELEASE.2023-05-27T05-56-19Z(*)|
 
@@ -225,7 +225,7 @@ docker compose --profile minio up -d
 コンテナの状態を確認します。STATUSが`running`となっていることを確認してください。
 
 ```console
-$ docker compose ps 
+$ docker compose ps
 NAME                               COMMAND                  SERVICE             STATUS              PORTS
 kafka-connect-s3-create-bucket-1   "/bin/sh -c ' /usr/b…"   create-bucket       exited (0)
 kafka-connect-s3-kafka-connect-1   "/etc/confluent/dock…"   kafka-connect       running (healthy)   0.0.0.0:8083->8083/tcp, :::8083->8083/tcp

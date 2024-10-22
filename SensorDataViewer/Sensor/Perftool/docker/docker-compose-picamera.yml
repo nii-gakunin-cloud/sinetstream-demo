@@ -1,13 +1,13 @@
 services:
   perftool:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/perftool:0.2.9
+    image: harbor.vcloud.nii.ac.jp/sinetstream/perftool:0.2.17
     restart: on-failure:5
     env_file: .env.perftool
     command: -U /run/perftool/socket
     volumes:
       - ./perftool:/run/perftool
   picamera:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.2.7
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.2.15
     privileged: true
     volumes:
       - /dev:/dev

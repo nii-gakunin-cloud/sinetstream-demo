@@ -215,9 +215,9 @@ docker compose up -d
 コンテナの状態を確認します。コンテナの状態(STATUS)が`running`となっていることを確認してください。
 
 ```console
-$ docker compose ps 
+$ docker compose ps
 NAME                COMMAND                  SERVICE             STATUS              PORTS
-images-picamera-1   "/opt/ss-camera/ss-c…"   picamera            running       
+images-picamera-1   "/opt/ss-camera/ss-c…"   picamera            running
 ```
 
 RaspberryPi起動時に自動的に画像送信を開始するために`docker-compose.yml`の`restart`には`on-failure:5`を指定しています。Kafkaブローカに接続できないなどの理由でコンテナの実行がエラーとなった場合、所定の回数（５回）リトライした後にエラー終了します。エラーに関わらずコンテナを起動し続けるには `restart`に`always` を指定してください。

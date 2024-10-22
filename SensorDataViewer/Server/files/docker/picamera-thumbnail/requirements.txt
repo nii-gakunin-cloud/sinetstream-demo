@@ -1,12 +1,12 @@
 avro-python3==1.10.2
-boto3==1.28.61
-botocore==1.31.61
+boto3==1.28.68
+botocore==1.31.68
 certifi==2023.7.22
 charset-normalizer==3.3.0
 idna==3.4
 jmespath==1.0.1
 kafka-python==2.0.2
-Pillow==10.0.1
+Pillow==10.1.0
 promise==2.3
 pycryptodomex==3.19.0
 python-dateutil==2.8.2
@@ -16,5 +16,5 @@ s3transfer==0.7.0
 sinetstream==1.8.1
 sinetstream-kafka==1.8.1
 six==1.16.0
-urllib3==1.26.17
+urllib3==1.26.18
 zstandard==0.21.0

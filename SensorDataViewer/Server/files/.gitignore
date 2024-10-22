@@ -1,0 +1,12 @@
+.tool-versions
+/kafka-connect/
+/secrets/
+/postgres/
+/minio/
+/tmp*
+.env*
+/sql/create_view.sql
+/certs/
+docker-compose.override.yml
+/utils/setup-kafka-connect-as/
+.venv

@@ -75,12 +75,12 @@ The configuration parameters for the Kafka broker can be specified as described 
 * Prefix the environment variable name with `KAFKA_`
 * Convert to all uppercase
 * Convert periods `.` to underscores `_`
-* Replace hyphens `-` with a 2-letter underscore `__`.
-* replace an underscore `_` with a three-letter underscore `___`
+* Replace an underscore `_` with a 2-letter underscore `__`
+* Replace hyphens `-` with a three-letter underscore `___`.
 
 For example, the property `message.max.bytes` is specified as the environment variable `KAFKA_MESSAGE_MAX_BYTES`.
 
-For details on how to specify environment variables, see [Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration).
+For details on how to specify environment variables, see [Kafka Docker Image Usage Guide](https://github.com/apache/kafka/blob/trunk/docker/examples/README.md#using-environment-variables).
 
 ## 4. Execution
 
@@ -95,15 +95,15 @@ docker compose up -d
 Check the state of the container:
 
 ```console
-$ docker compose ps 
-NAME                COMMAND                  SERVICE             STATUS              PORTS
-broker              "/etc/confluent/dock…"   broker              running             
-zookeeper           "/etc/confluent/dock…"   zookeeper           running             
+$ docker compose ps -a
+NAME                 IMAGE                COMMAND                  SERVICE      CREATED                  STATUS                  PORTS
+kafka-broker-1       apache/kafka:3.8.0   "/__cacert_entrypoin…"   broker       Less than a second ago   Up Less than a second   0.0.0.0:9092->9092/tcp, :::9092->9092/tcp
+kafka-controller-1   apache/kafka:3.8.0   "/__cacert_entrypoin…"   controller   Less than a second ago   Up Less than a second   9092/tcp
 ```
 
-Make sure that the state (STATUS) of the `broker` and `zookeeper` containers are both `running`.
+Make sure that the state (STATUS) of the `broker` and `controller` containers are both `Up`.
 
-If the STATUS value is not `running`, check the container logs to determine the cause of the error.
+If the STATUS value is not `Up`, check the container logs to determine the cause of the error.
 
 ```console
 docker compose logs

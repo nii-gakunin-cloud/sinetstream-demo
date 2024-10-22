@@ -75,12 +75,13 @@ Kafkaブローカに対する設定パラメータは [Kafka Documentation - 3.1
 * 環境変数名のプレフィックスに `KAFKA_` をつける
 * 全て大文字に変換する
 * ピリオド `.` を アンダースコア `_` に置き換える
-* ハイフン `-` を ２文字のアンダースコア `__` に置き換える
-* アンダースコア`_` を ３文字のアンダースコア `___` に置き換える
+* アンダースコア `_` を 2文字のアンダースコア `__` に置き換える
+* ハイフン `-` を 3文字のアンダースコア `___` に置き換える
 
 例えば、プロパティ`message.max.bytes`は環境変数`KAFKA_MESSAGE_MAX_BYTES`として指定します。
 
-環境変数の指定方法の詳細については[Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration)を参照してください。
+環境変数の指定方法の詳細については[Kafka Docker Image Usage Guide](https://github.com/apache/kafka/blob/trunk/docker/examples/README.md#using-environment-variables)を参照してください。
+
 
 ## 4. 実行
 
@@ -95,15 +96,15 @@ docker compose up -d
 コンテナの状態を確認します。
 
 ```console
-$ docker compose ps 
-NAME                COMMAND                  SERVICE             STATUS              PORTS
-broker              "/etc/confluent/dock…"   broker              running             
-zookeeper           "/etc/confluent/dock…"   zookeeper           running             
+$ docker compose ps -a
+NAME                 IMAGE                COMMAND                  SERVICE      CREATED                  STATUS                  PORTS
+kafka-broker-1       apache/kafka:3.8.0   "/__cacert_entrypoin…"   broker       Less than a second ago   Up Less than a second   0.0.0.0:9092->9092/tcp, :::9092->9092/tcp
+kafka-controller-1   apache/kafka:3.8.0   "/__cacert_entrypoin…"   controller   Less than a second ago   Up Less than a second   9092/tcp
 ```
 
-`broker`コンテナ`zookeeper`コンテナの状態(STATUS)がいずれも`running`となっていることを確認してください。
+`broker`コンテナ`controller`コンテナの状態(STATUS)がいずれも`Up`となっていることを確認してください。
 
-STATUSの値が`running`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
+STATUSの値が`Up`となっていない場合はコンテナのログなどを確認することによりエラーの原因を調査してください。
 
 ```console
 docker compose logs

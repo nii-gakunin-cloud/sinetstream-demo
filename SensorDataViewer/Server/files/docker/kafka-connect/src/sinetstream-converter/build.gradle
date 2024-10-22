@@ -7,6 +7,23 @@ group = 'net.sinetstream'
 version = currentVersion
 
 repositories {
+    maven {
+        url "https://gitlab.vcp-handson.org/api/v4/groups/2/-/packages/maven"
+        if (project.hasProperty('gitLabPrivateToken')) {
+            credentials(HttpHeaderCredentials) {
+                name = 'Private-Token'
+                value = gitLabPrivateToken
+            }
+        } else {
+            credentials(HttpHeaderCredentials) {
+                name = "Job-Token"
+                value = project.hasProperty('gitLabJobToken') ? gitLabJobToken : System.getenv('CI_JOB_TOKEN')
+            }
+        }
+        authentication {
+            header(HttpHeaderAuthentication)
+        }
+    }
     maven { url "https://packages.confluent.io/maven/" }
     mavenCentral()
 }
@@ -23,4 +40,25 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        def env = System.getenv()
+        maven {
+            url "${env.CI_API_V4_URL}/projects/${env.CI_PROJECT_ID}/packages/maven"
+            credentials(HttpHeaderCredentials) {
+                name = "Job-Token"
+                value = env.CI_JOB_TOKEN
+            }
+            authentication {
+                header(HttpHeaderAuthentication)
+            }
+        }
+    }
 }

@@ -36,7 +36,7 @@ The system to be built consists of three parts:
 * Server
   * Relays the transmission of images between the Raspberry Pi and the Viewer
   * Processes images sent to the broker with the GPU node OpenPose/YOLO
-  
+
 * Viewer
   * View the stream of images sent to the Kafka broker on the client
   * Viewer can select which images to display by specifying the Kafka topic name

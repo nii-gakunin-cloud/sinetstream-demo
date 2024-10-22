@@ -1,23 +1,26 @@
+from argparse import ArgumentParser
 import json
-from inspect import classify_class_attrs, signature
+
 from logging import getLogger
 from os import environ, getenv
 from pathlib import Path
+from typing import Any
+from libcamera import Transform, ColorSpace, controls
 
-from picamera import Color, PiCamera
 
 SECRETS_DIR = Path("/run/secrets")
 CONFIG_PATH = Path("~/.config/sinetstream").expanduser()
 PICAMERA_PREFIX = "PICAMERA_"
-CAPTURE_PREFIX = "CAPTURE_"
+PICAMERA2_PREFIX = "PICAMERA2_"
 
 
 DEFAULT_SERVICE = "images"
+EXT_SERVICE = "ext-tools"
 logger = getLogger(__name__)
 logger.setLevel(getenv("LOG_LEVEL", "WARNING"))
 
 
-def _get_param(name, default=None):
+def _get_param(name: str, default=None) -> Any:
     secrets = SECRETS_DIR / name
     if secrets.exists():
         with secrets.open() as f:
@@ -32,7 +35,7 @@ def _asNumeric(v, tp=int):
         return None
 
 
-def get_param(name, default=None):
+def get_param(name: str, default=None) -> Any:
     v = _get_param(name, default)
     if v is None:
         return v
@@ -46,7 +49,7 @@ def get_param(name, default=None):
     return v
 
 
-def setup_auth_json(auth):
+def setup_auth_json(auth) -> None:
     auth_json = CONFIG_PATH / "auth.json"
     if auth_json.exists():
         return
@@ -103,17 +106,28 @@ def _update_params(params, keys, value):
         params[key] = p
 
 
-def setup_ss_cfg_yml():
-    logger.debug("generate .sinetstream_config.yml")
+def get_service_params(prefix="SS_", defaults={"type": "kafka"}) -> dict:
+    pl = len(prefix)
     key_map = [
-        (x[3:].lower().split("__"), get_param(x)) for x in find_param_names("SS_")
+        (x[pl:].lower().split("__"), get_param(x)) for x in find_param_names(prefix)
     ]
-    params = {"type": "kafka"}
+    params = defaults.copy()
     for keys, value in key_map:
         _update_params(params, keys, value)
+    return params
+
+
+def setup_ss_cfg_yml() -> None:
+    logger.debug("generate .sinetstream_config.yml")
     cfg_file = Path(".sinetstream_config.yml")
     with cfg_file.open(mode="w") as f:
-        json.dump({DEFAULT_SERVICE: params}, f)
+        json.dump(
+            {
+                DEFAULT_SERVICE: get_service_params("SS_"),
+                EXT_SERVICE: get_service_params("EXT_SS_"),
+            },
+            f,
+        )
 
 
 def setup_sinetstream():
@@ -124,7 +138,7 @@ def setup_sinetstream():
     return dict(service=DEFAULT_SERVICE)
 
 
-def _to_tuple(v, to_num=float):
+def _to_tuple(v, to_num=float, separator=","):
     if type(v) == tuple:
         return v
     if type(v) != str:
@@ -132,141 +146,168 @@ def _to_tuple(v, to_num=float):
     v = v.strip()
     if not (v.startswith("(") and v.endswith(")")):
         raise RuntimeError(f"Cannot be converted to tuple: {v}")
-    return tuple([to_num(x) for x in v[1:-1].split(",")])
+    return tuple([to_num(x) for x in v[1:-1].split(separator)])
 
 
 def _to_resolution(v):
     v = v.strip()
     if v == "4K":
         return (3840, 2160)
-    elif v == "2K":
+    if v == "2K" or v == "FHD":
         return (1920, 1080)
-    elif v == "QVGA":
+    if v == "HD":
+        return (1280, 720)
+    if v == "SVGA":
+        return (800, 600)
+    if v == "VGA":
+        return (640, 480)
+    if v == "QVGA":
         return (320, 240)
-    if v.startswith("(") and v.endswith(")"):
-        return _to_tuple(v, int)
-    else:
-        return v
+    ret = _to_tuple(v, int, "x")
+    if len(ret) != 2:
+        raise RuntimeError(f"The image size parameter is incorrect: {v}")
+    return ret
 
 
-def get_picamera_constructor_args(env_names):
-    args = signature(PiCamera).parameters
+def get_picamera2_transform_params():
+    prefix = PICAMERA2_PREFIX + "TRANSFORM_"
+    names = find_param_names(prefix)
+    params = dict(
+        [(name[len(prefix) :].lower(), 1) for name in names if get_param(name)]
+    )
+    return {"transform": Transform(**params)} if len(params) > 0 else {}
+
+
+def get_picamera2_config_params():
     params = {}
-    for env_name in env_names:
-        name = env_name[len(PICAMERA_PREFIX) :].lower()
-        if name not in args.keys():
-            continue
-        v = get_param(env_name)
-        tp = type(args[name].default)
-        if tp == int:
-            params[name] = int(v)
-        elif tp == float or name == "framerate":
-            params[name] = float(v)
-        elif tp == bool:
-            params[name] = v.lower() == "true"
-        elif tp == str:
-            params[name] = v
-        elif name == "famerate_range":
-            params[name] = _to_tuple(v)
-        elif name == "resolution":
-            params[name] = _to_resolution(v)
-        elif name == "led_pin":
-            pass
-        logger.debug(f"picamera constructor arg: {name}={params.get(name)}")
+    colour_space_name = get_param(PICAMERA2_PREFIX + "COLOUR_SPACE")
+    if colour_space_name is not None:
+        params["colour_space"] = getattr(ColorSpace, colour_space_name)()
+
+    buffer_count = get_param(PICAMERA2_PREFIX + "BUFFER_COUNT")
+    if buffer_count is not None:
+        params["buffer_count"] = buffer_count
+
     return params
 
 
-def get_picamera_attrs(env_names):
-    picamera_attrs = [
-        x.name for x in classify_class_attrs(PiCamera) if x.kind == "property"
-    ]
+def get_picamera2_main_params():
     params = {}
-    for env_name in env_names:
-        name = env_name[len(PICAMERA_PREFIX) :].lower()
-        if name not in picamera_attrs:
-            err_msg = "Ignore because a non-existent attribute was specified"
-            logger.warning(f"{err_msg}: {name}")
-            continue
-        v = get_param(env_name)
-        if name in [
-            "annotate_text_size",
-            "brightness",
-            "contrast",
-            "exposure_compensation",
-            "iso",
-            "rotation",
-            "saturation",
-            "sharpness",
-            "shutter_speed",
-        ]:
-            params[name] = int(v)
-        elif name in ["aws_gains", "framerate_delta"]:
-            params[name] = float(v)
-        elif name in [
-            "annotate_frame_num",
-            "hflip",
-            "image_denoise",
-            "led",
-            "still_stats",
-            "vflip",
-            "video_denoise",
-        ]:
-            params[name] = v.lower() == "true"
-        elif name in ["color_effects", "image_effect_params"]:
-            params[name] = _to_tuple(v, int)
-        elif name in ["zoom"]:
-            params[name] = _to_tuple(v)
-        elif name in ["annotate_background", "annotate_foreground"]:
-            params[name] = Color(v)
-        elif name.startswith("exif_tags__"):
-            exif = params.get("exif_tags", {})
-            exif[env_name[len(PICAMERA_PREFIX + "exif_tags__") :]] = v
-            params["exif_tags"] = exif
-        else:
-            params[name] = v
-        logger.debug(f"picamera attr: {name}={params.get(name)}")
 
+    size = get_param(PICAMERA2_PREFIX + "MAIN_SIZE")
+    if size is None:
+        size = get_param(PICAMERA2_PREFIX + "SIZE")
+    if size is None:
+        size = get_param(PICAMERA_PREFIX + "RESOLUTION")
+    if size is not None:
+        params["size"] = _to_resolution(size)
+
+    format = get_param(PICAMERA2_PREFIX + "MAIN_FORMAT")
+    if format is None:
+        format = get_param(PICAMERA2_PREFIX + "FORMAT")
+    if format is not None:
+        params["format"] = format
+
+    return dict(main=params) if len(params) > 0 else {}
+
+
+def get_picamera2_enum(name, value):
+    enum = getattr(controls, f"{name}Enum", None)
+    if enum is not None:
+        return getattr(enum, value)
+    return value
+
+
+def update_framerate_param(params):
+    if "FrameRate" not in params:
+        return params
+    framerate = float(params["FrameRate"])
+    del params["FrameRate"]
+    params["FrameDurationLimits"] = (int(1000000 / framerate), int(1000000 / framerate))
     return params
+
+
+def get_picamera2_controls_params():
+    params = {}
+
+    framerate = get_param(PICAMERA_PREFIX + "FRAMERATE")
+    if framerate is not None:
+        params["FrameRate"] = framerate
+
+    prefix = PICAMERA2_PREFIX + "CONTROLS_"
+    names = find_param_names(prefix)
+    for env_name in names:
+        value = get_param(env_name)
+        name = "".join([x.capitalize() for x in env_name[len(prefix) :].split("_")])
+        params[name] = value if type(value) != str else get_picamera2_enum(name, value)
+    params = update_framerate_param(params)
+
+    return dict(controls=params) if len(params) > 0 else {}
 
 
 def get_picamera_params():
-    names = find_param_names(PICAMERA_PREFIX)
-    constructor_args = get_picamera_constructor_args(names)
-    attrs_names = set(names) - set(
-        [f"{PICAMERA_PREFIX}{x.upper()}" for x in constructor_args.keys()]
-    )
-    return {
-        "picamera": constructor_args,
-        "picamera_attrs": get_picamera_attrs(attrs_names),
-    }
+    params = {}
+    framerate = get_param(PICAMERA_PREFIX + "FRAMERATE")
+    if framerate is not None:
+        params["framerate"] = float(framerate)
+    return dict(picamera=params) if len(params) > 0 else {}
 
 
-def get_picamera_capture_params():
+def get_picamera2_params():
     params = {
-        "use_video_port": True,
-        "format": "jpeg",
+        **get_picamera2_transform_params(),
+        **get_picamera2_config_params(),
+        **get_picamera2_main_params(),
+        **get_picamera2_controls_params(),
     }
-    env_names = find_param_names(CAPTURE_PREFIX)
-    for env_name in env_names:
-        name = env_name[len(PICAMERA_PREFIX) :].lower()
-        v = get_param(env_name)
-        if name in ["splitter_port", "quality", "restart"]:
-            params[name] = int(v)
-        elif name in ["use_video_port", "bayer"]:
-            params[name] = v.lower() == "true"
-        elif name in ["resize", "thumbnail"]:
-            params[name] = _to_tuple(v, int)
-        else:
-            params[name] = v
-        logger.debug(f"picamera capture arg: {name}={params.get(name)}")
+    logger.debug(f"picamera2 params: {params}")
+    return dict(picamera2=params) if len(params) > 0 else {}
 
-    return params
+
+def get_exttool_params() -> dict:
+    args = parse_args()
+    if len(args) == 0:
+        return {}
+    return {
+        "server": args["server"],
+        "exttool": {
+            "function": args["function"],
+            "split": args["split"],
+            "args": get_service_params("EXT_ARG_", {}),
+            "result": get_service_params("EXT_SS_"),
+        },
+    }
+
+
+def parse_args() -> dict:
+    parser = ArgumentParser()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-U", "--unix-domain")
+    group.add_argument("-T", "--tcp-host")
+    parser.add_argument("-P", "--tcp-port", type=int, default=9999)
+    parser.add_argument("-F", "--function", default="perftool")
+    parser.add_argument("-S", "--split", action="store_true")
+    args = parser.parse_args()
+    if args.tcp_host is not None:
+        return {
+            "server": {"host": args.tcp_host, "port": args.tcp_port},
+            "function": args.function,
+            "split": args.split,
+        }
+    elif args.unix_domain is not None:
+        return {
+            "server": {"path": args.unix_domain},
+            "function": args.function,
+            "split": args.split,
+        }
+    else:
+        return {}
 
 
 def setup_cfg_file():
     return {
         "sinetstream": setup_sinetstream(),
-        "capture": get_picamera_capture_params(),
         "schedule": "10",
-        **get_picamera_params(),
+        **get_picamera2_params(),
+        **get_exttool_params(),
     }

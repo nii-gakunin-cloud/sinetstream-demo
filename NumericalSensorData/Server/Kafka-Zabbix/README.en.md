@@ -74,7 +74,7 @@ The version of each software component is listed below.
 
 |Software|Version|
 |---|---|
-|[Apache Kafka](https://kafka.apache.org/)|3.4.0|
+|[Apache Kafka](https://kafka.apache.org/)|3.8.0|
 |[Zabbix](https://www.zabbix.com/)|6.0 LTS|
 
 ### 1.2. Limitations
@@ -183,12 +183,12 @@ The configuration parameters for the Kafka broker can be specified as described 
 - Prefix the environment variable name with `KAFKA_`
 - Convert to all uppercase
 - Convert periods `.` to underscores `_`
-- Replace hyphens `-` with a 2-letter underscore `__`.
-- replace an underscore `_` with a three-letter underscore `___`
+- Replace an underscore `_` with a 2-letter underscore `__`
+- Replace hyphens `-` with a three-letter underscore `___`.
 
 For example, the property `message.max.bytes` is specified as the environment variable `KAFKA_MESSAGE_MAX_BYTES`.
 
-For details on how to specify environment variables, see [Confluent Kafka configuration](https://docs.confluent.io/platform/current/installation/docker/config-reference.html#confluent-ak-configuration).
+For details on how to specify environment variables, see [Kafka Docker Image Usage Guide](https://github.com/apache/kafka/blob/trunk/docker/examples/README.md#using-environment-variables).
 
 ### 3.3. Running the Container
 
@@ -203,15 +203,15 @@ docker compose up -d
 Check the state of the container.
 
 ```console
-$ docker compose ps 
-NAME                COMMAND                  SERVICE             STATUS              PORTS
-broker              "/etc/confluent/dock…"   broker              running             
-zookeeper           "/etc/confluent/dock…"   zookeeper           running             
+$ docker compose ps -a
+NAME                 IMAGE                COMMAND                  SERVICE      CREATED          STATUS          PORTS
+kafka-broker-1       apache/kafka:3.8.0   "/__cacert_entrypoin…"   broker       49 seconds ago   Up 48 seconds   0.0.0.0:9092->9092/tcp, :::9092->9092/tcp
+kafka-controller-1   apache/kafka:3.8.0   "/__cacert_entrypoin…"   controller   49 seconds ago   Up 49 seconds   9092/tcp
 ```
 
-Make sure that the state (STATUS) of the `broker` and `zookeeper` containers are both `running`.
+Make sure that the state (STATUS) of the `broker` and `controller` containers are both `Up`.
 
-If the STATUS value is not `running`, check the container logs to determine the cause of the error.
+If the STATUS value is not `Up`, check the container logs to determine the cause of the error.
 
 ```console
 docker compose logs
@@ -291,8 +291,8 @@ Next, start Zabbix Agent container for getting node status of Zabbix server.
 ```console
 $ docker compose up -d zabbix-agent
 [+] Running 2/2
- ⠿ Volume "zabbix-docker_snmptraps"        Created                        0.0s 
- ⠿ Container zabbix-docker-zabbix-agent-1  Started                        0.9s 
+ ⠿ Volume "zabbix-docker_snmptraps"        Created                        0.0s
+ ⠿ Container zabbix-docker-zabbix-agent-1  Started                        0.9s
 $ docker compose ps zabbix-agent
 NAME                           COMMAND                  SERVICE             STATUS              PORTS
 zabbix-docker-zabbix-agent-1   "/sbin/tini -- /usr/…"   zabbix-agent        running
@@ -545,7 +545,7 @@ The first time you start the container, it will take some time to complete the s
 ```console
 $ docker compose ps
 NAME                    COMMAND                  SERVICE             STATUS              PORTS
-sender-zabbix-sender-1  "/bin/sh -c './consu…"   zabbix-sender       running   
+sender-zabbix-sender-1  "/bin/sh -c './consu…"   zabbix-sender       running
 ```
 
 Make sure that the STATUS of the container is `running`.
@@ -611,13 +611,13 @@ To start the container, execute the following command in the directory where you
 ```console
 $ docker compose up -d zabbix-java-gateway
 [+] Running 1/1
- ⠿ Container zabbix-docker-zabbix-java-gateway-1  Started     
+ ⠿ Container zabbix-docker-zabbix-java-gateway-1  Started
 ```
 
 Check the state of the container, making sure that the STATUS value is `running`.
 
 ```console
-$ docker compose ps zabbix-java-gateway    
+$ docker compose ps zabbix-java-gateway
 NAME                                  COMMAND                  SERVICE               STATUS              PORTS
 zabbix-docker-zabbix-java-gateway-1   "docker-entrypoint.s…"   zabbix-java-gateway   running
 ```

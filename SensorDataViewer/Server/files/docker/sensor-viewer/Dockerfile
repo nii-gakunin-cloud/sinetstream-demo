@@ -1,4 +1,4 @@
-FROM node:18.18.0 AS builder
+FROM node:18.18.2 AS builder
 
 WORKDIR /home/node
 COPY . ./

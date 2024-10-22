@@ -92,7 +92,7 @@ $ ./producer.py --list-device
 デフォルトのブローカからデータを受信する場合は以下のようにコマンドを実行してください。音声データの受信を終了するにはキーボードで ctrl-c を押してください。受信したデータを音声ファイル`output_{yyyymmddHHMMSS}.flac`に保存します。なお、必ず音声ファイルを分割する仕様のため、ファイル名の`{yyyymmddHHMMSS}`の部分にその音声ファイルが作成された日時を設定し、ファイル名の重複を防ぎます。
 
 ```console
-$ ./consumer.py 
+$ ./consumer.py
 
 recording start: output_20240401134038.flac
 ^C

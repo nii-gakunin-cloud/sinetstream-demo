@@ -1,0 +1,6 @@
+.env*
+.vscode
+.venv
+.sinetstream_config.yml
+__pycache__
+*.pyc
