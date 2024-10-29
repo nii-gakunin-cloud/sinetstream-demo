@@ -6,3 +6,6 @@ PG_URL={{ postgres.url }}
 {%- if kafka is defined and kafka.hostname is defined %}
 KAFKA_HOSTNAME={{ kafka.hostname }}
 {%- endif %}
+{%- if kraft is defined and kraft.cluster_id is defined %}
+CLUSTER_ID={{ kraft.cluster_id }}
+{%- endif %}

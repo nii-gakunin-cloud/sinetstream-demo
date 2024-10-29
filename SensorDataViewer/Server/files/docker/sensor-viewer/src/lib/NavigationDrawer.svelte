@@ -46,7 +46,7 @@
       <i>done</i>
     {/if}
   </a>
-  <div class="small-divider" />
+  <hr class="small" />
 
   {#each $settings as setting, idx}
     <a
@@ -71,7 +71,7 @@
     <span>New Dashboard</span>
   </a>
 
-  <div class="small-divider" />
+  <hr class="small" />
 
   <a class="row round" href={`/setting/${$settingsIndex}`} use:link>
     <i>settings</i>

@@ -7,6 +7,8 @@ import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.kafka.common.serialization.Deserializer;
 
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 
 public class SinetStreamDeserializer implements Deserializer<GenericRecord> {
@@ -23,9 +25,31 @@ public class SinetStreamDeserializer implements Deserializer<GenericRecord> {
             return null;
         }
         try {
-            return decoder.decode(data);
-        } catch (IOException e) {
+            ByteBuffer buf = ByteBuffer.wrap(data);
+            if (isV3Message(buf)) {
+                buf.position(SinetStreamSerde.V3_DATA_POS);
+                buf = buf.slice();
+            }
+            return decoder.decode(buf);
+        } catch (IOException | BufferUnderflowException e) {
             throw new SinetStreamSerdeException(e);
         }
+    }
+
+    private boolean isV3Message(ByteBuffer message) {
+        ByteBuffer buf = message.slice();
+        if (SinetStreamSerde.MARKER != buf.get()) {
+            return false;
+        }
+        if (SinetStreamSerde.MESSAGE_VERSION != buf.get()) {
+            return false;
+        }
+        if (0 != buf.getShort()) {
+            return false;
+        }
+        if (0 != buf.getShort()) {
+            return false;
+        }
+        return true;
     }
 }

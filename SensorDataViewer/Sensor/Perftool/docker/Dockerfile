@@ -1,13 +1,14 @@
-FROM eclipse-temurin:11.0.24_8-jdk-focal AS builder
+FROM eclipse-temurin:17.0.13_11-jdk AS builder
 
 WORKDIR /build/perftool/
 COPY sinetstream-java/sample/perftool /build/perftool
-RUN ./gradlew build
+RUN sed -i -e '/distributionUrl/s/6.8.3/7.6.4/' gradle/wrapper/gradle-wrapper.properties \
+    && ./gradlew build
 
-FROM python:3.12.7-slim-bullseye
+FROM python:3.13.0-slim
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends openjdk-11-jre-headless \
+    && apt-get install -y --no-install-recommends openjdk-17-jre-headless \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY  --from=builder /build/perftool/build/distributions/*.tar /opt/
@@ -21,12 +22,8 @@ COPY scripts/*.sh /usr/local/bin/
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
 COPY scripts/*.txt ./
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends gcc python-dev libffi-dev \
-    && pip install --no-cache-dir -U pip setuptools \
+    && apt-get install -y --no-install-recommends libffi-dev \
     && pip install --no-cache-dir -r requirements.txt \
-    && apt-get remove -y gcc python-dev \
-    && apt-get autoremove -y \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 COPY scripts/*.py ./
 CMD ["./controller.py"]

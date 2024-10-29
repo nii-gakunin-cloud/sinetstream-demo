@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`LayoutForm.svelt > layout: horizontal 1`] = `"<input type=\\"radio\\" name=\\"layout.template\\" value=\\"horizontal\\" aria-label=\\"horizontal\\"> <span><table border=\\"1\\"><tr><td><i>map</i></td> <td><i>image</i></td></tr> <tr><td colspan=\\"2\\" style=\\"text-align: center;\\"><i>show_chart</i></td></tr></table></span><!--<HorizontalLayoutIcon>-->"`;
+exports[`LayoutForm.svelt > layout: horizontal 1`] = `"<input type="radio" name="layout.template" value="horizontal" aria-label="horizontal"> <span><table border="1"><tr><td><i>map</i></td> <td><i>image</i></td></tr> <tr><td colspan="2" style="text-align: center;"><i>show_chart</i></td></tr></table></span>"`;
 
-exports[`LayoutForm.svelt > layout: vertical 1`] = `"<input type=\\"radio\\" name=\\"layout.template\\" value=\\"vertical\\" aria-label=\\"vertical\\"> <span><table border=\\"1\\"><tr><td><i>map</i></td> <td><i>image</i><br><i>show_chart</i></td></tr></table></span><!--<VerticalLayoutIcon>-->"`;
+exports[`LayoutForm.svelt > layout: vertical 1`] = `"<input type="radio" name="layout.template" value="vertical" aria-label="vertical"> <span><table border="1"><tr><td><i>map</i></td> <td><i>image</i><br><i>show_chart</i></td></tr></table></span>"`;
 
-exports[`LayoutForm.svelt > layout: vertical-2 1`] = `"<input type=\\"radio\\" name=\\"layout.template\\" value=\\"vertical-2\\" aria-label=\\"vertical-2\\"> <span><table border=\\"1\\"><tr><td><i>map</i></td> <td rowspan=\\"2\\" style=\\"text-align: center;\\"><i>show_chart</i></td></tr> <tr><td><i>image</i></td></tr></table></span><!--<Vertical2LayoutIcon>-->"`;
+exports[`LayoutForm.svelt > layout: vertical-2 1`] = `"<input type="radio" name="layout.template" value="vertical-2" aria-label="vertical-2"> <span><table border="1"><tr><td><i>map</i></td> <td rowspan="2" style="text-align: center;"><i>show_chart</i></td></tr> <tr><td><i>image</i></td></tr></table></span>"`;
 
-exports[`LayoutForm.svelt > layout: vertical-horizontal 1`] = `"<input type=\\"radio\\" name=\\"layout.template\\" value=\\"vertical-horizontal\\" aria-label=\\"vertical-horizontal\\"> <span><table border=\\"1\\"><tr><td rowspan=\\"2\\"><i>map</i></td> <td><i>image</i></td></tr> <tr><td><i>show_chart</i></td></tr></table></span><!--<VerticalHorizontalLayoutIcon>-->"`;
+exports[`LayoutForm.svelt > layout: vertical-horizontal 1`] = `"<input type="radio" name="layout.template" value="vertical-horizontal" aria-label="vertical-horizontal"> <span><table border="1"><tr><td rowspan="2"><i>map</i></td> <td><i>image</i></td></tr> <tr><td><i>show_chart</i></td></tr></table></span>"`;

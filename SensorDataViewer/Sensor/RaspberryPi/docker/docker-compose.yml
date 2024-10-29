@@ -1,6 +1,6 @@
 services:
   picamera:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.2.15
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.3.0
     privileged: true
     volumes:
       - /dev:/dev

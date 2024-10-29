@@ -3,26 +3,26 @@ import { formatISO } from 'date-fns';
 import type { ResolutionSuffix } from '../viewer/timeRange';
 
 const moduleMap = {
-  accelerometer: 'ChartAccelerometer.svelte',
-  'accelerometer uncalibrated': 'ChartAccelerometerUncalibrated.svelte',
-  'ambient temperature': 'ChartAmbientTemperature.svelte',
-  'game rotation vector': 'ChartGameRotationVector.svelte',
-  'geomagnetic rotation vector': 'ChartGeomagneticRotationVector.svelte',
-  gravity: 'ChartGravity.svelte',
-  gyroscope: 'ChartGyroscope.svelte',
-  'gyroscope uncalibrated': 'ChartGyroscopeUncalibrated.svelte',
-  light: 'ChartLight.svelte',
-  'linear acceleration': 'ChartLinearAcceleration.svelte',
-  lte: 'ChartLte.svelte',
-  'magnetic field': 'ChartMagneticField.svelte',
-  'magnetic field uncalibrated': 'ChartMagneticFieldUncalibrated.svelte',
-  orientation: 'ChartOrientation.svelte',
-  perftool: 'ChartPerftool.svelte',
-  pressure: 'ChartPressure.svelte',
-  proximity: 'ChartProximity.svelte',
-  'relative humidity': 'ChartRelativeHumidity.svelte',
-  'rotation vector': 'ChartRotationVector.svelte',
-  'step counter': 'ChartStepCounter.svelte',
+  accelerometer: 'ChartAccelerometer',
+  'accelerometer uncalibrated': 'ChartAccelerometerUncalibrated',
+  'ambient temperature': 'ChartAmbientTemperature',
+  'game rotation vector': 'ChartGameRotationVector',
+  'geomagnetic rotation vector': 'ChartGeomagneticRotationVector',
+  gravity: 'ChartGravity',
+  gyroscope: 'ChartGyroscope',
+  'gyroscope uncalibrated': 'ChartGyroscopeUncalibrated',
+  light: 'ChartLight',
+  'linear acceleration': 'ChartLinearAcceleration',
+  lte: 'ChartLte',
+  'magnetic field': 'ChartMagneticField',
+  'magnetic field uncalibrated': 'ChartMagneticFieldUncalibrated',
+  orientation: 'ChartOrientation',
+  perftool: 'ChartPerftool',
+  pressure: 'ChartPressure',
+  proximity: 'ChartProximity',
+  'relative humidity': 'ChartRelativeHumidity',
+  'rotation vector': 'ChartRotationVector',
+  'step counter': 'ChartStepCounter',
 };
 
 type ChartNames = keyof typeof moduleMap;
@@ -37,7 +37,7 @@ const setupComponents = async (
   // eslint-disable-next-line no-restricted-syntax
   for await (const name of chartList) {
     if (isChartName(name) && tables[name] == null) {
-      const m = await import(/* @vite-ignore */ `../chart/${moduleMap[name]}`);
+      const m = await import(`../chart/${moduleMap[name]}.svelte`);
       tables[name] = m.table;
       fields[name] = m.fields;
       components[name] = m.default;

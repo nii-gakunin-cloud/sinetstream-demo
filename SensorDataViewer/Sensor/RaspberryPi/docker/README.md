@@ -29,7 +29,7 @@ flowchart LR
 実行環境として以下のものを想定します。
 
 * Raspberry Pi
-* [Raspberry Pi OS (bullseye)](https://www.raspberrypi.com/software/)
+* [Raspberry Pi OS](https://www.raspberrypi.com/software/)
 * [Raspberry Piカメラモジュール](https://www.raspberrypi.com/documentation/accessories/camera.html)
 
 また画像の送信先となる Kafka ブローカが事前に利用可能な状態になっている必要があります。以下に示すいずれかの構成でKafkaブローカを構築してください。
@@ -75,7 +75,7 @@ Kafkaブローカの[advertise するアドレス](../../../../option/Server/Kaf
 ```yaml
 services:
   picamera:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.1.0
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.3.0
     privileged: true
     volumes:
       - /dev:/dev
@@ -293,7 +293,7 @@ docker secretsで指定する場合は`docker-compose.yml`に[secrets](https://d
 ```yaml
 services:
   picamera:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.1.0
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-picamera:0.3.0
     privileged: true
     volumes:
       - /dev:/dev

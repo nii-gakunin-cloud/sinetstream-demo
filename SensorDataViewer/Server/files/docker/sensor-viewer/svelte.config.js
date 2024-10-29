@@ -1,5 +1,7 @@
-import sveltePreprocess from 'svelte-preprocess'
-import dotenv from 'dotenv';
+import { sveltePreprocess } from "svelte-preprocess";
+import dynamicImport from "vite-plugin-dynamic-import";
+
+import dotenv from "dotenv";
 dotenv.config();
 
 export default {
@@ -13,5 +15,6 @@ export default {
   }),
   compilerOptions: {
     hydratable: true,
-  }
-}
+  },
+  plugins: [dynamicImport()],
+};

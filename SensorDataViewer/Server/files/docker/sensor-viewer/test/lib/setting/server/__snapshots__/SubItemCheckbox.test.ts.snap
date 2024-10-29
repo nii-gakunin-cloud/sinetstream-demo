@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`SubItemCheckbox.svelt > label.svelt > slot 1`] = `"<div class=\\"row\\"><div></div> <label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"parent.child\\" aria-label=\\"parent.child\\"> <span></span></label> <div>child value</div></div>"`;
+exports[`SubItemCheckbox.svelt > label.svelt > slot 1`] = `"<div class="row"><div></div> <label class="checkbox"><input type="checkbox" name="targets" value="parent.child" aria-label="parent.child"> <span></span></label> <div>child value</div></div>"`;
 
-exports[`SubItemCheckbox.svelt > label.svelt > value 1`] = `"<div class=\\"row\\"><div></div> <label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"parent.child\\" aria-label=\\"parent.child\\"> <span></span></label> <div>default slot: \\"child value\\"</div></div>"`;
+exports[`SubItemCheckbox.svelt > label.svelt > value 1`] = `"<div class="row"><div></div> <label class="checkbox"><input type="checkbox" name="targets" value="parent.child" aria-label="parent.child"> <span></span></label> <div>default slot: "child value"</div></div>"`;
 
-exports[`SubItemCheckbox.svelt > parent state > checked 1`] = `"<div class=\\"row\\"><div></div> <label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"parent.child\\" disabled=\\"\\" aria-label=\\"parent.child\\"> <span></span></label> <div>default slot: \\"child value\\"</div></div>"`;
+exports[`SubItemCheckbox.svelt > parent state > checked 1`] = `"<div class="row"><div></div> <label class="checkbox"><input type="checkbox" name="targets" value="parent.child" disabled="" aria-label="parent.child"> <span></span></label> <div>default slot: "child value"</div></div>"`;
 
-exports[`SubItemCheckbox.svelt > parent state > unchecked 1`] = `"<div class=\\"row\\"><div></div> <label class=\\"checkbox\\"><input type=\\"checkbox\\" name=\\"targets\\" value=\\"parent.child\\" aria-label=\\"parent.child\\"> <span></span></label> <div>default slot: \\"child value\\"</div></div>"`;
+exports[`SubItemCheckbox.svelt > parent state > unchecked 1`] = `"<div class="row"><div></div> <label class="checkbox"><input type="checkbox" name="targets" value="parent.child" aria-label="parent.child"> <span></span></label> <div>default slot: "child value"</div></div>"`;

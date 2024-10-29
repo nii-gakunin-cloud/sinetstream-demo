@@ -1,4 +1,4 @@
-FROM python:3.10.13-slim
+FROM python:3.13.0-slim
 
 COPY requirements.txt /srv/
 RUN pip install --no-cache-dir -r /srv/requirements.txt

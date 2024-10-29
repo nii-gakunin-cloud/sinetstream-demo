@@ -261,12 +261,37 @@ EOF
 
 設定ファイル`01-postgres.yml`の記述例を示します。
 
-```bash
+```yaml
 postgres:
   database: sensor
   user: sensor
   password: db-pass-00
   url: postgres://sensor:db-pass-00@postgres:5432/sensor?sslmode=disable
+```
+
+### 2.7. Kafka
+
+kafkaのクラスタIDを生成します。
+
+```bash
+cluster_id=$(docker run -q --rm apache/kafka:latest /opt/kafka/bin/kafka-storage.sh random-uuid)
+```
+
+生成したクラスタIDをファイルに保存します。既に他のnotebookでパラメータが保存されている場合はその値が優先されます。
+
+```bash
+[ -f ${target_dir}/params/01-kraft.yml ] || \
+cat > ${target_dir}/params/01-kraft.yml <<EOF
+kraft:
+  cluster_id: ${cluster_id}
+EOF
+```
+
+設定ファイル`01-kraft.yml`の記述例を示します。
+
+```yaml
+kraft:
+  cluster_id: F6XhN2lmSDWvf-NEOB0C7g
 ```
 
 ## 3. 資材の配置
@@ -480,14 +505,14 @@ jinja2 --strict \
 ```yaml
 services:
   nats:
-    image: nats:2.9.15
+    image: nats:2.10.22
     restart: always
     ports:
       - ${MQTT_PORT:-1883}:1883
     volumes:
       - ./conf/nats/nats-server.conf:/nats-server.conf
   nats-kafka:
-    image: natsio/nats-kafka:1.3.0
+    image: natsio/nats-kafka:1.4.2
     restart: always
     command: -c /conf/kafkabridge.conf
     volumes:
@@ -496,42 +521,52 @@ services:
       kafka:
         condition: service_healthy
   kafka:
-    image: confluentinc/cp-kafka:7.3.3
+    image: apache/kafka:3.8.0
     restart: always
     volumes:
-      - ./data/kafka:/var/lib/kafka/data
+      - kafka-data:/var/lib/kafka/data
+      - kafka-secrets:/var/lib/kafka/secrets
     environment:
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      CLUSTER_ID: ${CLUSTER_ID}
+      KAFKA_NODE_ID: "10"
+      KAFKA_PROCESS_ROLES: broker
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
+      KAFKA_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: "1"
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: "1"
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1000@controller:9093
+      KAFKA_LOG_DIR: /var/lib/kafka/data
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:19092
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
     depends_on:
-      zookeeper:
+      controller:
         condition: service_healthy
     healthcheck:
       test: nc -z localhost 19092 || exit 1
       interval: 10s
       timeout: 5s
       retries: 3
-  zookeeper:
-    image: confluentinc/cp-zookeeper:7.3.3
+  controller:
+    image: apache/kafka:3.8.0
     restart: always
     volumes:
-      - ./data/zookeeper/data:/var/lib/zookeeper/data
-      - ./data/zookeeper/txn-logs:/var/lib/zookeeper/log
+      - kafka-controller:/var/lib/kafka/data
     environment:
-      ZOOKEEPER_CLIENT_PORT: "2181"
-      KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
+      CLUSTER_ID: ${CLUSTER_ID}
+      KAFKA_NODE_ID: "1000"
+      KAFKA_PROCESS_ROLES: controller
+      KAFKA_LISTENERS: CONTROLLER://:9093
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1000@controller:9093
+      KAFKA_LOG_DIR: /var/lib/kafka/data
     healthcheck:
-      test: echo ruok | nc localhost 2181 || exit -1
+      test: nc -z localhost 9093 || exit 1
       interval: 10s
       timeout: 5s
       retries: 3
   postgres:
-    image: timescale/timescaledb:2.10.1-pg15-oss
+    image: timescale/timescaledb:2.17.1-pg15-oss
     restart: always
     user: "${UID:-1000}:${GID:-1000}"
     volumes:
@@ -552,7 +587,7 @@ services:
       timeout: 5s
       retries: 5
   kafka-connect:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:20230408
+    image: harbor.vcloud.nii.ac.jp/sinetstream/kafka-connect:0.2.0
     restart: always
     environment:
       CONNECT_BOOTSTRAP_SERVERS: kafka:19092
@@ -574,7 +609,7 @@ services:
       kafka:
         condition: service_healthy
   graphql:
-    image: hasura/graphql-engine:v2.23.0-ce.cli-migrations-v3
+    image: hasura/graphql-engine:v2.44.0-ce.cli-migrations-v3
     restart: always
     volumes:
       - ./init/hasura:/hasura-metadata
@@ -589,7 +624,7 @@ services:
       postgres:
         condition: service_healthy
   nginx:
-    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.1.4
+    image: harbor.vcloud.nii.ac.jp/sinetstream/sensor-viewer:0.4.2
     ports:
       - "443:443"
     restart: always
@@ -615,6 +650,11 @@ secrets:
     file: ./secrets/CERT_FILE
   CERT_KEY:
         file: ./secrets/CERT_KEY
+
+volumes:
+  kafka-data:
+  kafka-secrets:
+  kafka-controller:
 ```
 
 `docker compose`の環境変数を記した`.env`ファイルを作成します。
@@ -633,6 +673,7 @@ jinja2 --strict \
 UID=1000
 GID=1000
 PG_URL=postgres://sensor:db-pass-00@postgres:5432/sensor?sslmode=disable
+CLUSTER_ID=F6XhN2lmSDWvf-NEOB0C7g
 ```
 
 必要となるディレクトリを作成します。

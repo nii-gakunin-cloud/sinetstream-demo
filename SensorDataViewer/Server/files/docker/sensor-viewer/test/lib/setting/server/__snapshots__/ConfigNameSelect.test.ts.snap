@@ -1,17 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ConfigNameSelect.svelt > error 1`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > error 1`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option></select> </div>"`;
 
-exports[`ConfigNameSelect.svelt > error 2`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option></select> <div class=\\"toast pink white-text active top\\" aria-label=\\"error-toast\\"><i>error</i> <span>[Network] Failed to fetch</span></div><!--<ErrorToast>--><!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > error 2`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option></select> <div class="toast pink white-text active top" aria-label="error-toast"><i>error</i> <span>[Network] Failed to fetch</span></div></div>"`;
 
-exports[`ConfigNameSelect.svelt > no data 1`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > no data 1`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option></select> </div>"`;
 
-exports[`ConfigNameSelect.svelt > two items > match event 1`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > two items > match event 1`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option></select> </div>"`;
 
-exports[`ConfigNameSelect.svelt > two items > match event 2`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option><option value=\\"1\\">setting-1</option><option value=\\"2\\">setting-2</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > two items > match event 2`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option><option value="1">setting-1</option><option value="2">setting-2</option></select> </div>"`;
 
-exports[`ConfigNameSelect.svelt > two items > match event 3`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"1\\">setting-1</option><option value=\\"2\\">setting-2</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > two items > match event 3`] = `"<div><select name="name" aria-label="config-name-select"><option value="1">setting-1</option><option value="2">setting-2</option></select> </div>"`;
 
-exports[`ConfigNameSelect.svelt > two items > no match 1`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > two items > no match 1`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option></select> </div>"`;
 
-exports[`ConfigNameSelect.svelt > two items > no match 2`] = `"<body><div><select name=\\"name\\" aria-label=\\"config-name-select\\"><option value=\\"\\">--Please choose an option--</option><option value=\\"1\\">setting-1</option><option value=\\"2\\">setting-2</option></select> <!--<ConfigNameSelect>--></div></body>"`;
+exports[`ConfigNameSelect.svelt > two items > no match 2`] = `"<div><select name="name" aria-label="config-name-select"><option value="">--Please choose an option--</option><option value="1">setting-1</option><option value="2">setting-2</option></select> </div>"`;

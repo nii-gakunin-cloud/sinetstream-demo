@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContextClient, gql, queryStore } from "@urql/svelte";
   import { format, formatISO } from "date-fns";
-  import { utcToZonedTime } from "date-fns-tz";
+  import { toZonedTime } from "date-fns-tz";
   import { latLng } from "leaflet";
   import LGeoJson, { toGeoJson } from "../map/LGeoJson.svelte";
   import LMap from "../map/LMap.svelte";
@@ -69,7 +69,7 @@
       latitude={point.latitude}
       longitude={point.longitude}
       timestamp={format(
-        utcToZonedTime(point.timestamp, tz),
+        toZonedTime(point.timestamp, tz),
         "yyyy-MM-dd HH:mm:ssXXX"
       )}
     />

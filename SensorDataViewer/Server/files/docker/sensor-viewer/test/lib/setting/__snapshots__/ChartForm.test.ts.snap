@@ -1,13 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`ChartForm.svelt > line enabled 1`] = `"<label class=\\"switch\\"><input type=\\"checkbox\\" name=\\"chart.line.enabled\\" aria-label=\\"chart line enabled\\"> <span></span></label>"`;
+exports[`ChartForm.svelt > line enabled 1`] = `"<label class="switch"><input type="checkbox" name="chart.line.enabled" aria-label="chart line enabled"> <span></span></label>"`;
 
-exports[`ChartForm.svelt > line width 1`] = `"<div class=\\"field label\\"><input type=\\"number\\" name=\\"chart.line.size\\" id=\\"line-width\\" min=\\"1\\" max=\\"5\\"> <label class=\\"active\\" for=\\"line-width\\">line width</label> <span class=\\"error\\"></span></div>"`;
+exports[`ChartForm.svelt > line width 1`] = `"<div class="field label"><input type="number" name="chart.line.size" id="line-width" min="1" max="5"> <label class="active" for="line-width">line width</label> <span class="error"></span></div>"`;
 
-exports[`ChartForm.svelt > min height 1`] = `"<div class=\\"field label\\"><input type=\\"number\\" name=\\"chart.minSize.height\\" id=\\"min-height\\" min=\\"150\\" step=\\"10\\"> <label for=\\"min-height\\">height</label> <span class=\\"error\\"></span></div>"`;
+exports[`ChartForm.svelt > min height 1`] = `"<div class="field label"><input type="number" name="chart.minSize.height" id="min-height" min="150" step="10"> <label for="min-height">height</label> <span class="error"></span></div>"`;
 
-exports[`ChartForm.svelt > min width 1`] = `"<div class=\\"field label\\"><input type=\\"number\\" name=\\"chart.minSize.width\\" id=\\"min-width\\" min=\\"200\\" step=\\"10\\"> <label for=\\"min-width\\">width</label> <span class=\\"error\\"></span></div>"`;
+exports[`ChartForm.svelt > min width 1`] = `"<div class="field label"><input type="number" name="chart.minSize.width" id="min-width" min="200" step="10"> <label for="min-width">width</label> <span class="error"></span></div>"`;
 
-exports[`ChartForm.svelt > point enabled 1`] = `"<label class=\\"switch\\"><input type=\\"checkbox\\" name=\\"chart.point.enabled\\" aria-label=\\"chart point enabled\\"> <span></span></label>"`;
+exports[`ChartForm.svelt > point enabled 1`] = `"<label class="switch"><input type="checkbox" name="chart.point.enabled" aria-label="chart point enabled"> <span></span></label>"`;
 
-exports[`ChartForm.svelt > point size 1`] = `"<div class=\\"field label\\"><input type=\\"number\\" name=\\"chart.point.size\\" id=\\"point-size\\" min=\\"1\\" max=\\"5\\"> <label class=\\"active\\" for=\\"point-size\\">point size</label> <span class=\\"error\\"></span></div>"`;
+exports[`ChartForm.svelt > point size 1`] = `"<div class="field label"><input type="number" name="chart.point.size" id="point-size" min="1" max="5"> <label class="active" for="point-size">point size</label> <span class="error"></span></div>"`;

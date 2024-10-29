@@ -33,11 +33,9 @@
   let tables: Record<string, string> = {};
   let fields: Record<string, string[]> = {};
   let components: Record<string, any> = {};
-  $: {
-    setupComponents($charts).then((result) => {
-      ({ tables, fields, components } = result);
-    });
-  }
+  setupComponents($charts).then((result) => {
+    ({ tables, fields, components } = result);
+  });
 
   $: resolution = toResolution({ from, to, mode: $mode, range: $timeRange });
   $: queryResult = fetchQueryResult(

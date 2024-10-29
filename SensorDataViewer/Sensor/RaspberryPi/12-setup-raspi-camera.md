@@ -26,8 +26,7 @@ sensor-picameraコンテナはRaspberry Piに接続されたカメラの画像�
 
 環境を構築、実行するために必要となる前提条件を示します。
 
-* Raspberry Pi OS (bullseye)
-  * Raspberry Pi OS Legacyはサポート対象外になります
+* Raspberry Pi OS
 * [Raspberry Pi カメラモジュール](https://www.raspberrypi.com/documentation/accessories/camera.html)
   * USBカメラはサポート対象外になります
 * docker, docker compose v2

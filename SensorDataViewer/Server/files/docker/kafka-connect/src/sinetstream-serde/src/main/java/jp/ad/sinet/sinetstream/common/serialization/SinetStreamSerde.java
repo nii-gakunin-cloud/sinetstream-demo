@@ -15,6 +15,12 @@ public class SinetStreamSerde implements Serde<GenericRecord> {
     private final Serde<GenericRecord> inner;
     private final Schema schema;
 
+    public static final String MESSAGE_FORMAT_CONFIG = "sinetstream.message.format";
+
+    static final byte MARKER = (byte) 0xdf;
+    static final int MESSAGE_VERSION = 3;
+    static final int V3_DATA_POS = 4 + 2;
+
     public SinetStreamSerde() {
         schema = createSchema();
         inner = Serdes.serdeFrom(new SinetStreamSerializer(schema), new SinetStreamDeserializer(schema));

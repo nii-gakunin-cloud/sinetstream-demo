@@ -1,11 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`PlayerForm.svelt > From 1`] = `"<div class=\\"field label s-04ptYz-wUiB2\\"><input type=\\"datetime-local\\" name=\\"player.from\\" id=\\"player-from\\" class=\\"s-04ptYz-wUiB2\\"> <label for=\\"player-from\\" class=\\"s-04ptYz-wUiB2\\">From</label> <span class=\\"error s-04ptYz-wUiB2\\"></span></div>"`;
+exports[`PlayerForm.svelt > From 1`] = `"<div class="field label"><input type="datetime-local" name="player.from" id="player-from" class="svelte-1d0gydl"> <label for="player-from">From</label> <span class="error"></span></div>"`;
 
-exports[`PlayerForm.svelt > Granularity 1`] = `"<div class=\\"field label s-04ptYz-wUiB2\\"><input type=\\"number\\" name=\\"player.speed\\" min=\\"1\\" max=\\"20\\" id=\\"player-speed\\" class=\\"s-04ptYz-wUiB2\\"> <label for=\\"player-speed\\" class=\\"s-04ptYz-wUiB2\\">Granularity</label> <span class=\\"helper s-04ptYz-wUiB2\\">１ステップをどの程度の粗さにするかを示す指数。大きい値を指定するほど１ステップで進む時間幅が広くなる。</span></div>"`;
+exports[`PlayerForm.svelt > Granularity 1`] = `"<div class="field label"><input type="number" name="player.speed" min="1" max="20" id="player-speed" class="svelte-1d0gydl"> <label for="player-speed">Granularity</label> <span class="helper">１ステップをどの程度の粗さにするかを示す指数。大きい値を指定するほど１ステップで進む時間幅が広くなる。</span></div>"`;
 
-exports[`PlayerForm.svelt > Refresh interval 1`] = `"<div class=\\"field label s-04ptYz-wUiB2\\"><input type=\\"number\\" name=\\"player.tick\\" min=\\"100\\" step=\\"100\\" id=\\"player-tick\\" class=\\"s-04ptYz-wUiB2\\"> <label for=\\"player-tick\\" class=\\"s-04ptYz-wUiB2\\">Refresh interval</label> <span class=\\"helper s-04ptYz-wUiB2\\">次のデータを表示するまでの時間間隔(ミリ秒)。</span></div>"`;
+exports[`PlayerForm.svelt > Refresh interval 1`] = `"<div class="field label"><input type="number" name="player.tick" min="100" step="100" id="player-tick" class="svelte-1d0gydl"> <label for="player-tick">Refresh interval</label> <span class="helper">次のデータを表示するまでの時間間隔(ミリ秒)。</span></div>"`;
 
-exports[`PlayerForm.svelt > To 1`] = `"<div class=\\"field label s-04ptYz-wUiB2\\"><input type=\\"datetime-local\\" name=\\"player.to\\" id=\\"player-to\\" class=\\"s-04ptYz-wUiB2\\"> <label for=\\"player-to\\" class=\\"s-04ptYz-wUiB2\\">To</label> <span class=\\"error s-04ptYz-wUiB2\\"></span></div>"`;
+exports[`PlayerForm.svelt > To 1`] = `"<div class="field label"><input type="datetime-local" name="player.to" id="player-to" class="svelte-1d0gydl"> <label for="player-to">To</label> <span class="error"></span></div>"`;
 
-exports[`PlayerForm.svelt > repeat 1`] = `"<label class=\\"checkbox s-04ptYz-wUiB2\\"><input type=\\"checkbox\\" name=\\"player.repeat\\" aria-label=\\"repeat checkbox\\" class=\\"s-04ptYz-wUiB2\\"> <span class=\\"s-04ptYz-wUiB2\\">repeat</span></label>"`;
+exports[`PlayerForm.svelt > repeat 1`] = `"<label class="checkbox"><input type="checkbox" name="player.repeat" aria-label="repeat checkbox" class="svelte-1d0gydl"> <span>repeat</span></label>"`;

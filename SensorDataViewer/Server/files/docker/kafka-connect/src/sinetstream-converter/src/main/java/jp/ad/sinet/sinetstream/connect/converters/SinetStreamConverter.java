@@ -28,6 +28,7 @@ public class SinetStreamConverter implements Converter {
     @Override
     public void configure(Map<String, ?> configs, boolean isKey) {
         avroData = new AvroData(new AvroDataConfig(configs));
+        serde.configure(configs, isKey);
     }
 
     @Override

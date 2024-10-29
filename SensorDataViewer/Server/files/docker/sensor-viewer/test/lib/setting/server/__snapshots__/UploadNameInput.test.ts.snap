@@ -1,5 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UploadNameInput.svelt > error message 1`] = `"<div><div class=\\"field label invalid\\"><input type=\\"text\\" name=\\"name\\" id=\\"setting-name\\"> <label for=\\"setting-name\\">name</label> <span class=\\"error\\">error message</span></div><!--<UploadNameInput>--></div>"`;
+exports[`UploadNameInput.svelt > error message 1`] = `"<div class="field label invalid"><input type="text" name="name" id="setting-name"> <label for="setting-name">name</label> <span class="error">error message</span></div>"`;
 
-exports[`UploadNameInput.svelt > mount 1`] = `"<div><div class=\\"field label\\"><input type=\\"text\\" name=\\"name\\" id=\\"setting-name\\"> <label for=\\"setting-name\\">name</label> </div><!--<UploadNameInput>--></div>"`;
+exports[`UploadNameInput.svelt > mount 1`] = `"<div class="field label"><input type="text" name="name" id="setting-name"> <label for="setting-name">name</label> </div>"`;

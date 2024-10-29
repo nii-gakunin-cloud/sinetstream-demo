@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContextClient, gql, queryStore } from "@urql/svelte";
   import { format, formatISO, fromUnixTime } from "date-fns";
-  import { utcToZonedTime } from "date-fns-tz";
+  import { toZonedTime } from "date-fns-tz";
   import LMarker from "../map/LMarker.svelte";
   import BaseMapPane from "../pane/BaseMapPane.svelte";
   import { publisher } from "../settings";
@@ -55,7 +55,7 @@
       latitude={point.latitude}
       longitude={point.longitude}
       timestamp={format(
-        utcToZonedTime(point.timestamp, tz),
+        toZonedTime(point.timestamp, tz),
         "yyyy-MM-dd HH:mm:ssXXX"
       )}
     />
