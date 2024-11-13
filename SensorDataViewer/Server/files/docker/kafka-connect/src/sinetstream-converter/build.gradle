@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'org.apache.kafka', name: 'connect-runtime', version: '3.8.0'
+    implementation group: 'org.apache.kafka', name: 'connect-runtime', version: '3.9.0'
     implementation group: 'org.apache.avro', name: 'avro', version: '1.12.0'
-    implementation group: 'net.sinetstream', name: 'sinetstream-kafka-serde', version: '0.2.1'
+    implementation group: 'net.sinetstream', name: 'sinetstream-kafka-serde', version: '0.2.3'
     implementation group: 'io.confluent', name: 'kafka-connect-avro-data', version: '7.7.1'
 }
 

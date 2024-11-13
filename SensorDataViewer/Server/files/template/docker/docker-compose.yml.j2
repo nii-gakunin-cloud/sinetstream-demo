@@ -20,7 +20,7 @@ services:
         condition: service_healthy
 {%- endif %}
   kafka:
-    image: apache/kafka:3.8.0
+    image: apache/kafka:3.8.1
     restart: always
     volumes:
       - kafka-data:/var/lib/kafka/data
@@ -54,7 +54,7 @@ services:
       timeout: 5s
       retries: 3
   controller:
-    image: apache/kafka:3.8.0
+    image: apache/kafka:3.8.1
     restart: always
     volumes:
       - kafka-controller:/var/lib/kafka/data
