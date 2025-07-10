@@ -18,6 +18,22 @@ amixer                          # 現在の状態確認
 amixer -D hw:1 sset Mic 100%    # マイクのボリュームを設定する
 ```
 
+`arecord -l` を実行してデバイスのカード番号を調べます。たとえば
+
+```
+**** ハードウェアデバイス CAPTURE のリスト ****
+カード 2: Device [USB PnP Sound Device], デバイス 0: USB Audio [USB Audio]
+  サブデバイス: 1/1
+  サブデバイス #0: subdevice #0
+```
+
+と出力された場合はカード番号は `2` です。
+
+`amixer` でマイクボリュームを設定するとき、このカード番号を指定します。
+今回の例ではカード番号が `2` なのでコマンドラインは
+`amixer -D hw:2 sset Mic 100%`
+になります。
+
 ### 1.3. ライブラリのインストール
 
 スクリプトの実行環境を準備します。
@@ -38,6 +54,28 @@ virtualenv -p python .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 ```
+
+#### 補足: スクリプト実行時エラー
+
+スクリプトを実行したときにライブラリnumpyのimportでエラーになることがあります。
+
+システムにnumpyにインストールすることでエラーを解消できる場合があります。
+debian系OSの場合のnumpyインストール方法:
+
+```
+$ sudo apt update
+$ apt search numpy   # python3-numpyのようなパッケージ名がみつかるとおもいます
+$ sudo apt install python3-numpy
+```
+
+requirements.txt で指定している仮想環境のnumpyのバージョンを
+システムに入っているnumpyのバージョンに合わせると
+エラーを解消できる場合があります。
+
+1. `/usr/bin/pip show numpy` を実行してシステムにインスールされているnumpyのバージョンを調べます。
+    `Verion: ` で始まる行にバージョン番号が書かれています。
+2. `requirements.txt` を編集して `numpy==<pip showで得られたバージョン番号>` に変更します。
+3. `pip install -r requirements.txt` を実行して仮想環境のnumpyを入れ替えます。
 
 ### 1.4. 設定ファイル
 
